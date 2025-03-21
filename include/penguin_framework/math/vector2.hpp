@@ -25,7 +25,7 @@ struct [[nodiscard]] Vector2 {
 	// Move assignment operator
 	constexpr Vector2& operator=(Vector2&& v) noexcept = default;
 
-    // Binary operators
+	// Binary operators
 
 	friend constexpr Vector2 operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
 	friend constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
@@ -71,7 +71,7 @@ struct [[nodiscard]] Vector2 {
 
 	// Other comparsion operators
 	
-=	constexpr auto operator<=>(const Vector2 &) const noexcept = default; // C++20 three-way comparison generates ==, !=, <, >, <=, and >= automatically
+=	constexpr auto operator<=>(const Vector2&) const noexcept = default; // C++20 three-way comparison generates ==, !=, <, >, <=, and >= automatically
 
 	// Vector operations
 
