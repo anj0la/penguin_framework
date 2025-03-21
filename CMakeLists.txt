@@ -1,4 +1,6 @@
-﻿# Backwards comptability for CMake 3.15 to 3.31 (doesn't support CMake 4.0 or higher).
+﻿###### PROJECT SETUP ######
+
+# Backwards comptability for CMake 3.15 to 3.31 (doesn't support CMake 4.0 or higher).
 cmake_minimum_required(VERSION 3.15...3.31)
 
 # Define the project, version and languages support.
@@ -15,3 +17,22 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 # Assumed the SDL source is available in external/SDL.
 add_subdirectory(external/SDL EXCLUDE_FROM_ALL)
+
+###### TESTING SETUP ######
+
+# Enable testing.
+# enable_testing()
+
+# Fetch GoogleTest.
+#FetchContent_Declare(
+#  googletest
+#  GIT_REPOSITORY https://github.com/google/googletest.git
+#  GIT_TAG        v1.16.0
+#)
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+#if (WIN32)
+#	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+#endif()
+
+#FetchContent_MakeAvailable(googletest)
