@@ -20,19 +20,19 @@ add_subdirectory(external/SDL EXCLUDE_FROM_ALL)
 
 ###### TESTING SETUP ######
 
-# Enable testing.
-# enable_testing()
+# Ensure FetchContent is included.
+include(FetchContent)
 
 # Fetch GoogleTest.
-#FetchContent_Declare(
-#  googletest
-#  GIT_REPOSITORY https://github.com/google/googletest.git
-#  GIT_TAG        v1.16.0
-#)
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        v1.16.0
+)
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
-#if (WIN32)
-#	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-#endif()
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-#FetchContent_MakeAvailable(googletest)
+# Add test subdirectory to enable testing.
+# add_subdirectory(tests)
