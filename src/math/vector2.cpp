@@ -50,7 +50,6 @@ void Vector2::normalize() {
 	len = std::sqrtf(len);
 	x /= len;
 	y /= len;
-	return len;
 }
 
 Vector2 Vector2::normalized() const {
