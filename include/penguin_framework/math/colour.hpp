@@ -9,7 +9,7 @@ struct [[nodiscard]] Colour {
 
     // Default constructors
 
-    constexpr Colour() : r(0), g(0), b(0), ai(OPAQUE) {}
+    constexpr Colour() : r(0), g(0), b(0), a(OPAQUE) {}
 
     // Regular constructors
 
@@ -21,10 +21,6 @@ struct [[nodiscard]] Colour {
     constexpr Colour(Colour&& c) noexcept = default; // Move constructor
     constexpr Colour& operator=(const Colour& c) = default; // Copy assignment operator
     constexpr Colour& operator=(Colour&& c) noexcept = default; // Move assignment operator
-
-    // Conversion operators
-
-    constexpr Colour to_float() const { return Colour(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f); }
 };
 
 
