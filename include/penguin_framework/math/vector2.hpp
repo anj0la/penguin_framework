@@ -5,7 +5,7 @@
 struct [[nodiscard]] Vector2 {
 	static constexpr float ORIGIN = 0.0; /// The origin for all Vector2 objects -> (0, 0)
 
-    float x, y; /// The x and y components of the vector.
+	float x, y; /// The x and y components of the vector.
 
 	// Default constructor (x, y = ORIGIN)
 	constexpr Vector2() : x{ ORIGIN }, y{ ORIGIN } {};
@@ -28,16 +28,16 @@ struct [[nodiscard]] Vector2 {
     // Binary operators
 
 	friend constexpr Vector2 operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
-    friend constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
-    friend constexpr Vector2 operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
-    friend constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
+	friend constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
+	friend constexpr Vector2 operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
+	friend constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
 
 	// Assignment operators
-   
+ 
 	constexpr Vector2& operator+=(const Vector2& v) const { x += v.x; y += v.y; return *this; }
-    constexpr Vector2& operator-=(const Vector2& v) const { x -= v.x; y -= v.y; return *this; }
-    constexpr Vector2& operator*=(const Vector2& v) const { x *= v.x; y *= v.y; return *this; }
-    constexpr Vector2& operator/=(const Vector2& v) const { x /= v.x; y /= v.y; return *this; }
+	constexpr Vector2& operator-=(const Vector2& v) const { x -= v.x; y -= v.y; return *this; }
+	constexpr Vector2& operator*=(const Vector2& v) const { x *= v.x; y *= v.y; return *this; }
+	constexpr Vector2& operator/=(const Vector2& v) const { x /= v.x; y /= v.y; return *this; }
 
 	// Comparison operators
 
