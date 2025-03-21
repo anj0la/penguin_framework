@@ -8,22 +8,19 @@ struct [[nodiscard]] Vector2i {
 	int x, y; /// The x and y components of the vector.
 
 	// Default constructor (x, y = ORIGIN)
-	constexpr Vector2i() : x{ ORIGIN }, y{ ORIGIN } {};
+	constexpr Vector2i() : x(ORIGIN), y(ORIGIN) {};
 
-	// Parameterized constructor
-	constexpr Vector2i(int p_x, int p_y) : x{ p_x }, y{ p_y } {}
+	// Regular constructors
 
-	// Copy constructor
-	constexpr Vector2i(const Vector2i& v) = default;
+	constexpr Vector2i(int p_x, int p_y) : x(p_x), y(p_y) {}
+	constexpr explicit Vector2i(int scalar) : x(scalar), y(scalar) {}
 
-	// Move constructor
-	constexpr Vector2i(Vector2i&& v) noexcept = default;
+	// Copy and move constructors
 
-	// Copy assignment operator
-	constexpr Vector2i& operator=(const Vector2i& v) = default;
-
-	// Move assignment operator
-	constexpr Vector2i& operator=(Vector2i&& v) noexcept = default;
+	constexpr Vector2i(const Vector2i& v) = default; // Copy constructor
+	constexpr Vector2i(Vector2i&& v) noexcept = default; // Move constructor
+	constexpr Vector2i& operator=(const Vector2i& v) = default; // Copy assignment operator
+	constexpr Vector2i& operator=(Vector2i&& v) noexcept = default;	// Move assignment operator
 
 	// Binary operators
 

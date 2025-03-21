@@ -8,22 +8,20 @@ struct [[nodiscard]] Vector2 {
 	float x, y; /// The x and y components of the vector.
 
 	// Default constructor (x, y = ORIGIN)
-	constexpr Vector2() : x{ ORIGIN }, y{ ORIGIN } {};
 
-	// Parameterized constructor
-	constexpr Vector2(float p_x, float p_y) : x{ p_x }, y{ p_y } {}
+	constexpr Vector2() : x(ORIGIN), y(ORIGIN) {};
 
-	// Copy constructor
-	constexpr Vector2(const Vector2& v) = default;
+	// Regular constructors
 
-	// Move constructor
-	constexpr Vector2(Vector2&& v) noexcept = default;
+	constexpr Vector2(float p_x, float p_y) : x(p_x), y(p_y) {}
+	constexpr explicit Vector2(float scalar) : x(scalar), y(scalar) {}
 
-	// Copy assignment operator
-	constexpr Vector2& operator=(const Vector2& v) = default;
+	// Copy and move constructors
 
-	// Move assignment operator
-	constexpr Vector2& operator=(Vector2&& v) noexcept = default;
+	constexpr Vector2(const Vector2& v) = default; // Copy constructor
+	constexpr Vector2(Vector2&& v) noexcept = default; // Move constructor
+	constexpr Vector2& operator=(const Vector2& v) = default; // Copy assignment operator
+	constexpr Vector2& operator=(Vector2&& v) noexcept = default; // Move assignment operator
 
 	// Binary operators
 
