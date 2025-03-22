@@ -3,7 +3,7 @@
 #include <cmath>
 
 struct [[nodiscard]] Vector2 {
-	static constexpr float ORIGIN = 0.0; /// The origin for all Vector2 objects -> (0, 0)
+	static constexpr float ORIGIN = 0.0f; /// The origin for all Vector2 objects -> (0, 0)
 
 	float x, y; /// The x and y components of the vector.
 
@@ -25,10 +25,10 @@ struct [[nodiscard]] Vector2 {
 
 	// Binary operators
 
-	friend constexpr Vector2 operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
-	friend constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
-	friend constexpr Vector2 operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
-	friend constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
+	constexpr Vector2 operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
+	constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
+	constexpr Vector2 operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
+	constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
 
 	// Assignment operators
  
@@ -39,8 +39,8 @@ struct [[nodiscard]] Vector2 {
 
 	// Comparison operators
 
-	friend constexpr bool operator==(const Vector2& v) const { return x == v.x && y == v.y; }
-	friend constexpr bool operator!=(const Vector2& v) const { return x != v.x || y != v.y; }
+	constexpr bool operator==(const Vector2& v) const { return x == v.x && y == v.y; }
+	constexpr bool operator!=(const Vector2& v) const { return x != v.x || y != v.y; }
 
 	// Unary operators
 
@@ -50,10 +50,10 @@ struct [[nodiscard]] Vector2 {
 
 	// Scalar operators
 
-	friend constexpr Vector2 operator+(float scalar) const { return Vector2(x + scalar, y + scalar); }
-	friend constexpr Vector2 operator-(float scalar) const { return Vector2(x - scalar, y - scalar); }
-	friend constexpr Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
-	friend constexpr Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); }
+	friend constexpr Vector2 operator+(float scalar) { return Vector2(x + scalar, y + scalar); }
+	friend constexpr Vector2 operator-(float scalar) { return Vector2(x - scalar, y - scalar); }
+	friend constexpr Vector2 operator*(float scalar) { return Vector2(x * scalar, y * scalar); }
+	friend constexpr Vector2 operator/(float scalar) { return Vector2(x / scalar, y / scalar); }
 
 	// Scalar assignment operators
 
@@ -64,8 +64,8 @@ struct [[nodiscard]] Vector2 {
 
 	// Scalar comparison operators
 
-	friend constexpr bool operator==(float scalar) const { return x == scalar && y == scalar; }
-	friend constexpr bool operator!=(float scalar) const { return x != scalar || y != scalar; }
+	constexpr bool operator==(float scalar) const { return x == scalar && y == scalar; }
+	constexpr bool operator!=(float scalar) const { return x != scalar || y != scalar; }
 
 	// Other comparsion operators
 	
