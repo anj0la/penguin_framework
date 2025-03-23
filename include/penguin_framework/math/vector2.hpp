@@ -10,7 +10,7 @@ struct [[nodiscard]] Vector2 {
 
 	// Default constructor (x, y = ORIGIN)
 
-	constexpr Vector2() : x(ORIGIN), y(ORIGIN) {};
+	constexpr Vector2() : x(ORIGIN), y(ORIGIN) {}
 
 	// Regular constructors
 

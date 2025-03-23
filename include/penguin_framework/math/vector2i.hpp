@@ -9,7 +9,7 @@ struct [[nodiscard]] Vector2i {
 	int x, y; /// The x and y components of the vector.
 
 	// Default constructor (x, y = ORIGIN)
-	constexpr Vector2i() : x(ORIGIN), y(ORIGIN) {};
+	constexpr Vector2i() : x(ORIGIN), y(ORIGIN) {}
 
 	// Regular constructors
 
@@ -44,6 +44,8 @@ struct [[nodiscard]] Vector2i {
 
 	// Unary operators
 
+	constexpr Vector2i operator%(const Vector2i& v) const { return Vector2i(x % v.x, y % v.y); }
+	constexpr Vector2i operator%(int scalar) const { return Vector2i(x % scalar, y % scalar); }
 	constexpr Vector2i operator-() const { return Vector2i(-x, -y); }
 	constexpr bool operator!() const { return x != ORIGIN && y != ORIGIN; }
 
@@ -60,6 +62,7 @@ struct [[nodiscard]] Vector2i {
 	constexpr Vector2i& operator-=(int scalar) { x -= scalar; y -= scalar; return *this; }
 	constexpr Vector2i& operator*=(int scalar) { x *= scalar; y *= scalar; return *this; }
 	constexpr Vector2i& operator/=(int scalar) { x /= scalar; y /= scalar; return *this; }
+	constexpr Vector2i& operator%=(int scalar) { x %= scalar; y %= scalar; return *this; }
 
 	// Scalar comparison operators
 

@@ -191,6 +191,20 @@ TEST(Vector2iTest, GreaterThanEqualOperatorFalse) {
 
 // Unary Operator Tests
 
+TEST(Vector2iTest, ModuloOperator) {
+	Vector2i vector(1, 1);
+	Vector2i result = vector % Vector2i(1, 1);
+	EXPECT_EQ(result.x, 0);
+	EXPECT_EQ(result.y, 0);
+}
+
+TEST(Vector2iTest, ModuloScalarOperator) {
+	Vector2i vector(1, 1);
+	Vector2i result = vector % 1;
+	EXPECT_EQ(result.x, 0);
+	EXPECT_EQ(result.y, 0);
+}
+
 TEST(Vector2iTest, NegationOperator) {
 	Vector2i vector(1, 1);
 	Vector2i result = -vector;
@@ -259,6 +273,13 @@ TEST(Vector2iTest, MultScalarAssignmentOperator) {
 TEST(Vector2iTest, DivScalarAssignmentOperator) {
 	Vector2i vector(1, 1);
 	vector /= 2;
+	EXPECT_EQ(vector.x, 0);
+	EXPECT_EQ(vector.y, 0);
+}
+
+TEST(Vector2iTest, ModuloScalarAssignmentOperator) {
+	Vector2i vector(1, 1);
+	vector %= 1;
 	EXPECT_EQ(vector.x, 0);
 	EXPECT_EQ(vector.y, 0);
 }
