@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <compare>
 
 struct [[nodiscard]] Vector2i {
 	static constexpr int ORIGIN = 0.0; /// The origin for all Vector2i objects -> (0, 0)
@@ -31,10 +32,10 @@ struct [[nodiscard]] Vector2i {
 
 	// Assignment operators
 
-	constexpr Vector2i& operator+=(const Vector2i& v) const { x += v.x; y += v.y; return *this; }
-	constexpr Vector2i& operator-=(const Vector2i& v) const { x -= v.x; y -= v.y; return *this; }
-	constexpr Vector2i& operator*=(const Vector2i& v) const { x *= v.x; y *= v.y; return *this; }
-	constexpr Vector2i& operator/=(const Vector2i& v) const { x /= v.x; y /= v.y; return *this; }
+	constexpr Vector2i& operator+=(const Vector2i& v) { x += v.x; y += v.y; return *this; }
+	constexpr Vector2i& operator-=(const Vector2i& v) { x -= v.x; y -= v.y; return *this; }
+	constexpr Vector2i& operator*=(const Vector2i& v) { x *= v.x; y *= v.y; return *this; }
+	constexpr Vector2i& operator/=(const Vector2i& v) { x /= v.x; y /= v.y; return *this; }
 
 	// Comparison operators
 
@@ -49,17 +50,17 @@ struct [[nodiscard]] Vector2i {
 
 	// Scalar operators
 
-	friend constexpr Vector2i operator+(int scalar) const { return Vector2i(x + scalar, y + scalar); }
-	friend constexpr Vector2i operator-(int scalar) const { return Vector2i(x - scalar, y - scalar); }
-	friend constexpr Vector2i operator*(int scalar) const { return Vector2i(x * scalar, y * scalar); }
-	friend constexpr Vector2i operator/(int scalar) const { return Vector2i(x / scalar, y / scalar); }
+	constexpr Vector2i operator+(int scalar) const { return Vector2i(x + scalar, y + scalar); }
+	constexpr Vector2i operator-(int scalar) const { return Vector2i(x - scalar, y - scalar); }
+	constexpr Vector2i operator*(int scalar) const { return Vector2i(x * scalar, y * scalar); }
+	constexpr Vector2i operator/(int scalar) const { return Vector2i(x / scalar, y / scalar); }
 
 	// Scalar assignment operators
 
-	constexpr Vector2i& operator+=(int scalar) const { x += scalar; y += scalar; return *this; }
-	constexpr Vector2i& operator-=(int scalar) const { x -= scalar; y -= scalar; return *this; }
-	constexpr Vector2i& operator*=(int scalar) const { x *= scalar; y *= scalar; return *this; }
-	constexpr Vector2i& operator/=(int scalar) const { x /= scalar; y /= scalar; return *this; }
+	constexpr Vector2i& operator+=(int scalar) { x += scalar; y += scalar; return *this; }
+	constexpr Vector2i& operator-=(int scalar) { x -= scalar; y -= scalar; return *this; }
+	constexpr Vector2i& operator*=(int scalar) { x *= scalar; y *= scalar; return *this; }
+	constexpr Vector2i& operator/=(int scalar) { x /= scalar; y /= scalar; return *this; }
 
 	// Scalar comparison operators
 

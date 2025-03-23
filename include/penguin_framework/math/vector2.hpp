@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <compare>
 
 struct [[nodiscard]] Vector2 {
 	static constexpr float ORIGIN = 0.0f; /// The origin for all Vector2 objects -> (0, 0)
@@ -32,10 +33,10 @@ struct [[nodiscard]] Vector2 {
 
 	// Assignment operators
  
-	constexpr Vector2& operator+=(const Vector2& v) const { x += v.x; y += v.y; return *this; }
-	constexpr Vector2& operator-=(const Vector2& v) const { x -= v.x; y -= v.y; return *this; }
-	constexpr Vector2& operator*=(const Vector2& v) const { x *= v.x; y *= v.y; return *this; }
-	constexpr Vector2& operator/=(const Vector2& v) const { x /= v.x; y /= v.y; return *this; }
+	constexpr Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
+	constexpr Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
+	constexpr Vector2& operator*=(const Vector2& v) { x *= v.x; y *= v.y; return *this; }
+	constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; }
 
 	// Comparison operators
 
@@ -50,17 +51,17 @@ struct [[nodiscard]] Vector2 {
 
 	// Scalar operators
 
-	friend constexpr Vector2 operator+(float scalar) { return Vector2(x + scalar, y + scalar); }
-	friend constexpr Vector2 operator-(float scalar) { return Vector2(x - scalar, y - scalar); }
-	friend constexpr Vector2 operator*(float scalar) { return Vector2(x * scalar, y * scalar); }
-	friend constexpr Vector2 operator/(float scalar) { return Vector2(x / scalar, y / scalar); }
+	constexpr Vector2 operator+(float scalar) const { return Vector2(x + scalar, y + scalar); }
+	constexpr Vector2 operator-(float scalar) const { return Vector2(x - scalar, y - scalar); }
+	constexpr Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
+	constexpr Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); }
 
 	// Scalar assignment operators
 
-	constexpr Vector2& operator+=(float scalar) const { x += scalar; y += scalar; return *this; }
-	constexpr Vector2& operator-=(float scalar) const { x -= scalar; y -= scalar; return *this; }
-	constexpr Vector2& operator*=(float scalar) const { x *= scalar; y *= scalar; return *this; }
-	constexpr Vector2& operator/=(float scalar) const { x /= scalar; y /= scalar; return *this; }
+	constexpr Vector2& operator+=(float scalar) { x += scalar; y += scalar; return *this; }
+	constexpr Vector2& operator-=(float scalar) { x -= scalar; y -= scalar; return *this; }
+	constexpr Vector2& operator*=(float scalar) { x *= scalar; y *= scalar; return *this; }
+	constexpr Vector2& operator/=(float scalar) { x /= scalar; y /= scalar; return *this; }
 
 	// Scalar comparison operators
 
@@ -69,7 +70,7 @@ struct [[nodiscard]] Vector2 {
 
 	// Other comparsion operators
 	
-=	constexpr auto operator<=>(const Vector2&) const noexcept = default; // C++20 three-way comparison generates ==, !=, <, >, <=, and >= automatically
+	constexpr auto operator<=>(const Vector2&) const noexcept = default; // C++20 three-way comparison generates ==, !=, <, >, <=, and >= automatically
 
 	// Vector operations
 

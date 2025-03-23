@@ -1,4 +1,4 @@
-#include "include/penguin_framework/math/colour.hpp"
+#include "../../include/penguin_framework/math/colour.hpp"
 #include <gtest/gtest.h>
 
 TEST(ColourTest, DefaultConstructor) {

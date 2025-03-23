@@ -1,13 +1,13 @@
-#include "include/penguin_framework/math/vector2i.hpp"
+#include "math/vector2i.hpp"
 
-Vector2i::abs() const {
+Vector2i Vector2i::abs() const {
 	return Vector2i(std::abs(x), std::abs(y));
 }
-Vector2i::min(const Vector2i& v) const {
+Vector2i Vector2i::min(const Vector2i& v) const {
 	return Vector2i(static_cast<int>(std::fmin(x, v.x)), static_cast<int>(std::fmin(y, v.y)));
 }
 
-Vector2i::max(const Vector2i& v) const {
+Vector2i Vector2i::max(const Vector2i& v) const {
 	return Vector2i(static_cast<int>(std::fmax(x, v.x)), static_cast<int>(std::fmax(y, v.y)));
 }
 

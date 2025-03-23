@@ -18,6 +18,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 # Assumed the SDL source is available in external/SDL.
 add_subdirectory(external/SDL EXCLUDE_FROM_ALL)
 
+# Add include directory. - TEMP FIX until the framework is built.
+include_directories(include/penguin_framework)
+
 ###### TESTING SETUP ######
 
 # Ensure FetchContent is included.
@@ -35,4 +38,4 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Add test subdirectory to enable testing.
-# add_subdirectory(tests)
+add_subdirectory(tests)

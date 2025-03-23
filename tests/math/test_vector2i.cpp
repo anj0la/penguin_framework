@@ -1,4 +1,4 @@
-#include "include/penguin_framework/math/vector2i.hpp"
+#include "math/vector2i.hpp"
 #include <gtest/gtest.h>
 
 // Constructor Tests

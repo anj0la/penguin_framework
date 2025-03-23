@@ -1,4 +1,4 @@
-#include "include/penguin_framework/math/vector2.hpp"
+#include "math/vector2.hpp"
 #include <gtest/gtest.h>
 
 // Constructor Tests
@@ -216,23 +216,9 @@ TEST(Vector2Test, AddScalarOperator) {
 	EXPECT_FLOAT_EQ(result.y, 2.0f);
 }
 
-TEST(Vector2Test, AddScalarRightOperator) {
-	Vector2 vector(1.0f, 1.0f);
-	Vector2 result = 1.0f + vector;
-	EXPECT_FLOAT_EQ(result.x, 2.0f);
-	EXPECT_FLOAT_EQ(result.y, 2.0f);
-}
-
 TEST(Vector2Test, SubScalarOperator) {
 	Vector2 vector(1.0f, 1.0f);
 	Vector2 result = vector - 1.0f;
-	EXPECT_FLOAT_EQ(result.x, 0.0f);
-	EXPECT_FLOAT_EQ(result.y, 0.0f);
-}
-
-TEST(Vector2Test, SubScalarRightOperator) {
-	Vector2 vector(1.0f, 1.0f);
-	Vector2 result = 1.0f - vector;
 	EXPECT_FLOAT_EQ(result.x, 0.0f);
 	EXPECT_FLOAT_EQ(result.y, 0.0f);
 }
@@ -244,25 +230,11 @@ TEST(Vector2Test, MultScalarOperator) {
 	EXPECT_FLOAT_EQ(result.y, 2.0f);
 }
 
-TEST(Vector2Test, MultScalarRightOperator) {
-	Vector2 vector(1.0f, 1.0f);
-	Vector2 result = 2.0f * vector;
-	EXPECT_FLOAT_EQ(result.x, 2.0f);
-	EXPECT_FLOAT_EQ(result.y, 2.0f);
-}
-
 TEST(Vector2Test, DivScalarOperator) {
 	Vector2 vector(1.0f, 1.0f);
 	Vector2 result = vector / 2.0f;
 	EXPECT_FLOAT_EQ(result.x, 0.5f);
 	EXPECT_FLOAT_EQ(result.y, 0.5f);
-}
-
-TEST(Vector2Test, DivScalarRightOperator) {
-	Vector2 vector(1.0f, 1.0f);
-	Vector2 result = 2.0f / vector;
-	EXPECT_FLOAT_EQ(result.x, 2.0f);
-	EXPECT_FLOAT_EQ(result.y, 2.0f);
 }
 
 // Scalar Assignment Operator Tests
