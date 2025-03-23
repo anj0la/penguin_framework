@@ -6,7 +6,7 @@ TEST(ColourTest, DefaultConstructor) {
 	EXPECT_EQ(colour.r, 0);
 	EXPECT_EQ(colour.g, 0);
 	EXPECT_EQ(colour.b, 0);
-	EXPECT_EQ(colour.a, 0);
+	EXPECT_EQ(colour.a, 255);
 }
 
 TEST(ColourTest, RegularConstructor) {

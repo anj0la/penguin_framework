@@ -2,7 +2,6 @@
 cmake_minimum_required(VERSION 3.15...3.31)
 
 ###### TESTING SETUP ######
-enable_testing()
 
 # Add subdirectories for modular tests.
 add_subdirectory(math)

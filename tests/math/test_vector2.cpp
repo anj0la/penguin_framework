@@ -354,11 +354,18 @@ TEST(Vector2Test, NormalizeFunction) {
 	EXPECT_FLOAT_EQ(vector.y, 0.707106769f);
 }
 
-TEST(Vector2Test, NormalizeFunctionZero) {
-	Vector2 vector(1.0f, 1.0f);
+TEST(Vector2Test, NormalizeFunctionUnitVector) {
+	Vector2 vector(0.0f, 1.0f);
 	vector.normalize();
-	EXPECT_FLOAT_EQ(vector.x, 1.0f);
+	EXPECT_FLOAT_EQ(vector.x, 0.0f);
 	EXPECT_FLOAT_EQ(vector.y, 1.0f);
+}
+
+TEST(Vector2Test, NormalizeFunctionZeroVector) {
+	Vector2 vector(0.0f, 0.0f);
+	vector.normalize();
+	EXPECT_FLOAT_EQ(vector.x, 0.0f);
+	EXPECT_FLOAT_EQ(vector.y, 0.0f);
 }
 
 TEST(Vector2Test, NormalizedFunction) {
@@ -368,10 +375,10 @@ TEST(Vector2Test, NormalizedFunction) {
 	EXPECT_FLOAT_EQ(result.y, 0.707106769f);
 }
 
-TEST(Vector2Test, NormalizedFunctionZero) {
-	Vector2 vector(1.0f, 1.0f);
+TEST(Vector2Test, NormalizedFunctionUnitVector) {
+	Vector2 vector(0.0f, 1.0f);
 	Vector2 result = vector.normalized();
-	EXPECT_FLOAT_EQ(result.x, 1.0f);
+	EXPECT_FLOAT_EQ(result.x, 0.0f);
 	EXPECT_FLOAT_EQ(result.y, 1.0f);
 }
 

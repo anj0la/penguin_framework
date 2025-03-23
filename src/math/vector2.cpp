@@ -44,7 +44,7 @@ float Vector2::length_squared() const {
 
 void Vector2::normalize() {
 	float len = length_squared();
-	if (len == 0) {
+	if (len == 0.0f) {
 		return;
 	}
 	len = std::sqrtf(len);
@@ -54,7 +54,7 @@ void Vector2::normalize() {
 
 Vector2 Vector2::normalized() const {
 	float len = length_squared();
-	if (len == 0) {
+	if (len == 0.0f) {
 		return Vector2();
 	}
 	len = std::sqrtf(len);

@@ -23,6 +23,9 @@ include_directories(include/penguin_framework)
 
 ###### TESTING SETUP ######
 
+# Enable testing
+enable_testing()
+
 # Ensure FetchContent is included.
 include(FetchContent)
 

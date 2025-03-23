@@ -4,7 +4,7 @@
 #include <compare>
 
 struct [[nodiscard]] Vector2 {
-	static constexpr float ORIGIN = 0.0f; /// The origin for all Vector2 objects -> (0, 0)
+	static constexpr float ORIGIN = 0.0f; /// The origin for all Vector2 objects -> (0.0, 0.0)
 
 	float x, y; /// The x and y components of the vector.
 
@@ -46,8 +46,7 @@ struct [[nodiscard]] Vector2 {
 	// Unary operators
 
 	constexpr Vector2 operator-() const { return Vector2(-x, -y); }
-	// Check if the vector is the origin.
-	constexpr bool operator!() const { return x == ORIGIN && y == ORIGIN; }
+	constexpr bool operator!() const { return x != ORIGIN && y != ORIGIN; }
 
 	// Scalar operators
 

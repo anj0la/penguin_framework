@@ -2,10 +2,9 @@
 cmake_minimum_required(VERSION 3.15...3.31)
 
 ###### TESTING SETUP ######
-enable_testing()
 
 add_executable(
-  math_tests
+  run_math_tests
   test_colour.cpp
   test_vector2.cpp
   test_vector2i.cpp
@@ -13,9 +12,9 @@ add_executable(
   ${CMAKE_SOURCE_DIR}/src/math/vector2i.cpp
 )
 target_link_libraries(
-  math_tests
+  run_math_tests
   GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(math_tests)
+gtest_discover_tests(run_math_tests)
