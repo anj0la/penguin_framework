@@ -24,10 +24,10 @@ struct [[nodiscard]] Vector2i {
 
 	// Binary operators
 
-	friend constexpr Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
-	friend constexpr Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
-	friend constexpr Vector2i operator*(const Vector2i& v) const { return Vector2i(x * v.x, y * v.y); }
-	friend constexpr Vector2i operator/(const Vector2i& v) const { return Vector2i(x / v.x, y / v.y); }
+	constexpr Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
+	constexpr Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
+	constexpr Vector2i operator*(const Vector2i& v) const { return Vector2i(x * v.x, y * v.y); }
+	constexpr Vector2i operator/(const Vector2i& v) const { return Vector2i(x / v.x, y / v.y); }
 
 	// Assignment operators
 
@@ -38,8 +38,8 @@ struct [[nodiscard]] Vector2i {
 
 	// Comparison operators
 
-	friend constexpr bool operator==(const Vector2i& v) const { return x == v.x && y == v.y; }
-	friend constexpr bool operator!=(const Vector2i& v) const { return x != v.x || y != v.y; }
+	constexpr bool operator==(const Vector2i& v) const { return x == v.x && y == v.y; }
+	constexpr bool operator!=(const Vector2i& v) const { return x != v.x || y != v.y; }
 
 	// Unary operators
 
@@ -63,25 +63,22 @@ struct [[nodiscard]] Vector2i {
 
 	// Scalar comparison operators
 
-	friend constexpr bool operator==(int scalar) const { return x == scalar && y == scalar; }
-	friend constexpr bool operator!=(int scalar) const { return x != scalar || y != scalar; }
+	constexpr bool operator==(int scalar) const { return x == scalar && y == scalar; }
+	constexpr bool operator!=(int scalar) const { return x != scalar || y != scalar; }
 
 	// Other comparsion operators
 
-	= constexpr auto operator<=>(const Vector2i&) const noexcept = default; // C++20 three-way comparison generates ==, !=, <, >, <=, and >= automatically
+	constexpr auto operator<=>(const Vector2i&) const noexcept = default; // C++20 three-way comparison generates ==, !=, <, >, <=, and >= automatically
 
 	// Vector operations
 
 	Vector2i abs() const;
-	Vector2i floor() const;
-	Vector2i ceil() const;
-	Vector2i round() const;
 	Vector2i min(const Vector2i& v) const;
 	Vector2i max(const Vector2i& v) const;
 	int dot(const Vector2i& v) const;
 	int cross(const Vector2i& v) const;
-	int length() const;
+	float length() const;
 	int length_squared() const;
-	int distance_to(const Vector2i& v) const;
+	float distance_to(const Vector2i& v) const;
 	int distance_squared_to(const Vector2i& v) const;
 };
