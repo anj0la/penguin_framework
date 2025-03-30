@@ -19,7 +19,7 @@ TEST(ColourTest, RegularConstructor) {
 
 TEST(ColourTest, RegularConstructorClamped) {
 	Colour colour(-10, 300, 100, 500);
-	EXPECT_EQ(colour.r, 255);	  // Representation is unsigned, so clamped to max by default
+	EXPECT_EQ(colour.r, 255); // Representation is unsigned, so clamped to max by default
 	EXPECT_EQ(colour.g, 255); // Clamped to max
 	EXPECT_EQ(colour.b, 100); // Not clamped
 	EXPECT_EQ(colour.a, 255); // Clamped to max
