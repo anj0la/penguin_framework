@@ -34,8 +34,6 @@ struct [[nodiscard]] Rect2 {
 
 	constexpr Rect2& operator+=(const Rect2& r) { position += r.position; size += r.size; return *this; }
 	constexpr Rect2& operator-=(const Rect2& r) { position -= r.position; size -= r.size; return *this; }
-	constexpr Rect2& operator*=(const Rect2& r) { position *= r.position; size *= r.size; return *this; }
-	constexpr Rect2& operator/=(const Rect2& r) { position /= r.position; size /= r.size; return *this; }
 
 	 // Scalar operators
 
