@@ -29,14 +29,14 @@ struct [[nodiscard]] Vector2 {
 	constexpr Vector2 operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
 	constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
 	constexpr Vector2 operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
-	constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
+	constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); } // need to handle division by 0
 
 	// Assignment operators
  
 	constexpr Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
 	constexpr Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
 	constexpr Vector2& operator*=(const Vector2& v) { x *= v.x; y *= v.y; return *this; }
-	constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; }
+	constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; } // need to handle division by 0
 
 	// Comparison operators
 
@@ -53,14 +53,14 @@ struct [[nodiscard]] Vector2 {
 	constexpr Vector2 operator+(float scalar) const { return Vector2(x + scalar, y + scalar); }
 	constexpr Vector2 operator-(float scalar) const { return Vector2(x - scalar, y - scalar); }
 	constexpr Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
-	constexpr Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); }
+	constexpr Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); } // need to handle division by 0
 
 	// Scalar assignment operators
 
 	constexpr Vector2& operator+=(float scalar) { x += scalar; y += scalar; return *this; }
 	constexpr Vector2& operator-=(float scalar) { x -= scalar; y -= scalar; return *this; }
 	constexpr Vector2& operator*=(float scalar) { x *= scalar; y *= scalar; return *this; }
-	constexpr Vector2& operator/=(float scalar) { x /= scalar; y /= scalar; return *this; }
+	constexpr Vector2& operator/=(float scalar) { x /= scalar; y /= scalar; return *this; } // need to handle division by 0
 
 	// Scalar comparison operators
 

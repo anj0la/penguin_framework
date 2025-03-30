@@ -1,350 +1,327 @@
 #include "math/vector2i.hpp"
 #include <gtest/gtest.h>
 
+// Setting Up the Test Suite
+
+class Vector2iTestFixutre : public ::testing::Test {
+protected:
+	Vector2i vector1, vector2, vector3;
+
+	void SetUp() override {
+		vector1 = Vector2i(2, 3);
+		vector2 = Vector2i(1, 2);
+	};
+
+};
+
 // Constructor Tests
 
-TEST(Vector2iTest, DefaultConstructor) {
+TEST(Vector2iConstructorTest, DefaultConstructor) {
 	Vector2i vector;
 	EXPECT_EQ(vector.x, 0);
 	EXPECT_EQ(vector.y, 0);
 }
 
-TEST(Vector2iTest, RegularConstructor) {
+TEST(Vector2iConstructorTest, RegularConstructor) {
 	Vector2i vector(1, 1);
 	EXPECT_EQ(vector.x, 1);
 	EXPECT_EQ(vector.y, 1);
 }
 
-TEST(Vector2iTest, RegularConstructorScalar) {
+TEST(Vector2iConstructorTest, RegularConstructorScalar) {
 	Vector2i vector(1);
 	EXPECT_EQ(vector.x, 1);
 	EXPECT_EQ(vector.y, 1);
 }
 
-TEST(Vector2iTest, CopyConstructor) {
-	Vector2i vector(1, 1);
-	Vector2i copy(vector);
-	EXPECT_EQ(copy.x, 1);
-	EXPECT_EQ(copy.y, 1);
-}
-
-TEST(Vector2iTest, MoveConstructor) {
-	Vector2i vector(1, 1);
-	Vector2i move(std::move(vector));
-	EXPECT_EQ(move.x, 1);
-	EXPECT_EQ(move.y, 1);
-}
-
-TEST(Vector2iTest, CopyAssignmentOperator) {
-	Vector2i vector(1, 1);
-	Vector2i copy;
-	copy = vector;
-	EXPECT_EQ(copy.x, 1);
-	EXPECT_EQ(copy.y, 1);
-}
-
-TEST(Vector2iTest, MoveAssignmentOperator) {
-	Vector2i vector(1, 1);
-	Vector2i move;
-	move = std::move(vector);
-	EXPECT_EQ(move.x, 1);
-	EXPECT_EQ(move.y, 1);
-}
-
 // Binary Operator Tests
 
-TEST(Vector2iTest, AddOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(1, 1);
+TEST_F(Vector2iTestFixutre, AddVectors) {
 	Vector2i result = vector1 + vector2;
-	EXPECT_EQ(result.x, 2);
-	EXPECT_EQ(result.y, 2);
+	EXPECT_EQ(result.x, 3);
+	EXPECT_EQ(result.y, 5);
 }
 
-TEST(Vector2iTest, SubOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(1, 1);
+TEST_F(Vector2iTestFixutre, SubVectors) {
 	Vector2i result = vector1 - vector2;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 0);
+	EXPECT_EQ(result.x, 1);
+	EXPECT_EQ(result.y, 1);
 }
 
-TEST(Vector2iTest, MultOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
+TEST_F(Vector2iTestFixutre, MultVectors) {
 	Vector2i result = vector1 * vector2;
 	EXPECT_EQ(result.x, 2);
-	EXPECT_EQ(result.y, 2);
+	EXPECT_EQ(result.y, 6);
 }
 
-TEST(Vector2iTest, DivOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
+TEST_F(Vector2iTestFixutre, DivVectors) {
 	Vector2i result = vector1 / vector2;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 0);
+	EXPECT_EQ(result.x, 2);
+	EXPECT_EQ(result.y, 1);
 }
 
 // Assignment Operator Tests
 
-TEST(Vector2iTest, AddAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector += Vector2i(1, 1);
-	EXPECT_EQ(vector.x, 2);
-	EXPECT_EQ(vector.y, 2);
+TEST_F(Vector2iTestFixutre, AddVectorsAssignment) {
+	vector1 += vector2;
+	EXPECT_EQ(vector1.x, 3);
+	EXPECT_EQ(vector1.y, 5);
 }
 
-TEST(Vector2iTest, SubAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector -= Vector2i(1, 1);
-	EXPECT_EQ(vector.x, 0);
-	EXPECT_EQ(vector.y, 0);
+TEST_F(Vector2iTestFixutre, SubVectorsAssignment) {
+	vector1 -= vector2;
+	EXPECT_EQ(vector1.x, 1);
+	EXPECT_EQ(vector1.y, 1);
 }
 
-TEST(Vector2iTest, MultAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector *= Vector2i(2, 2);
-	EXPECT_EQ(vector.x, 2);
-	EXPECT_EQ(vector.y, 2);
+TEST_F(Vector2iTestFixutre, MultVectorsAssignment) {
+	vector1 *= vector2;
+	EXPECT_EQ(vector1.x, 2);
+	EXPECT_EQ(vector1.y, 6);
 }
 
-TEST(Vector2iTest, DivAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector /= Vector2i(2, 2);
-	EXPECT_EQ(vector.x, 0);
-	EXPECT_EQ(vector.y, 0);
-}
-
-// Comparison Operator Tests
-
-TEST(Vector2iTest, EqualOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(1, 1);
-	EXPECT_TRUE(vector1 == vector2);
-}
-
-TEST(Vector2iTest, EqualOperatorFalse) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	EXPECT_FALSE(vector1 == vector2);
-}
-
-TEST(Vector2iTest, NotEqualOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	EXPECT_TRUE(vector1 != vector2);
-}
-
-TEST(Vector2iTest, NotEqualOperatorFalse) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(1, 1);
-	EXPECT_FALSE(vector1 != vector2);
-}
-
-TEST(Vector2iTest, LessThanOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	EXPECT_TRUE(vector1 < vector2);
-}
-
-TEST(Vector2iTest, LessThanOperatorFalse) {
-	Vector2i vector1(2, 2);
-	Vector2i vector2(1, 1);
-	EXPECT_FALSE(vector1 < vector2);
-}
-
-TEST(Vector2iTest, GreaterThanOperator) {
-	Vector2i vector1(2, 2);
-	Vector2i vector2(1, 1);
-	EXPECT_TRUE(vector1 > vector2);
-}
-
-TEST(Vector2iTest, GreaterThanOperatorFalse) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	EXPECT_FALSE(vector1 > vector2);
-}
-
-TEST(Vector2iTest, LessThanEqualOperator) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	EXPECT_TRUE(vector1 <= vector2);
-}
-
-TEST(Vector2iTest, LessThanEqualOperatorFalse) {
-	Vector2i vector1(2, 2);
-	Vector2i vector2(1, 1);
-	EXPECT_FALSE(vector1 <= vector2);
-}
-
-TEST(Vector2iTest, GreaterThanEqualOperator) {
-	Vector2i vector1(2, 2);
-	Vector2i vector2(1, 1);
-	EXPECT_TRUE(vector1 >= vector2);
-}
-
-TEST(Vector2iTest, GreaterThanEqualOperatorFalse) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	EXPECT_FALSE(vector1 >= vector2);
-}
-
-// Unary Operator Tests
-
-TEST(Vector2iTest, ModuloOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = vector % Vector2i(1, 1);
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 0);
-}
-
-TEST(Vector2iTest, ModuloScalarOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = vector % 1;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 0);
-}
-
-TEST(Vector2iTest, NegationOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = -vector;
-	EXPECT_EQ(result.x, -1);
-	EXPECT_EQ(result.y, -1);
-}
-
-TEST(Vector2iTest, NotOperator) {
-	Vector2i vector(1, 1);
-	EXPECT_TRUE(!vector);
+TEST_F(Vector2iTestFixutre, DivVectorsAssignment) {
+	vector1 /= vector2;
+	EXPECT_EQ(vector1.x, 2);
+	EXPECT_EQ(vector1.y, 1);
 }
 
 // Scalar Operator Tests
 
-TEST(Vector2iTest, AddScalarOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = vector + 1;
-	EXPECT_EQ(result.x, 2);
+TEST_F(Vector2iTestFixutre, AddVectorsScalar) {
+	Vector2i result = vector1 + 1;
+	EXPECT_EQ(result.x, 3);
+	EXPECT_EQ(result.y, 4);
+}
+
+TEST_F(Vector2iTestFixutre, SubVectorsScalar) {
+	Vector2i result = vector1 - 1;
+	EXPECT_EQ(result.x, 1);
 	EXPECT_EQ(result.y, 2);
 }
 
-TEST(Vector2iTest, SubScalarOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = vector - 1;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 0);
+TEST_F(Vector2iTestFixutre, MultVectorsScalar) {
+	Vector2i result = vector1 * 2;
+	EXPECT_EQ(result.x, 4);
+	EXPECT_EQ(result.y, 6);
 }
 
-TEST(Vector2iTest, MultScalarOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = vector * 2;
-	EXPECT_EQ(result.x, 2);
+TEST_F(Vector2iTestFixutre, DivVectorsScalar) {
+	Vector2i result = vector1 / 2;
+	EXPECT_EQ(result.x, 1);
+	EXPECT_EQ(result.y, 1);
+}
+
+// Assignment Operator Tests
+
+TEST_F(Vector2iTestFixutre, AddVectorsScalarAssignment) {
+	vector1 += 1;
+	EXPECT_EQ(vector1.x, 3);
+	EXPECT_EQ(vector1.y, 4);
+}
+
+TEST_F(Vector2iTestFixutre, SubVectorsScalarAssignment) {
+	vector1 -= 1;
+	EXPECT_EQ(vector1.x, 1);
+	EXPECT_EQ(vector1.y, 2);
+}
+
+TEST_F(Vector2iTestFixutre, MultVectorsScalarAssignment) {
+	vector1 *= 2;
+	EXPECT_EQ(vector1.x, 4);
+	EXPECT_EQ(vector1.y, 6);
+}
+
+TEST_F(Vector2iTestFixutre, DivVectorsScalarAssignment) {
+	vector1 /= 2;
+	EXPECT_EQ(vector1.x, 1);
+	EXPECT_EQ(vector1.y, 1);
+}
+
+// Comparison Operator Tests
+
+TEST_F(Vector2iTestFixutre, EqualOperator) {
+	vector1 -= 1; // (1, 2), vector2 = (1, 2)
+	EXPECT_TRUE(vector1 == vector2);
+}
+
+TEST_F(Vector2iTestFixutre, EqualOperatorFalse) {
+	EXPECT_FALSE(vector1 == vector2);
+}
+
+TEST_F(Vector2iTestFixutre, NotEqualOperator) {
+	EXPECT_TRUE(vector1 != vector2);
+}
+
+TEST_F(Vector2iTestFixutre, NotEqualOperatorFalse) {
+	vector1 -= 1; // (1, 2), vector2 = (1, 2)
+	EXPECT_FALSE(vector1 != vector2);
+}
+
+
+TEST_F(Vector2iTestFixutre, LessThanOperator) {
+	EXPECT_TRUE(vector2 < vector1);
+}
+
+TEST_F(Vector2iTestFixutre, LessThanOperatorFalse) {
+	EXPECT_FALSE(vector1 < vector2);
+}
+
+TEST_F(Vector2iTestFixutre, GreaterThanOperator) {
+	EXPECT_TRUE(vector1 > vector2);
+}
+
+TEST_F(Vector2iTestFixutre, GreaterThanOperatorFalse) {
+	EXPECT_FALSE(vector2 > vector1);
+}
+
+TEST_F(Vector2iTestFixutre, LessThanEqualOperator) {
+	EXPECT_TRUE(vector2 <= vector1);
+}
+
+TEST_F(Vector2iTestFixutre, LessThanEqualOperatorFalse) {
+	EXPECT_FALSE(vector1 <= vector2);
+}
+
+TEST_F(Vector2iTestFixutre, GreaterThanEqualOperator) {
+	EXPECT_TRUE(vector1 >= vector2);
+}
+
+TEST_F(Vector2iTestFixutre, GreaterThanEqualOperatorFalse) {
+	EXPECT_FALSE(vector2 >= vector1);
+}
+
+// Unary Operator Tests
+
+TEST_F(Vector2iTestFixutre, ModuloOperator) {
+	Vector2i result = vector1 % vector2;
+	EXPECT_EQ(result.x, 0);
+	EXPECT_EQ(result.y, 1);
+}
+
+TEST_F(Vector2iTestFixutre, ModuloScalarOperator) {
+	Vector2i result = vector1 % 2;
+	EXPECT_EQ(result.x, 0);
+	EXPECT_EQ(result.y, 1);
+}
+
+TEST_F(Vector2iTestFixutre, NegationOperator) {
+	Vector2i result = -vector1;
+	EXPECT_EQ(result.x, -2);
+	EXPECT_EQ(result.y, -3);
+}
+
+TEST_F(Vector2iTestFixutre, NotOperator) {
+	EXPECT_TRUE(!vector1);
+}
+
+
+// Scalar Operator Tests
+
+TEST_F(Vector2iTestFixutre, AddScalarOperator) {
+	Vector2i result = vector1 + 1;
+	EXPECT_EQ(result.x, 3);
+	EXPECT_EQ(result.y, 4);
+}
+
+TEST_F(Vector2iTestFixutre, SubScalarOperator) {
+	Vector2i result = vector1 - 1;
+	EXPECT_EQ(result.x, 1);
 	EXPECT_EQ(result.y, 2);
 }
 
-TEST(Vector2iTest, DivScalarOperator) {
-	Vector2i vector(1, 1);
-	Vector2i result = vector / 2;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 0);
+TEST_F(Vector2iTestFixutre, MultScalarOperator) {
+	Vector2i result = vector1 * 2;
+	EXPECT_EQ(result.x, 4);
+	EXPECT_EQ(result.y, 6);
+}
+
+TEST_F(Vector2iTestFixutre, DivScalarOperator) {
+	Vector2i result = vector1 / 2;
+	EXPECT_EQ(result.x, 1);
+	EXPECT_EQ(result.y, 1);
 }
 
 // Scalar Assignment Operator Tests
 
-TEST(Vector2iTest, AddScalarAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector += 1;
-	EXPECT_EQ(vector.x, 2);
-	EXPECT_EQ(vector.y, 2);
+TEST_F(Vector2iTestFixutre, AddScalarAssignmentOperator) {
+	vector1 += 1;
+	EXPECT_EQ(vector1.x, 3);
+	EXPECT_EQ(vector1.y, 4);
 }
 
-TEST(Vector2iTest, SubScalarAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector -= 1;
-	EXPECT_EQ(vector.x, 0);
-	EXPECT_EQ(vector.y, 0);
+TEST_F(Vector2iTestFixutre, SubScalarAssignmentOperator) {
+	vector1 -= 1;
+	EXPECT_EQ(vector1.x, 1);
+	EXPECT_EQ(vector1.y, 2);
 }
 
-TEST(Vector2iTest, MultScalarAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector *= 2;
-	EXPECT_EQ(vector.x, 2);
-	EXPECT_EQ(vector.y, 2);
+TEST_F(Vector2iTestFixutre, MultScalarAssignmentOperator) {
+	vector1 *= 2;
+	EXPECT_EQ(vector1.x, 4);
+	EXPECT_EQ(vector1.y, 6);
 }
 
-TEST(Vector2iTest, DivScalarAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector /= 2;
-	EXPECT_EQ(vector.x, 0);
-	EXPECT_EQ(vector.y, 0);
+TEST_F(Vector2iTestFixutre, DivScalarAssignmentOperator) {
+	vector1 /= 2;
+	EXPECT_EQ(vector1.x, 1);
+	EXPECT_EQ(vector1.y, 1);
 }
 
-TEST(Vector2iTest, ModuloScalarAssignmentOperator) {
-	Vector2i vector(1, 1);
-	vector %= 1;
-	EXPECT_EQ(vector.x, 0);
-	EXPECT_EQ(vector.y, 0);
+TEST_F(Vector2iTestFixutre, ModuloScalarAssignmentOperator) {
+	vector1 %= 2;
+	EXPECT_EQ(vector1.x, 0);
+	EXPECT_EQ(vector1.y, 1);
 }
 
 // Other Tests
 
-TEST(Vector2iTest, AbsFunction) {
-	Vector2i vector(-1, -1);
-	Vector2i result = vector.abs();
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 1);
+TEST_F(Vector2iTestFixutre, AbsFunction) {
+	Vector2i result = (-vector1).abs();
+	EXPECT_EQ(result.x, 2);
+	EXPECT_EQ(result.y, 3);
 }
 
-TEST(Vector2iTest, MinFunction) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
+TEST_F(Vector2iTestFixutre, MinFunction) {
 	Vector2i result = vector1.min(vector2);
 	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 1);
-}
-
-TEST(Vector2iTest, MaxFunction) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
-	Vector2i result = vector1.max(vector2);
-	EXPECT_EQ(result.x, 2);
 	EXPECT_EQ(result.y, 2);
 }
 
-TEST(Vector2iTest, DotFunction) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
+TEST_F(Vector2iTestFixutre, MaxFunction) {
+	Vector2i result = vector1.max(vector2);
+	EXPECT_EQ(result.x, 2);
+	EXPECT_EQ(result.y, 3);
+}
+
+TEST_F(Vector2iTestFixutre, DotFunction) {
 	int result = vector1.dot(vector2);
-	EXPECT_EQ(result, 4);
+	EXPECT_EQ(result, 8);
 }
 
-TEST(Vector2iTest, CrossFunction) {
-	Vector2i vector1(1, 1);
-	Vector2i vector2(2, 2);
+TEST_F(Vector2iTestFixutre, CrossFunction) {
 	int result = vector1.cross(vector2);
-	EXPECT_EQ(result, 0);
-}
-
-TEST(Vector2iTest, LengthFunction) {
-	Vector2i vector(0, 1);
-	float result = vector.length();
-	EXPECT_FLOAT_EQ(result, 1.0f);
-}
-
-TEST(Vector2iTest, LengthSquaredFunction) {
-	Vector2i vector(0, 1);
-	int result = vector.length_squared();
 	EXPECT_EQ(result, 1);
 }
 
-TEST(Vector2iTest, DistanceToFunction) {
-	Vector2i vector1(0, 0);
-	Vector2i vector2(0, 1);
-	float result = vector1.distance_to(vector2);
-	EXPECT_FLOAT_EQ(result, 1.0f);
+TEST_F(Vector2iTestFixutre, LengthFunction) {
+	float result = vector1.length();
+	EXPECT_FLOAT_EQ(result, 3.6055512f);
 }
 
-TEST(Vector2iTest, DistanceSquaredToFunction) {
-	Vector2i vector1(0, 0);
-	Vector2i vector2(0, 1);
-	int result = vector1.distance_squared_to(vector2);
-	EXPECT_EQ(result, 1);
+TEST_F(Vector2iTestFixutre, LengthSquaredFunction) {
+	int result = vector1.length_squared();
+	EXPECT_EQ(result, 13);
+}
+
+TEST_F(Vector2iTestFixutre, DistanceToFunction) {
+	Vector2i vector(0, 0);
+	float result = vector1.distance_to(vector);
+	EXPECT_FLOAT_EQ(result, 3.6055512f);
+}
+
+TEST_F(Vector2iTestFixutre, DistanceSquaredToFunction) {
+	Vector2i vector(0, 0);
+	int result = vector1.distance_squared_to(vector);
+	EXPECT_EQ(result, 13);
 }

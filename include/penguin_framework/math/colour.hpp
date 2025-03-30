@@ -1,5 +1,11 @@
 #pragma once
 
+#include <algorithm>
+
+int x = 0;
+
+int y = std::clamp(x, 255, 255);
+
 struct [[nodiscard]] Colour {
 
     static constexpr unsigned int OPAQUE = 255;
@@ -13,7 +19,11 @@ struct [[nodiscard]] Colour {
 
     // Regular constructors
 
-    constexpr Colour(unsigned int p_r, unsigned int p_g, unsigned int p_b, unsigned int p_a) : r(p_r), g(p_g), b(p_b), a(p_a) {}
+    constexpr Colour(unsigned int p_r, unsigned int p_g, unsigned int p_b, unsigned int p_a) : 
+        r(std::clamp(p_r, 0u, 255u)), 
+        g(std::clamp(p_g, 0u, 255u)), 
+        b(std::clamp(p_b, 0u, 255u)),
+        a(std::clamp(p_a, 0u, 255u)) {}
 
     // Copy and move constructors
 

@@ -61,7 +61,7 @@ struct [[nodiscard]] Vector2i {
 	constexpr Vector2i& operator+=(int scalar) { x += scalar; y += scalar; return *this; }
 	constexpr Vector2i& operator-=(int scalar) { x -= scalar; y -= scalar; return *this; }
 	constexpr Vector2i& operator*=(int scalar) { x *= scalar; y *= scalar; return *this; }
-	constexpr Vector2i& operator/=(int scalar) { x /= scalar; y /= scalar; return *this; }
+	constexpr Vector2i& operator/=(int scalar) { x /= scalar; y /= scalar; return *this; } // need to handle division by 0
 	constexpr Vector2i& operator%=(int scalar) { x %= scalar; y %= scalar; return *this; }
 
 	// Scalar comparison operators
