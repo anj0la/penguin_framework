@@ -15,6 +15,7 @@ struct [[nodiscard]] Rect2 {
 	constexpr Rect2(const Vector2& position, const Vector2& size) : position(position), size(size) {}
 
 	// Copy and move constructors
+
 	constexpr Rect2(const Rect2& r) = default; // Copy constructor
 	constexpr Rect2(Rect2&& r) noexcept = default; // Move constructor
 	constexpr Rect2& operator=(const Rect2& r) = default; // Copy assignment operator
@@ -24,30 +25,6 @@ struct [[nodiscard]] Rect2 {
 
 	constexpr bool operator==(const Rect2& r) const { return position == r.position && size == r.size; }
 	constexpr bool operator!=(const Rect2& r) const { return position != r.position || size != r.size; }
-
-	// Binary operators
-
-	constexpr Rect2 operator+(const Rect2& r) const { return Rect2{ position + r.position, size + r.size }; }
-	constexpr Rect2 operator-(const Rect2& r) const { return Rect2{ position - r.position, size - r.size }; }
-
-	// Assignment operators
-
-	constexpr Rect2& operator+=(const Rect2& r) { position += r.position; size += r.size; return *this; }
-	constexpr Rect2& operator-=(const Rect2& r) { position -= r.position; size -= r.size; return *this; }
-
-	 // Scalar operators
-
-	constexpr Rect2 operator+(float scalar) const { return Rect2{ position + scalar, size + scalar }; }
-	constexpr Rect2 operator-(float scalar) const { return Rect2{ position - scalar, size - scalar }; }
-	constexpr Rect2 operator*(float scalar) const { return Rect2{ position * scalar, size * scalar }; }
-	constexpr Rect2 operator/(float scalar) const { return Rect2{ position / scalar, size / scalar }; }
-
-	// Scalar assignment operators
-
-	constexpr Rect2& operator+=(float scalar) { position += scalar; size += scalar; return *this; }
-	constexpr Rect2& operator-=(float scalar) { position -= scalar; size -= scalar; return *this; }
-	constexpr Rect2& operator*=(float scalar) { position *= scalar; size *= scalar; return *this; }
-	constexpr Rect2& operator/=(float scalar) { position /= scalar; size /= scalar; return *this; }
 
 	// Other functions
 	

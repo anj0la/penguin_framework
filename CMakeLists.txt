@@ -8,7 +8,7 @@ project(PenguinFramework VERSION 0.1.0 LANGUAGES CXX)
 
 # Requires C++ 20.
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set the output directory for built objects (dynamic library automatically goes into the build directory).
 # This makes sure that the dynamic library goes into the build directory automatically.

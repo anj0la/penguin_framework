@@ -35,7 +35,7 @@ float Vector2::cross(const Vector2& v) const {
 }
 
 float Vector2::length() const {
-	return std::sqrtf(x * x + y * y);
+	return std::hypotf(x, y);
 }
 
 float Vector2::length_squared() const {
@@ -43,26 +43,24 @@ float Vector2::length_squared() const {
 }
 
 void Vector2::normalize() {
-	float len = length_squared();
+	float len = length(); // Directly compute the length of the vector
 	if (len == 0.0f) {
-		return;
+		return; // Avoids division by zero
 	}
-	len = std::sqrtf(len);
 	x /= len;
 	y /= len;
 }
 
 Vector2 Vector2::normalized() const {
-	float len = length_squared();
+	float len = length();
 	if (len == 0.0f) {
-		return Vector2();
+		return Vector2(); // Original vector has zero lengh (ZERO vector)
 	}
-	len = std::sqrtf(len);
 	return Vector2(x / len, y / len);
 }
 
 float Vector2::distance_to(const Vector2& v) const {
-	return std::sqrtf((x - v.x) * (x - v.x) + (y - v.y) * (y - v.y));
+	return std::hypotf(x - v.x, y - v.y);
 }
 
 float Vector2::distance_squared_to(const Vector2& v) const {

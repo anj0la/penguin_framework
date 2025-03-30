@@ -5,7 +5,6 @@
 #include <string>
 #include <utility>
 
-
 class Exception final : public std::exception {
 
 public:
