@@ -1,4 +1,4 @@
-#include "math/vector2.hpp"
+#include "core/math/vector2.hpp"
 
 Vector2 Vector2::abs() const {
 	return Vector2(std::fabsf(x), std::fabsf(y));

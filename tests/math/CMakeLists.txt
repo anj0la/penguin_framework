@@ -8,8 +8,8 @@ add_executable(
   test_colour.cpp
   test_vector2.cpp
   test_vector2i.cpp
-  ${CMAKE_SOURCE_DIR}/src/math/vector2.cpp
-  ${CMAKE_SOURCE_DIR}/src/math/vector2i.cpp
+  ${CMAKE_SOURCE_DIR}/src/core/math/vector2.cpp
+  ${CMAKE_SOURCE_DIR}/src/core/math/vector2i.cpp
  "test_rect2.cpp" "test_rect2i.cpp" "test_circle2.cpp")
 target_link_libraries(
   run_math_tests

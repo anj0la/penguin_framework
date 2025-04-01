@@ -20,6 +20,7 @@ add_subdirectory(external/SDL EXCLUDE_FROM_ALL)
 
 # Add include directory. - TEMP FIX until the framework is built.
 include_directories(include/penguin_framework)
+include_directories(external/SDL/include)
 
 ###### TESTING SETUP ######
 

@@ -1,4 +1,4 @@
-#include "math/vector2.hpp"
+#include "core/math/vector2.hpp"
 #include <gtest/gtest.h>
 
 // Setting Up the Test Suite

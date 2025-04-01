@@ -1,6 +1,7 @@
 #pragma once
 
 #include "errors.hpp"
+#include <SDL3/SDL_error.h>
 #include <exception>
 #include <string>
 #include <utility>
@@ -9,7 +10,7 @@ class Exception final : public std::exception {
 
 public:
 	Exception(pf::PF_Error error, const char* message) : error_val{ error }, message{ message } {}
-	explicit Exception(const char* message) : error_val{ pf::PF_Error::UNKNOWN_ERROR }, message{ message } {}
+	explicit Exception(const char* message) : error_val{ pf::PF_Error::Unknown }, message{ message } {}
 	~Exception() noexcept override = default;
 
 	[[nodiscard]] pf::PF_Error error() const noexcept { return error_val; }

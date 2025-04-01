@@ -1,4 +1,4 @@
-#include "math/colour.hpp"
+#include "core/math/colour.hpp"
 #include <gtest/gtest.h>
 
 TEST(ColourTest, DefaultConstructor) {
