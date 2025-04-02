@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/vector2.hpp"
+#include "core/math/vector2.hpp"
 
 struct [[nodiscard]] Rect2 {
 	Vector2 position, size;

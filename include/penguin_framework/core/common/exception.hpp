@@ -16,9 +16,9 @@ public:
 	[[nodiscard]] pf::PF_Error error() const noexcept { return error_val; }
 	[[nodiscard]] const char* what() const noexcept override { return message; }
 
-	inline static void throw_if(bool condition, pf::PF_Error error, const char* message) {
+	inline static void throw_if(bool condition, const char* message, pf::PF_Error error) {
 		if (condition)
-			throw Exception{ error, message };
+			throw Exception{ message, error };
 	}
 private:
 	pf::PF_Error error_val;

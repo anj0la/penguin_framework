@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/vector2.hpp"
+#include "core/math/vector2.hpp"
 
 constexpr float PI = 3.14159265358979323846f;
 
