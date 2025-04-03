@@ -3,88 +3,121 @@
 #include "core/window/pf_windowflags.hpp"
 #include "exception.hpp"
 #include "core/math/vector2i.hpp"
+#include "core/events/pf_windowevent.hpp"
 
 #include <SDL3/SDL_video.h>
 
+#include <functional>
 #include <memory>
-
 
 namespace pf {
 
-	class PF_Window {
-	public:
-		PF_Window(const char* p_title = "", Vector2i p_size = Vector2i(640, 480), PF_WindowFlags p_flags = PF_WindowFlags::None);
+	namespace core {
 
-		SDL_Window* get_window();
+		class PF_Window {
+		public:
 
-		void set_title(const char* new_title);
-		void set_max_size(Vector2i p_max_size);
-		void set_min_size(Vector2i p_min_size);
-		void resize(Vector2i new_size);
+			// Callback types for various events
+			using PF_EventCallback = std::function<void()>;
 
-		void show();
-		void hide();
-		void minimize();
-		void maximize();
-		void restore(); // used to restore a minimized / maximized window. Has no effect on a fullscreen window.
-		void restore_async();
+			PF_Window(const char* p_title = "", Vector2i p_size = Vector2i(640, 480), PF_WindowFlags p_flags = PF_WindowFlags::None);
 
-		void enable_resizing();
-		void disable_resizing();
+			// Needed for objects requiring the raw SDL pointer. Only used internally, should not be used AT all otherwise.
+			SDL_Window* get_window();
 
-		void enable_borders();   
-		void disable_borders(); 
+			// Regular functions
 
-		void enter_fullscreen(); 
-		void exit_fullscreen();  
+			void set_title(const char* new_title);
+			void set_max_size(Vector2i p_max_size);
+			void set_min_size(Vector2i p_min_size);
+			void resize(Vector2i new_size);
 
-		void enable_vsync();     
-		void disable_vsync();   
+			void show();
+			void hide();
+			void minimize();
+			void maximize();
+			void restore(); // used to restore a minimized / maximized window. Has no effect on a fullscreen window.
+			void restore_async();
 
-		void grab_mouse();     
-		void release_mouse();    
+			void enable_resizing();
+			void disable_resizing();
 
-		void always_on_top();  
-		void remove_always_on_top();
+			void enable_borders();
+			void disable_borders();
 
-		void gain_focus();
-		void lose_foucs();
+			void enter_fullscreen();
+			void exit_fullscreen();
 
-		inline bool is_hidden() const { return hidden; }
-		inline bool is_fullscreen() const { return fullscreen; }
-		inline bool is_bordered() const { return bordered; }
-		inline bool is_resizable() const { return resizable; }
-		inline bool is_minimized() const { return minimized; }
-		inline bool is_maximized() const { return maximized; }
-		inline bool is_open() const { return open; }
-		inline bool is_mouse_grabbed() const { return mouse_grabbed; }
-		inline bool is_always_on_top() const { return always_on_top; }
-		inline bool is_vsync_enabled() const { return vsync_enabled; }
-		inline bool is_restored() const { return restored; }
-		inline bool is_focused() const { return focused; }
+			void enable_vsync();
+			void disable_vsync();
 
-		inline void close() { is_open = false; }
+			void grab_mouse();
+			void release_mouse();
 
-	private:
-		std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
-		Vector2i size;
-		Vector2i min_size;
-		Vector2i max_size;
+			void always_on_top();
+			void remove_always_on_top();
 
-		// Flags
+			void gain_focus();
+			void lose_foucs();
 
-		bool fullscreen = false;
-		bool resizable = false;
-		bool bordered = false;
-		bool hidden = false;
-		bool minimized = false;
-		bool maximized = false;
-		bool open = true;
-		bool mouse_grabbed = false;
-		bool always_on_top = false;
-		bool vsync_enabled = false;
-		bool restored = true;
-		bool focused = false;
-	};
+			inline void close() { open = false; }
 
+			// Checking for window states
+
+			inline bool is_resizable() const { return resizable; }
+			inline bool is_hidden() const { return hidden; }
+			inline bool is_minimized() const { return minimized; }
+			inline bool is_maximized() const { return maximized; }
+			inline bool is_restored() const { return restored; }
+			inline bool is_bordered() const { return bordered; }
+			inline bool is_fullscreen() const { return fullscreen; }
+			inline bool is_vsync_enabled() const { return vsync_enabled; }
+			inline bool is_mouse_grabbed() const { return mouse_grabbed; }
+			inline bool is_always_on_top() const { return always_on_top; }
+			inline bool is_focused() const { return focused; }
+			inline bool is_open() const { return open; }
+
+			// Callback functions
+
+			inline void on_resized(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Resized, callback); }
+
+			inline void on_hidden(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Hidden, callback); }
+			inline void on_shown(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Shown, callback); }
+			inline void on_minimized(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Minimized, callback); }
+			inline void on_maximized(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Maximized, callback); }
+			inline void on_restored(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Restored, callback); }
+
+			inline void on_fullscreen_entered(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FullscreenEntered, callback); }
+			inline void on_fullscreen_exited(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FullscreenExited, callback); }
+
+			inline void on_mouse_grabbed(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::MouseGrabbed, callback); }
+			inline void on_mouse_released(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::MouseReleased, callback); }
+
+			inline void on_focus_gained(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FocusGained, callback); }
+			inline void on_focus_lost(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FocusLost, callback); }
+
+			inline void on_close(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Close, callback); }
+
+		private:
+			std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
+			Vector2i size;
+			Vector2i min_size;
+			Vector2i max_size;
+
+			// Flags
+
+			bool resizable = false;
+			bool hidden = false;
+			bool minimized = false;
+			bool maximized = false;
+			bool restored = true;
+			bool bordered = false;
+			bool fullscreen = false;
+			bool vsync_enabled = false;
+			bool mouse_grabbed = false;
+			bool always_on_top = false;
+			bool focused = false;
+			bool open = true;
+		};
+	}
 }

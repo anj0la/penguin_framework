@@ -1,9 +1,11 @@
 #include "core/window/pf_window.hpp"
 
-using pf::PF_Window;
-using pf::PF_WindowFlags;
-using pf::PF_WindowVSyncFlags;
-using pf::PF_Error;
+using pf::core::PF_Window;
+using pf::core::PF_WindowFlags;
+using pf::core::PF_WindowVSyncFlags;
+using pf::common::PF_Error;
+using pf::events::PF_WindowEvent;
+using pf::events::PF_WindowEventIndex;
 
 PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flags)
 	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, p_flags)) {
