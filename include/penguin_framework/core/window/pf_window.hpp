@@ -3,7 +3,7 @@
 #include "core/window/pf_windowflags.hpp"
 #include "exception.hpp"
 #include "core/math/vector2i.hpp"
-#include "core/events/pf_windowevent.hpp"
+#include "core/events/pf_event.hpp"
 
 #include <SDL3/SDL_video.h>
 
@@ -79,24 +79,26 @@ namespace pf {
 
 			// Callback functions
 
-			inline void on_resized(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Resized, callback); }
+			inline void on_resized(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Resized, callback); }
 
-			inline void on_hidden(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Hidden, callback); }
-			inline void on_shown(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Shown, callback); }
-			inline void on_minimized(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Minimized, callback); }
-			inline void on_maximized(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Maximized, callback); }
-			inline void on_restored(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Restored, callback); }
+			inline void on_hidden(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Hidden, callback); }
+			inline void on_shown(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Shown, callback); }
+			inline void on_minimized(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Minimized, callback); }
+			inline void on_maximized(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Maximized, callback); }
+			inline void on_restored(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Restored, callback); }
 
-			inline void on_fullscreen_entered(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FullscreenEntered, callback); }
-			inline void on_fullscreen_exited(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FullscreenExited, callback); }
+			inline void on_fullscreen_entered(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::FullscreenEntered, callback); }
+			inline void on_fullscreen_exited(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::FullscreenExited, callback); }
 
-			inline void on_mouse_grabbed(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::MouseGrabbed, callback); }
-			inline void on_mouse_released(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::MouseReleased, callback); }
+			inline void on_mouse_grabbed(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::MouseGrabbed, callback); }
+			inline void on_mouse_released(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::MouseReleased, callback); }
 
-			inline void on_focus_gained(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FocusGained, callback); }
-			inline void on_focus_lost(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::FocusLost, callback); }
+			inline void on_focus_gained(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::FocusGained, callback); }
+			inline void on_focus_lost(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::FocusLost, callback); }
 
-			inline void on_close(const PF_EventCallback& callback) { PF_WindowEvent::register_callback(PF_WindowEventIndex::Close, callback); }
+			inline void on_close(const PF_EventCallback& callback) { pf::events::PF_WindowEvent::register_callback(pf::events::PF_WindowEventIndex::Close, callback); }
+
+			inline void poll_events() { pf::events::PF_Event::poll_events(); } // Poll events from Event class
 
 		private:
 			std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
