@@ -2,10 +2,6 @@
 
 #include <algorithm>
 
-int x = 0;
-
-int y = std::clamp(x, 255, 255);
-
 struct [[nodiscard]] Colour {
 
     static constexpr unsigned int OPAQUE = 255;
