@@ -19,6 +19,8 @@ PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flag
 	size = p_size;
 	min_size = p_size;
 	max_size = p_size;
+
+	set_flags(flags);
 }
 
 SDL_Window* PF_Window::get_window() {
@@ -279,4 +281,16 @@ void PF_Window::lose_foucs() {
 		SDL_GetError(),
 		PF_Error::Window
 	);
+}
+
+void PF_Window::set_flags(PF_WindowFlags& flags) {
+	resizable = has_flag(flags, PF_WindowFlags::Resizable);
+	hidden = has_flag(flags, PF_WindowFlags::Hidden);
+	minimized = has_flag(flags, PF_WindowFlags::Maximized);
+	maximized = has_flag(flags, PF_WindowFlags::Minimized);
+	bordered = !(has_flag(flags, PF_WindowFlags::Borderless)); // If the borderless flag is set, we need to set bordered to be false
+	fullscreen = has_flag(flags, PF_WindowFlags::Fullscreen);
+	mouse_grabbed = has_flag(flags, PF_WindowFlags::MouseGrabbed);
+	always_on_top = has_flag(flags, PF_WindowFlags::AlwaysOnTop);
+	focused = has_flag(flags, PF_WindowFlags::InputFocus) || has_flag(flags, PF_WindowFlags::MouseFocus);
 }

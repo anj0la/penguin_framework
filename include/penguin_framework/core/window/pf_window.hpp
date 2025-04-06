@@ -68,7 +68,6 @@ namespace pf {
 			inline bool is_hidden() const { return hidden; }
 			inline bool is_minimized() const { return minimized; }
 			inline bool is_maximized() const { return maximized; }
-			inline bool is_restored() const { return restored; }
 			inline bool is_bordered() const { return bordered; }
 			inline bool is_fullscreen() const { return fullscreen; }
 			inline bool is_vsync_enabled() const { return vsync_enabled; }
@@ -100,26 +99,33 @@ namespace pf {
 
 			inline void poll_events() { pf::events::PF_Event::poll_events(); } // Poll events from Event class
 
+			// Public variables
+
+			Vector2i size;
+
+
 		private:
 			std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
-			Vector2i size;
 			Vector2i min_size;
 			Vector2i max_size;
 
 			// Flags
 
-			bool resizable = false;
-			bool hidden = false;
-			bool minimized = false;
-			bool maximized = false;
-			bool restored = true;
-			bool bordered = false;
-			bool fullscreen = false;
-			bool vsync_enabled = false;
-			bool mouse_grabbed = false;
-			bool always_on_top = false;
-			bool focused = false;
+			bool resizable;
+			bool hidden;
+			bool minimized;
+			bool maximized;
+			bool bordered;
+			bool fullscreen;
+			bool vsync_enabled = false; // disabled by default
+			bool mouse_grabbed;
+			bool always_on_top;
+			bool focused;
 			bool open = true;
+
+			// Private functions
+
+			void set_flags(PF_WindowFlags& flags);
 		};
 	}
 }

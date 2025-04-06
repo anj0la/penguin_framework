@@ -46,5 +46,9 @@ namespace pf {
 		constexpr PF_WindowFlags operator~(PF_WindowFlags flag) {
 			return static_cast<PF_WindowFlags>(~static_cast<uint64_t>(flag));
 		}
+
+		constexpr bool has_flag(PF_WindowFlags flags, PF_WindowFlags test) {
+			return (flags & test) != PF_WindowFlags::None;
+		}
 	}
 }
