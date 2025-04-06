@@ -4,7 +4,6 @@
 
 class [[nodiscard]] String {
 public:
-
 	// Default constructor
 
 	String() : buf(nullptr), size(0) {}
@@ -45,5 +44,5 @@ public:
 
 private:
 	char* buf = nullptr;
-	unsigned int size = 0;
+	size_t size = 0;
 };
