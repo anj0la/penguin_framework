@@ -60,6 +60,13 @@ namespace pf {
 			void gain_focus();
 			void lose_foucs();
 
+			inline Vector2i get_window_size() { return size; }
+			inline Vector2i get_max_window_size() { return max_size; }
+			inline Vector2i get_min_window_size() { return min_size; }
+
+			inline int get_window_width() { return size.x; }
+			inline int get_window_height() { return size.y; }
+
 			inline void close() { open = false; }
 
 			// Checking for window states
@@ -99,13 +106,9 @@ namespace pf {
 
 			inline void poll_events() { pf::events::PF_Event::poll_events(); } // Poll events from Event class
 
-			// Public variables
-
-			Vector2i size;
-
-
 		private:
 			std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
+			Vector2i size;
 			Vector2i min_size;
 			Vector2i max_size;
 

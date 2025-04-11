@@ -1,4 +1,4 @@
-#include "math/rect2i.hpp"
+#include "core/math/rect2i.hpp"
 #include <gtest/gtest.h>
 
 // Setting Up the Test Suite
