@@ -22,10 +22,6 @@ public:
 	String& operator=(const String& other); // Copy assignment
 	String& operator=(String&& other) noexcept; // Move assignment
 
-	// Destructor
-
-	// ~String() = default;
-
 	// Other functions
 
 	constexpr static size_t length(const char* str) {
@@ -64,6 +60,5 @@ public:
 
 private:
 	std::unique_ptr<char[]> buf;
-	//char* buf = nullptr;
 	size_t size = 0;
 };

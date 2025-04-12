@@ -8,7 +8,7 @@ using pf::events::PF_WindowEvent;
 using pf::events::PF_WindowEventIndex;
 
 PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flags)
-	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, p_flags)) {
+	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, p_flags)), title(p_title)	{
 
 	Exception::throw_if(
 		!window,
@@ -28,8 +28,10 @@ SDL_Window* PF_Window::get_window() {
 }
 
 void PF_Window::set_title(const char* new_title) {
+	title = new_title;
+
 	Exception::throw_if(
-		!SDL_SetWindowTitle(new_title),
+		!SDL_SetWindowTitle(title.c_str()),
 		SDL_GetError(),
 		PF_Error::Window
 	);

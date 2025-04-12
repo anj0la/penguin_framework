@@ -5,6 +5,8 @@
 #include "core/math/vector2i.hpp"
 #include "core/events/pf_event.hpp"
 
+#include "utils/string.hpp"
+
 #include <SDL3/SDL_video.h>
 
 #include <functional>
@@ -60,9 +62,16 @@ namespace pf {
 			void gain_focus();
 			void lose_foucs();
 
-			inline Vector2i get_window_size() { return size; }
-			inline Vector2i get_max_window_size() { return max_size; }
-			inline Vector2i get_min_window_size() { return min_size; }
+			// The String class is very minimal, but std::string is not stable
+			// So the String class allows me to store string information more safely
+			// But it has much less functions than std::string, so for now, it's expected
+			// to wrap this c_str() around an std::string if needing to store the title somewhere.
+			
+			inline const char* get_title() { return title.c_str(); } 
+
+			inline Vector2i get_window_size() const { return size; }
+			inline Vector2i get_max_window_size() const { return max_size; }
+			inline Vector2i get_min_window_size() const { return min_size; }
 
 			inline int get_window_width() { return size.x; }
 			inline int get_window_height() { return size.y; }
@@ -108,6 +117,7 @@ namespace pf {
 
 		private:
 			std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
+			String title;
 			Vector2i size;
 			Vector2i min_size;
 			Vector2i max_size;
