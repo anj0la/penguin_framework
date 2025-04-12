@@ -3,12 +3,13 @@
 #include <cstring>
 #include <cstddef>
 #include <utility>
+#include <memory>
 
 class [[nodiscard]] String {
 public:
 	// Default constructor
 
-	String() : buf(nullptr), size(0) {}
+	String() = default;
 
 	// Regular constructor
 
@@ -23,7 +24,7 @@ public:
 
 	// Destructor
 
-	~String();
+	// ~String() = default;
 
 	// Other functions
 
@@ -54,7 +55,7 @@ public:
 	}
 
 	constexpr const char* c_str() const {
-		return buf ? buf : "";
+		return buf ? buf.get() : "";
 	}
 
 	inline bool operator==(const String& rhs) {
@@ -62,6 +63,7 @@ public:
 	}
 
 private:
-	char* buf = nullptr;
+	std::unique_ptr<char[]> buf;
+	//char* buf = nullptr;
 	size_t size = 0;
 };
