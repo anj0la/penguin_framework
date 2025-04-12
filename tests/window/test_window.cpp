@@ -5,6 +5,7 @@
 
 using pf::core::PF_Window;
 using pf::core::PF_WindowFlags;
+using pf::core::PF_WindowVSyncFlags;
 
 // Note: The vsync functions cannot be tested with the window, but with the renderer once made.
 
@@ -41,7 +42,6 @@ TEST_F(PF_WindowTestFixture, CreatesDefaultWindow) {
 
     // Validate flags
     EXPECT_FALSE(window.is_always_on_top());
-    EXPECT_FALSE(window.is_bordered());
     EXPECT_FALSE(window.is_focused());
     EXPECT_FALSE(window.is_fullscreen());
     EXPECT_FALSE(window.is_maximized());
@@ -52,6 +52,7 @@ TEST_F(PF_WindowTestFixture, CreatesDefaultWindow) {
 
     EXPECT_TRUE(window.is_open()); // this should be the only true variable (other than the hidden - which is for testing purposes)
     EXPECT_TRUE(window.is_hidden());
+    EXPECT_TRUE(window.is_bordered()); // the borderless flag is NOT set, so the window HAS a border
 }
 
 
@@ -73,6 +74,7 @@ TEST_F(PF_WindowTestFixture, CreatesWindowWithAllParams) {
     // Validate flags
     EXPECT_FALSE(window.is_always_on_top());
     EXPECT_FALSE(window.is_focused());
+    EXPECT_FALSE(window.is_bordered()); // the borderless flag is set, so the window DOES NOT have a border
     EXPECT_FALSE(window.is_fullscreen());
     EXPECT_FALSE(window.is_maximized());
     EXPECT_FALSE(window.is_minimized());
@@ -80,7 +82,6 @@ TEST_F(PF_WindowTestFixture, CreatesWindowWithAllParams) {
     EXPECT_FALSE(window.is_vsync_enabled());
 
     EXPECT_TRUE(window.is_open()); 
-    EXPECT_TRUE(window.is_bordered());
     EXPECT_TRUE(window.is_resizable());
     EXPECT_TRUE(window.is_hidden());
 }
@@ -101,7 +102,6 @@ TEST_F(PF_WindowTestFixture, CreatesWindowWithAllParamsInt) {
     EXPECT_EQ(480, size.y); // window size is 480 pixels wide by default
 
     // Validate flags
-    EXPECT_FALSE(window.is_bordered());
     EXPECT_FALSE(window.is_fullscreen());
     EXPECT_FALSE(window.is_maximized());
     EXPECT_FALSE(window.is_minimized());
@@ -113,6 +113,7 @@ TEST_F(PF_WindowTestFixture, CreatesWindowWithAllParamsInt) {
     EXPECT_TRUE(window.is_always_on_top());
     EXPECT_TRUE(window.is_focused());
     EXPECT_TRUE(window.is_hidden());
+    EXPECT_TRUE(window.is_bordered()); // the borderless flag is NOT set, so the window HAS a border
 }
 
 // Window Functions
@@ -232,5 +233,136 @@ TEST_F(PenguinWindowTest, DoesNotMinimizesAndMaximizesWindow) {
 TEST_F(PenguinWindowTest, RestoresWindowCorrectly) {
     PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden | PF_WindowFlags::Resizable);
 
-  
+    window.minimize();
+
+    // Validate that window is resizable AND minimized but NOT maximized
+    EXPECT_TRUE(window.is_resizable());
+    EXPECT_TRUE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized());
+
+    window.restore(); // Synchronous, guaranteed that the window will be restored
+
+    // Validate that window is resizable AND NOT minimized OR maximized
+    EXPECT_TRUE(window.is_resizable());
+    EXPECT_FALSE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized());
+}
+
+TEST_F(PenguinWindowTest, AsyncRestoresWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden | PF_WindowFlags::Resizable);
+
+    window.minimize();
+
+    // Validate that window is resizable AND minimized but NOT maximized
+    EXPECT_TRUE(window.is_resizable());
+    EXPECT_TRUE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized());
+
+    window.restore_async(); // No synchronization, no guarantee the window will be restored
+
+    // Validate that window is resizable AND NOT minimized OR maximized
+    EXPECT_TRUE(window.is_resizable());
+    EXPECT_FALSE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized());
+}
+
+TEST_F(PenguinWindowTest, TogglesResizableWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    window.enable_resizing();
+
+    // Validate that window is now resizable
+    EXPECT_TRUE(window.is_resizable());
+
+    window.disable_resizing();
+
+    // Validate that window is now NOT resizable
+    EXPECT_FALSE(window.is_resizable());
+}
+
+TEST_F(PenguinWindowTest, TogglesBorderedWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    // The window is bordered by default
+    window.disable_borders();
+
+    // Validate that window has no borders
+    EXPECT_FALSE(window.is_bordered()); 
+
+    window.enable_borders();
+
+    // Validate that window now has borders
+    EXPECT_TRUE(window.is_bordered());
+}
+
+TEST_F(PenguinWindowTest, TogglesFullscreenWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    window.enter_fullscreen();
+
+    // Validate that window is in fullscreen mode
+    EXPECT_TRUE(window.is_fullscreen());
+
+    window.exit_fullscreen();
+
+    // Validate that window is NOT in fullscreen mode
+    EXPECT_FALSE(window.is_fullscreen());
+}
+
+
+TEST_F(PenguinWindowTest, TogglesVsyncWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    // Vsync is disabled by default
+    window.enable_vsync();
+
+    // Validate that window has vysnc enabled
+    EXPECT_TRUE(window.is_vsync_enabled());
+
+    window.disable_vsync();
+
+    // Validate that window has vysnc disabled
+    EXPECT_FALSE(window.is_vsync_enabled());
+}
+
+TEST_F(PenguinWindowTest, TogglesMouseGrabWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    window.grab_mouse();
+
+    // Validate that window has grabbed mouse
+    EXPECT_TRUE(window.is_mouse_grabbed());
+
+    window.release_mouse();
+
+    // Validate that window has released mouse
+    EXPECT_FALSE(window.is_mouse_grabbed());
+}
+
+TEST_F(PenguinWindowTest, TogglesAlwaysOnTopWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    window.always_on_top();
+
+    // Validate that window is always on top
+    EXPECT_TRUE(window.is_always_on_top());
+
+    window.remove_always_on_top();
+
+    // Validate that window is NOT always on top
+    EXPECT_FALSE(window.is_always_on_top());
+}
+
+TEST_F(PenguinWindowTest, TogglesFocusedWindowCorrectly) {
+    PF_Window window("Hidden Window", Vector2i(800, 600), PF_WindowFlags::Hidden);
+
+    window.gain_focus();
+
+    // Validate that window has gained input focus
+    EXPECT_TRUE(window.is_focused());
+
+    window.lose_focus();
+
+    // Validate that window has lost input focus
+    EXPECT_FALSE(window.is_focused());
 }
