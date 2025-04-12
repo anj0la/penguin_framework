@@ -5,3 +5,4 @@ cmake_minimum_required(VERSION 3.15...3.31)
 
 # Add subdirectories for modular tests.
 add_subdirectory(math)
+add_subdirectory(utils)
