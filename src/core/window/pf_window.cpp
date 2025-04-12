@@ -23,7 +23,7 @@ PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flag
 	set_flags(flags);
 }
 
-SDL_Window* PF_Window::get_window() {
+SDL_Window* PF_Window::get_ptr() {
 	return window.get();
 }
 

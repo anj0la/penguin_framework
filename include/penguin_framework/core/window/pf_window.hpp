@@ -23,9 +23,10 @@ namespace pf {
 			using PF_EventCallback = std::function<void()>;
 
 			PF_Window(const char* p_title = "", Vector2i p_size = Vector2i(640, 480), PF_WindowFlags p_flags = PF_WindowFlags::None);
+			PF_Window(const char* p_title = "", int width = 640, int height = 480, PF_WindowFlags p_flags = PF_WindowFlags::None) : PF_Window(p_title, Vector2i(width, height), p_flags) {}
 
 			// Needed for objects requiring the raw SDL pointer. Only used internally, should not be used AT all otherwise.
-			SDL_Window* get_window();
+			SDL_Window* get_ptr();
 
 			// Regular functions
 
