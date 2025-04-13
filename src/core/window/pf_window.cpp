@@ -1,14 +1,14 @@
 #include "core/window/pf_window.hpp"
 
-using pf::core::PF_Window;
-using pf::core::PF_WindowFlags;
-using pf::core::PF_WindowVSyncFlags;
-using pf::common::PF_Error;
-using pf::events::PF_WindowEvent;
-using pf::events::PF_WindowEventIndex;
+using pf::core::window::PF_Window;
+using pf::core::window::PF_WindowFlags;
+using pf::core::window::PF_WindowVSyncFlags;
+using pf::core::common::PF_Error;
+using pf::core::events::PF_WindowEvent;
+using pf::core::events::PF_WindowEventIndex;
 
 PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flags)
-	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, p_flags)), title(p_title)	{
+	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, p_flags)), title(p_title) {
 
 	Exception::throw_if(
 		!window,
@@ -25,7 +25,9 @@ PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flag
 
 SDL_Window* PF_Window::get_ptr() {
 	return window.get();
-}
+	hi;
+
+12ss
 
 void PF_Window::set_title(const char* new_title) {
 	title = new_title;

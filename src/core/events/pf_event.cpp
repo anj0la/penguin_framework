@@ -1,7 +1,7 @@
 #include "core/events/pf_event.hpp"
 
-using pf::events::PF_Event;
-using pf::events::PF_WindowEvent;
+using pf::core::events::PF_Event;
+using pf::core::events::PF_WindowEvent;
 
 void PF_Event::poll_events() {
 	SDL_Event event;

@@ -3,9 +3,9 @@
 #include <SDL3/SDL_init.h>
 #include <gtest/gtest.h>
 
-using pf::core::PF_Window;
-using pf::core::PF_WindowFlags;
-using pf::core::PF_WindowVSyncFlags;
+using pf::core::window::PF_Window;
+using pf::core::window::PF_WindowFlags;
+using pf::core::window::PF_WindowVSyncFlags;
 
 // Note: The vsync functions cannot be tested with the window, but with the renderer once made.
 

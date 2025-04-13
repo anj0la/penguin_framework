@@ -1,7 +1,7 @@
 #include "core/window/pf_windowflags.hpp"
 #include <gtest/gtest.h>
 
-using pf::core::PF_WindowFlags;
+using pf::core::window::PF_WindowFlags;
 
 // Simple tests to ensure that the flag operators work correctly
 // Since the flags map to SDL flags, they are essentially the same values as their SDL counterparts
