@@ -3,7 +3,6 @@
 using pf::core::window::PF_Window;
 using pf::core::window::PF_WindowFlags;
 using pf::core::window::PF_WindowVSyncFlags;
-using pf::core::common::PF_Error;
 using pf::core::events::PF_WindowEvent;
 using pf::core::events::PF_WindowEventIndex;
 
@@ -24,10 +23,15 @@ PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flag
 }
 
 SDL_Window* PF_Window::get_ptr() {
-	return window.get();
-	hi;
 
-12ss
+	Exception::throw_if(
+		!window,
+		SDL_GetError(),
+		PF_Error::Window
+	);
+
+	return window.get();
+}
 
 void PF_Window::set_title(const char* new_title) {
 	title = new_title;

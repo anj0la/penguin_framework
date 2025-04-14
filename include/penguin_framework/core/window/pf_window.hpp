@@ -1,10 +1,10 @@
 #pragma once
 
 #include "core/window/pf_windowflags.hpp"
-#include "exception.hpp"
 #include "core/math/vector2i.hpp"
 #include "core/events/pf_event.hpp"
 
+#include "utils/exception.hpp"
 #include "utils/string.hpp"
 
 #include <SDL3/SDL_video.h>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/events/pf_windowevent.hpp"
+#include "core/input/pf_input.hpp"
 
 #include <SDL3/SDL_events.h>
 
