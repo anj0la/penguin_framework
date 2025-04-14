@@ -5,11 +5,6 @@
 #include <array>
 
 namespace pf::core::input::keyboard {
-	struct KeyboardState {
-
-	};
-
-
 	class Keyboard {
 	public:
 		static void handle_keyboard_event(const SDL_Event& p_event);
@@ -20,6 +15,9 @@ namespace pf::core::input::keyboard {
 		static bool is_any_key_just_pressed();
 		static bool is_any_key_just_released();
 		static void update();
+
+		// Callback functions (registerd from input probs)
+		
 
 	private:
 		std::array<bool, NumKeys> current{}; // current state of the key (use to check persistence pressing)
