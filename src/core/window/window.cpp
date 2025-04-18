@@ -1,13 +1,11 @@
-#include "core/window/pf_window.hpp"
+#include <penguin_framework/core/window/window.hpp>
 
-using pf::core::window::PF_Window;
-using pf::core::window::PF_WindowFlags;
-using pf::core::window::PF_WindowVSyncFlags;
-using pf::core::events::PF_WindowEvent;
-using pf::core::events::PF_WindowEventIndex;
+using penguin::core::window::PF_Window;
+using penguin::core::window::PF_WindowFlags;
+using penguin::core::window::PF_WindowVSyncFlags;
 
 PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flags)
-	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, p_flags)), title(p_title) {
+	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, to_sdl_flags(p_flags)), &SDL_DestroyWindow), title(p_title) {
 
 	Exception::throw_if(
 		!window,
@@ -19,7 +17,7 @@ PF_Window::PF_Window(const char* p_title, Vector2i p_size, PF_WindowFlags p_flag
 	min_size = p_size;
 	max_size = p_size;
 
-	set_flags(flags);
+	set_flags(p_flags);
 }
 
 SDL_Window* PF_Window::get_ptr() {
@@ -37,7 +35,7 @@ void PF_Window::set_title(const char* new_title) {
 	title = new_title;
 
 	Exception::throw_if(
-		!SDL_SetWindowTitle(title.c_str()),
+		!SDL_SetWindowTitle(window.get(), title.c_str()),
 		SDL_GetError(),
 		PF_Error::Window
 	);
@@ -47,7 +45,7 @@ void PF_Window::set_max_size(Vector2i p_max_size) {
 	max_size = p_max_size;
 
 	Exception::throw_if(
-		!SDL_SetWindowMaximumSize(window.get(), &max_size.x, &max_size.y),
+		!SDL_SetWindowMaximumSize(window.get(), max_size.x, max_size.y),
 		SDL_GetError(),
 		PF_Error::Window
 	);
@@ -57,7 +55,7 @@ void PF_Window::set_min_size(Vector2i p_min_size) {
 	min_size = p_min_size;
 
 	Exception::throw_if(
-		!SDL_SetWindowMinimumSize(window.get(), &min_size.x, &min_size.y),
+		!SDL_SetWindowMinimumSize(window.get(), min_size.x, min_size.y),
 		SDL_GetError(),
 		PF_Error::Window
 	);
@@ -67,7 +65,7 @@ void PF_Window::resize(Vector2i new_size) {
 	size = new_size;
 
 	Exception::throw_if(
-		!SDL_SetWindowSize(window.get(), &size.x, &size.y),
+		!SDL_SetWindowSize(window.get(), size.x, size.y),
 		SDL_GetError(),
 		PF_Error::Window
 	);
@@ -215,7 +213,7 @@ void PF_Window::enable_vsync() {
 	vsync_enabled = true;
 
 	Exception::throw_if(
-		!SDL_SetWindowSurfaceVSync(window.get(), PF_WindowVSyncFlags::VSync_Adaptive),
+		!SDL_SetWindowSurfaceVSync(window.get(), static_cast<int>(PF_WindowVSyncFlags::VSync_Adaptive)),
 		SDL_GetError(),
 		PF_Error::Window
 	);
@@ -225,7 +223,7 @@ void PF_Window::disable_vsync() {
 	vsync_enabled = false;
 
 	Exception::throw_if(
-		!SDL_SetWindowSurfaceVSync(window.get(), PF_WindowVSyncFlags::VSync_Disabled),
+		!SDL_SetWindowSurfaceVSync(window.get(), static_cast<int>(PF_WindowVSyncFlags::VSync_Disabled)),
 		SDL_GetError(),
 		PF_Error::Window
 	);
@@ -251,7 +249,7 @@ void PF_Window::release_mouse() {
 	);
 }
 
-void PF_Window::always_on_top() {
+void PF_Window::add_always_on_top() {
 	always_on_top = true;
 
 	Exception::throw_if(

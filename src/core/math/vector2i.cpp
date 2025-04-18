@@ -1,4 +1,4 @@
-#include "core/math/vector2i.hpp"
+#include <penguin_framework/core/math/vector2i.hpp>
 
 Vector2i Vector2i::abs() const {
 	return Vector2i(std::abs(x), std::abs(y));

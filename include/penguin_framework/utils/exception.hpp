@@ -13,7 +13,7 @@ public:
 	Exception(const char* message, PF_Error error = PF_Error::Unknown) : message(message), error_val(error) {}
 	~Exception() noexcept override = default;
 
-	[[nodiscard]] const char* what() const noexcept override { return message; }
+	[[nodiscard]] const char* what() const noexcept override { return message.c_str(); }
 	[[nodiscard]] PF_Error error() const noexcept { return error_val; }
 
 	inline static void throw_if(bool condition, const char* message, PF_Error error) { if (condition) throw Exception{ message, error }; }

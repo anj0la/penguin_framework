@@ -2,10 +2,12 @@
 
 #include <SDL3/SDL_keycode.h>
 #include <cstdint>
+#include <array>
 
-namespace pf::core::input::keyboard {
 
-    const int NUM_KEYS = 138; // the number of keys (can't store in the enum)
+namespace penguin::core::input::keyboard {
+
+    constexpr size_t NumKeys = 138; // the number of keys (can't store in the enum)
 
     enum class PF_Key : uint32_t {
         Unknown = SDLK_UNKNOWN,
@@ -145,5 +147,155 @@ namespace pf::core::input::keyboard {
         LGui = SDLK_LGUI,
         RGui = SDLK_RGUI
     };
+
+    constexpr size_t InvalidKeyIndex = 0;
+
+    constexpr std::array<PF_Key, NumKeys> PF_KeyList = {
+        Unknown,
+        Enter,
+        Escape,
+        Backspace,
+        Tab,
+        Space,
+        Exclaim,
+        At,
+        Hash,
+        Dollar,
+        Percent,
+        Caret,
+        Ampersand,
+        Asterisk,
+        LBracket,
+        RBracket,
+        Minus,
+        Plus,
+        Num0,
+        Num1,
+        Num2,
+        Num3,
+        Num4,
+        Num5,
+        Num6,
+        Num7,
+        Num8,
+        Num9,
+        Underscore,
+        EqualSign,
+        GreaterThan,
+        LessThan,
+        LBrace,
+        RBrace,
+        LSquareBracket,
+        RSquareBracket,
+        QuestionMark,
+        Slash,
+        Backslash,
+        Pipe,
+        Comma,
+        Period,
+        Colon,
+        Semicolon,
+        DQoute,
+        SQuote,
+        Grave,
+        Tilde,
+        A,
+        B,
+        C,
+        D,
+        E,
+        F,
+        G,
+        H,
+        I,
+        J,
+        K,
+        L,
+        M,
+        N,
+        O,
+        P,
+        Q,
+        R,
+        S,
+        T,
+        U,
+        V,
+        W,
+        X,
+        Y,
+        Z,
+        Delete,
+        PlusMinus,
+        CapsLock,
+        F1,
+        F2,
+        F3,
+        F4,
+        F5,
+        F6,
+        F7,
+        F8,
+        F9,
+        F10,
+        F11,
+        F12,
+        PrintScreen,
+        ScrollLock,
+        Pause,
+        Insert,
+        Home,
+        PageUp,
+        PageDown,
+        End,
+        Right,
+        Left,
+        Down,
+        Up,
+        KeypadDivide,
+        KeypadMultiply,
+        KeypadMinus,
+        KeypadPlus,
+        KeypadEnter,
+        Keypad0,
+        Keypad1,
+        Keypad2,
+        Keypad3,
+        Keypad4,
+        Keypad5,
+        Keypad6,
+        Keypad7,
+        Keypad8,
+        Keypad9,
+        KeypadPeriod,
+        KeypadEqualSign,
+        Application,
+        Undo,
+        Cut,
+        Copy,
+        Paste,
+        Find,
+        Mute,
+        VolumeUp,
+        VolumeDown,
+        AltErase,
+        Cancel,
+        Clear,
+        LCtrl,
+        RCtrl,
+        LShift,
+        RShift,
+        LGui,
+        RGui
+    };
+
+    constexpr int key_to_index(PF_Key key) {
+        for (size_t i = 0; i < KeyList.size(); ++i) {
+            if (PF_KeyList[i] == key) {
+                return i;
+            }
+        }
+        return InvalidKeyIndex; // doesn't exist (unknown is the first value)
+    }
 }
 

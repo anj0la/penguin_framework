@@ -1,11 +1,13 @@
 #pragma once
 
-#include "core/input/keyboard/keyboard_keys.hpp"
+#include <penguin_framework/core/input/keyboard/keyboard_keys.hpp>
 #include <array>
 
-namespace pf::core::input::keyboard {
+namespace penguin::core::input::keyboard {
 
-    constexpr std::array<Key, NUM_KEYS> PF_KeyList = {
+    constexpr size_t InvalidKeyIndex = 0;
+
+    constexpr std::array<PF_Key, NumKeys> PF_KeyList = {
         Unknown,
         Enter,
         Escape,
@@ -144,11 +146,8 @@ namespace pf::core::input::keyboard {
         RGui
     };
 
-    constexpr size_t NumKeys = KeyList.size();
-    constexpr size_t InvalidKeyIndex = 0;
-
     constexpr int key_to_index(PF_Key key) {
-        for (size_t i = 0; i < NumKeys; ++i) {
+        for (size_t i = 0; i < KeyList.size(); ++i) {
             if (PF_KeyList[i] == key) {
                 return i;
             }

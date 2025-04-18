@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <SDL3/SDL_video.h>
 
-namespace pf::core::window {
+namespace penguin::core::window {
 
 	enum class PF_WindowFlags : uint64_t {
 		None = 0,
@@ -47,5 +47,9 @@ namespace pf::core::window {
 
 	constexpr bool has_flag(PF_WindowFlags flags, PF_WindowFlags test) {
 		return (flags & test) != PF_WindowFlags::None;
+	}
+
+	inline SDL_WindowFlags to_sdl_flags(PF_WindowFlags flags) {
+		return static_cast<SDL_WindowFlags>(static_cast<uint64_t>(flags));
 	}
 }

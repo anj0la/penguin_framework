@@ -7,6 +7,9 @@ namespace pf::core::input {
 	class PF_Input {
 		static void handle_events(const SDL_Event& p_event);
 		static void update();
+
+		// ADD CALLBACKS LATER
+		
 		// static void register_callback(const PF_EventCallback& callback);
 		// static void trigger_event();
 	};
