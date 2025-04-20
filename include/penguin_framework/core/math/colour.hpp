@@ -1,8 +1,9 @@
 #pragma once
 
+#include <penguin_framework/penguin_api.hpp>
 #include <algorithm>
 
-struct [[nodiscard]] Colour {
+struct PENGUIN_API [[nodiscard]] Colour {
 
     static constexpr unsigned int OPAQUE = 255;
     static constexpr unsigned int TRANSPARENT = 0; 

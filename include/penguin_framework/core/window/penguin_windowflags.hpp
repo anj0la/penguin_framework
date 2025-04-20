@@ -5,7 +5,7 @@
 
 namespace penguin::core::window {
 
-	enum class PF_WindowFlags : uint64_t {
+	enum class WindowFlags : uint64_t {
 		None = 0,
 		Fullscreen = SDL_WINDOW_FULLSCREEN,
 		Resizable = SDL_WINDOW_RESIZABLE,
@@ -29,27 +29,27 @@ namespace penguin::core::window {
 
 	// Enable bitwise operations for WindowFlags
 
-	constexpr PF_WindowFlags operator|(PF_WindowFlags lhs, PF_WindowFlags rhs) {
-		return static_cast<PF_WindowFlags>(
+	constexpr WindowFlags operator|(WindowFlags lhs, WindowFlags rhs) {
+		return static_cast<WindowFlags>(
 			static_cast<uint64_t>(lhs) | static_cast<uint64_t>(rhs)
 			);
 	}
 
-	constexpr PF_WindowFlags operator&(PF_WindowFlags lhs, PF_WindowFlags rhs) {
-		return static_cast<PF_WindowFlags>(
+	constexpr WindowFlags operator&(WindowFlags lhs, WindowFlags rhs) {
+		return static_cast<WindowFlags>(
 			static_cast<uint64_t>(lhs) & static_cast<uint64_t>(rhs)
 			);
 	}
 
-	constexpr PF_WindowFlags operator~(PF_WindowFlags flag) {
-		return static_cast<PF_WindowFlags>(~static_cast<uint64_t>(flag));
+	constexpr WindowFlags operator~(WindowFlags flag) {
+		return static_cast<WindowFlags>(~static_cast<uint64_t>(flag));
 	}
 
-	constexpr bool has_flag(PF_WindowFlags flags, PF_WindowFlags test) {
-		return (flags & test) != PF_WindowFlags::None;
+	constexpr bool has_flag(WindowFlags flags, WindowFlags test) {
+		return (flags & test) != WindowFlags::None;
 	}
 
-	inline SDL_WindowFlags to_sdl_flags(PF_WindowFlags flags) {
+	inline SDL_WindowFlags to_sdl_flags(WindowFlags flags) {
 		return static_cast<SDL_WindowFlags>(static_cast<uint64_t>(flags));
 	}
 }

@@ -94,7 +94,7 @@ add_library(penguin_framework
             #${CMAKE_CURRENT_SOURCE_DIR}/src/core/events/windowevent.cpp
             #${CMAKE_CURRENT_SOURCE_DIR}/src/core/input/input.cpp
             #${CMAKE_CURRENT_SOURCE_DIR}/src/core/input/keyboard/keyboard.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/core/window/window.cpp
+            "src/core/window/penguin_window.cpp"
             ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/string.cpp
 )
 add_library(penguin::penguin ALIAS penguin_framework)
@@ -106,9 +106,10 @@ message(STATUS "Added penguin_framework library.")
 #----------------------------------------------------------------------------------------------------------------------
 
 generate_export_header(penguin_framework
-  EXPORT_MACRO_NAME PENGUIN_API
-  NO_EXPORT_MACRO_NAME PENGUIN_NO_EXPORT
-  EXPORT_FILE_NAME include/penguin_framework/penguin_api.hpp
+      BASE_NAME PENGUIN
+      EXPORT_MACRO_NAME PENGUIN_API
+      NO_EXPORT_MACRO_NAME PENGUIN_HIDDEN
+      EXPORT_FILE_NAME include/penguin_framework/penguin_api.hpp
 )
 
 #----------------------------------------------------------------------------------------------------------------------

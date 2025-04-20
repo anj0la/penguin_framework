@@ -1,10 +1,12 @@
 #pragma once
 
-#include "core/math/vector2.hpp"
+#include <penguin_framework/penguin_api.hpp>
+#include <penguin_framework/core/math/vector2.hpp>
+#include <numbers>
 
 constexpr float PI = 3.14159265358979323846f;
 
-struct [[nodiscard]] Circle2 {
+struct PENGUIN_API [[nodiscard]] Circle2 {
 	Vector2 center;
 	float radius;
 

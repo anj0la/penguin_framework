@@ -1,8 +1,9 @@
 #pragma once
 
-#include "core/math/vector2.hpp"
+#include <penguin_framework/penguin_api.hpp>
+#include <penguin_framework/core/math/vector2.hpp>
 
-struct [[nodiscard]] Rect2 {
+struct PENGUIN_API [[nodiscard]] Rect2 {
 	Vector2 position, size;
 
 	// Default constructor

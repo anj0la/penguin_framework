@@ -1,9 +1,11 @@
 #pragma once
 
+#include <penguin_framework/penguin_api.hpp>
+
 #include <cmath>
 #include <compare>
 
-struct [[nodiscard]] Vector2 {
+struct PENGUIN_API [[nodiscard]] Vector2 {
 	static constexpr float ORIGIN = 0.0f; /// The origin for all Vector2 objects -> (0.0, 0.0)
 
 	float x, y; /// The x and y components of the vector.

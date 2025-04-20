@@ -1,9 +1,12 @@
 #pragma once
 
+#include <penguin_framework/penguin_api.hpp>
+
+
 #include <cmath>
 #include <compare>
 
-struct [[nodiscard]] Vector2i {
+struct PENGUIN_API [[nodiscard]] Vector2i {
 	static constexpr int ORIGIN = 0; /// The origin for all Vector2i objects -> (0, 0)
 
 	int x, y; /// The x and y components of the vector.
