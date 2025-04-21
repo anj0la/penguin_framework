@@ -8,6 +8,11 @@
 
 #include <memory>
 
+// Forward declaration of GraphicsSystem
+namespace penguin::core::system {
+	class GraphicsSystem;
+}
+
 namespace penguin::core::window {
 
 	class PENGUIN_API Window {
@@ -93,6 +98,10 @@ namespace penguin::core::window {
 	private:
 		// Forward declaration
 		struct WindowImpl;
+
+		// Gives access to internal implementation (needed to create renderer)
+		friend class GraphicsSystem;
+
 		std::unique_ptr<WindowImpl> pimpl_;
 	};
 }

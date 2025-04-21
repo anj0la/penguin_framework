@@ -96,7 +96,7 @@ add_library(penguin_framework
             #${CMAKE_CURRENT_SOURCE_DIR}/src/core/input/keyboard/keyboard.cpp
             "src/core/window/penguin_window.cpp"
             ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/string.cpp
-)
+ "src/core/penguin_graphics_system.cpp")
 add_library(penguin::penguin ALIAS penguin_framework)
 
 message(STATUS "Added penguin_framework library.")
