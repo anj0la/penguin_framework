@@ -16,19 +16,18 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest) # provides the gtest_discover_tests() function 
 
 #----------------------------------------------------------------------------------------------------------------------
-# Dependencies
+# Functions
 #----------------------------------------------------------------------------------------------------------------------
 
-#find_package(penguin_framework 0.1.0 QUIET)
-#if(NOT penguin_framework_FOUND)
- #   message(STATUS "find_package(penguin_framework) was NOT found, using as a subproject...")
-    # test if the targets are usable if used as subproject
- #   add_subdirectory(.. penguin_framework EXCLUDE_FROM_ALL)
-#endif()
+# TODO: Add function to add test executable. Needs to copy DLL files to avoid violating DRY (Don't Repeat Yourself)
+function(add_test_executable target_name)
+endfunction()
 
 #----------------------------------------------------------------------------------------------------------------------
 # Testing Subdirectories
 #----------------------------------------------------------------------------------------------------------------------
 
-#add_subdirectory(math) 
-#add_subdirectory(utils)
+add_subdirectory(math) 
+add_subdirectory(utils)
+# add_subdirectory(window) -> Tests don't build currently due to unresolved externals, need to go back to implementation of Window
+#add_subdirectory(system)

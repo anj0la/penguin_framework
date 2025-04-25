@@ -18,7 +18,6 @@ namespace penguin::core::window {
 	class PENGUIN_API Window {
 	public:
 		Window(const char* p_title = "", Vector2i p_size = Vector2i(640, 480), WindowFlags p_flags = WindowFlags::None);
-		Window(const char* p_title = "", int width = 640, int height = 480, WindowFlags p_flags = WindowFlags::None) : Window(p_title, Vector2i(width, height), p_flags) {}
 		~Window();
 
 		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
@@ -30,44 +29,44 @@ namespace penguin::core::window {
 
 		// Functions to change window title / sizes
 
-		void set_title(const char* new_title);
-		void set_max_size(Vector2i p_max_size);
-		void set_min_size(Vector2i p_min_size);
-		void resize(Vector2i new_size);
+		bool set_title(const char* new_title);
+		bool set_max_size(Vector2i p_max_size);
+		bool set_min_size(Vector2i p_min_size);
+		bool resize(Vector2i new_size);
 
 		// Functions to change window visibility
 
-		void show();
-		void hide();
-		void minimize();
-		void maximize();
-		void restore(); // used to restore a minimized / maximized window. Has no effect on a fullscreen window.
-		void restore_async();
+		bool show();
+		bool hide();
+		bool minimize();
+		bool maximize();
+		bool restore(); // used to restore a minimized / maximized window. Has no effect on a fullscreen window.
+		bool restore_async();
 
 		// Functions to toggle window states
 
-		void enable_resizing();
-		void disable_resizing();
+		bool enable_resizing();
+		bool disable_resizing();
 
-		void enable_borders();
-		void disable_borders();
+		bool enable_borders();
+		bool disable_borders();
 
-		void enter_fullscreen();
-		void exit_fullscreen();
+		bool enter_fullscreen();
+		bool exit_fullscreen();
 
-		void enable_vsync();
-		void disable_vsync();
+		bool enable_vsync();
+		bool disable_vsync();
 
-		void grab_mouse();
-		void release_mouse();
+		bool grab_mouse();
+		bool release_mouse();
 
-		void add_always_on_top();
-		void remove_always_on_top();
+		bool add_always_on_top();
+		bool remove_always_on_top();
 
-		void gain_focus();
-		void lose_foucs();
+		bool gain_focus();
+		bool lose_foucs();
 
-		// Functions to get window title / sizes
+		// Functions to get window title / size
 
 		const char* get_title();
 		Vector2i get_window_size() const;

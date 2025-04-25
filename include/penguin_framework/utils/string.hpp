@@ -1,11 +1,14 @@
 #pragma once
 
+#include <penguin_framework/penguin_api.hpp>
+
 #include <cstring>
 #include <cstddef>
 #include <utility>
 #include <memory>
 
-class [[nodiscard]] String {
+
+class PENGUIN_API [[nodiscard]] String {
 public:
 	// Default constructor
 

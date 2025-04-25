@@ -22,7 +22,7 @@ namespace penguin::core::window {
 		NotFocusable = SDL_WINDOW_NOT_FOCUSABLE
 	};
 
-	enum class PF_WindowVSyncFlags : int {
+	enum class WindowVSyncFlags : int {
 		VSync_Adaptive = -1,
 		VSync_Disabled
 	};

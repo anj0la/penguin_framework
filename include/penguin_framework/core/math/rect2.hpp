@@ -8,19 +8,19 @@ struct PENGUIN_API [[nodiscard]] Rect2 {
 
 	// Default constructor
 
-	Rect2() = default; // Sets the position and sixe of the rectangle at the origin (0.0, 0.0)
+	Rect2(); 
 
 	// Regular constructors
 
-	constexpr Rect2(float x, float y, float width, float height) : position(Vector2(x, y)), size(Vector2(width, height)) {}
-	constexpr Rect2(const Vector2& position, const Vector2& size) : position(position), size(size) {}
+	Rect2(float x, float y, float width, float height);
+	Rect2(const Vector2& position, const Vector2& size);
 
 	// Copy and move constructors
 
-	constexpr Rect2(const Rect2& r) = default; // Copy constructor
-	constexpr Rect2(Rect2&& r) noexcept = default; // Move constructor
-	constexpr Rect2& operator=(const Rect2& r) = default; // Copy assignment operator
-	constexpr Rect2& operator=(Rect2&& r) noexcept = default; // Move assignment operator
+	Rect2(const Rect2& r) = default; // Copy constructor
+	Rect2(Rect2&& r) noexcept = default; // Move constructor
+	Rect2& operator=(const Rect2& r) = default; // Copy assignment operator
+	Rect2& operator=(Rect2&& r) noexcept = default; // Move assignment operator
 
 	// Equality operators
 
@@ -29,18 +29,10 @@ struct PENGUIN_API [[nodiscard]] Rect2 {
 
 	// Other functions
 	
-	inline float area() const { return size.x * size.y; }
-	inline float perimeter() const { return 2.0f * (size.x + size.y); }
-	inline Vector2 center() const { return position + size / 2.0f; }
-
-	inline bool contains(const Vector2& point) const {
-		return point.x >= position.x && point.x <= position.x + size.x &&
-			point.y >= position.y && point.y <= position.y + size.y;
-	}
-
-	inline bool intersects(const Rect2& r) const {
-		return position.x < r.position.x + r.size.x && position.x + size.x > r.position.x &&
-			position.y < r.position.y + r.size.y && position.y + size.y > r.position.y;
-	}
+	float area() const;
+	float perimeter() const;
+	Vector2 center() const;
+	bool contains(const Vector2& point) const;
+	bool intersects(const Rect2& r) const;
 
 };

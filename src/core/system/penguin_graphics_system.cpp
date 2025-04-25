@@ -14,6 +14,6 @@ GraphicsSystem::~GraphicsSystem() {
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
-std::unique_ptr<Window> GraphicsSystem::create_window(const char* p_title = "", Vector2i p_size = Vector2i(640, 480), WindowFlags p_flags = WindowFlags::None) {
+std::unique_ptr<Window> create_window(const char* p_title, Vector2i p_size, WindowFlags p_flags) {
 	return std::make_unique<Window>(p_title, p_size, p_flags);
 }

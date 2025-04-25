@@ -31,10 +31,12 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" IS_TOP_
 set(PF_BUILD_SHARED ON) 
 set(BUILD_SHARED_LIBS ${PF_BUILD_SHARED})
 
-option(PF_BUILD_TESTS "Build Penguin Framework tests" OFF) # TODO: Update tests CMakeLists.txt file
+option(PF_BUILD_TESTS "Build Penguin Framework tests" ON) # TODO: Update tests CMakeLists.txt file
 option(PF_BUILD_EXAMPLES "Build Penguin Framework examples" OFF) # NOTE: No examples currently
 option(PF_BUILD_DOCS "Build Penguin Framework documentation" OFF) # NOTE: No documentation currently
 option(PF_INSTALL "Generate target for installing Penguin Framework" ${IS_TOP_LEVEL})
+
+set(PF_BUILD_TESTS ON) # JUST FOR TESTING PURPOSES
 
 #----------------------------------------------------------------------------------------------------------------------
 # Build Settings
@@ -88,15 +90,18 @@ message(STATUS "SDL3 available. Linking against target: SDL3::SLD3")
 message(STATUS "Adding penguin_framework library...")
 
 add_library(penguin_framework
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/core/math/vector2.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/core/math/vector2i.cpp       
-            #${CMAKE_CURRENT_SOURCE_DIR}/src/core/events/event.cpp -> these classes need to be updated
-            #${CMAKE_CURRENT_SOURCE_DIR}/src/core/events/windowevent.cpp
-            #${CMAKE_CURRENT_SOURCE_DIR}/src/core/input/input.cpp
-            #${CMAKE_CURRENT_SOURCE_DIR}/src/core/input/keyboard/keyboard.cpp
-            "src/core/window/penguin_window.cpp"
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/string.cpp
- "src/core/penguin_graphics_system.cpp")
+        "src/core/math/vector2.cpp"
+        "src/core/math/vector2i.cpp"
+        "src/utils/string.cpp"
+        "src/core/math/circle2.cpp" 
+        "src/core/math/rect2.cpp" 
+        "src/core/math/rect2i.cpp" 
+        "src/core/math/colour.cpp"
+        #"src/core/window/penguin_window.cpp"
+        #"src/core/system/penguin_graphics_system.cpp" 
+
+
+)
 add_library(penguin::penguin ALIAS penguin_framework)
 
 message(STATUS "Added penguin_framework library.")
