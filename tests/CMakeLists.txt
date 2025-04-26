@@ -29,5 +29,5 @@ endfunction()
 
 add_subdirectory(math) 
 add_subdirectory(utils)
-# add_subdirectory(window) -> Tests don't build currently due to unresolved externals, need to go back to implementation of Window
+add_subdirectory(window) # -> Tests don't build currently due to unresolved externals, need to go back to implementation of Window
 #add_subdirectory(system)

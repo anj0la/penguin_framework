@@ -24,8 +24,8 @@ namespace penguin::core::window {
 
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
-		Window(Window&&) noexcept;         
-		Window& operator=(Window&&) noexcept;
+		Window(Window&&) noexcept = default;         
+		Window& operator=(Window&&) noexcept = default;
 
 		// Functions to change window title / sizes
 

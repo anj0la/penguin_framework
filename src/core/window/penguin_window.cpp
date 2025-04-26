@@ -203,8 +203,9 @@ struct Window::WindowImpl {
 
 Window::Window(const char* p_title, Vector2i p_size, WindowFlags p_flags) : pimpl_(std::make_unique<WindowImpl>(p_title, p_size, p_flags)) {}
 Window::~Window() = default;
-Window::Window(Window&&) noexcept = default;
-Window& Window::operator=(Window&&) noexcept = default;
+
+//Window::Window(Window&&) noexcept = default;
+//Window& Window::operator=(Window&&) noexcept = default;
 
 bool Window::set_title(const char* new_title) { return pimpl_->set_title(new_title); }
 bool Window::set_max_size(Vector2i p_max_size) { return pimpl_->set_max_size(p_max_size); }
