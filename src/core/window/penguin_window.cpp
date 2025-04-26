@@ -42,10 +42,7 @@ struct Window::WindowImpl {
 		max_size = p_size;
 
 		set_flags(p_flags);
-
 	}
-
-	WindowImpl(const char* p_title = "", int width = 640, int height = 480, WindowFlags p_flags = WindowFlags::None) : WindowImpl(p_title, Vector2i(width, height), p_flags) {}
 
 	// Move constructor & assignment destructors
 

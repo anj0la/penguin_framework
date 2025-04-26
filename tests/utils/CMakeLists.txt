@@ -2,6 +2,8 @@
 # Testing Setup
 #----------------------------------------------------------------------------------------------------------------------
 
+include(TestHelpers)
+
 add_executable(run_util_tests
 	  "test_string.cpp"
 )
@@ -9,46 +11,8 @@ add_executable(run_util_tests
 target_link_libraries(
 	  run_util_tests
 	  penguin::penguin
-      SDL3::SDL3
 	  GTest::gtest_main
 )
 
-if(WIN32 AND PF_BUILD_SHARED) 
-    set(PF_DLL_PATH "$<TARGET_FILE:penguin::penguin>")
-    set(SDL3_DLL_PATH "$<TARGET_FILE:SDL3::SDL3>")
-    set(GTEST_DLL_PATH "$<TARGET_FILE:GTest::gtest>")
-    set(GTEST_MAIN_DLL_PATH "$<TARGET_FILE:GTest::gtest_main>")
-    set(TEST_EXE_DIR "$<TARGET_FILE_DIR:run_util_tests>")
-
-    # Add steps to copy specific dlls
-    add_custom_command(TARGET run_util_tests POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${PF_DLL_PATH}"
-            "${TEST_EXE_DIR}"
-        COMMENT "Copying penguin_framework.dll for ${run_util_tests}"
-        VERBATIM)
-
-    add_custom_command(TARGET run_util_tests POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${SDL3_DLL_PATH}"
-            "${TEST_EXE_DIR}"
-        COMMENT "Copying SDL3.dll for ${run_util_tests}"
-        VERBATIM)
-
-    add_custom_command(TARGET run_util_tests POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${GTEST_DLL_PATH}"
-            "${TEST_EXE_DIR}"
-        COMMENT "Copying gtest.dll for ${run_util_tests}"
-        VERBATIM)
-
-    add_custom_command(TARGET run_util_tests POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${GTEST_MAIN_DLL_PATH}"
-            "${TEST_EXE_DIR}"
-        COMMENT "Copying gtest_main.dll for ${run_util_tests}"
-        VERBATIM)
-
-endif()
-
+copy_dll_files(run_util_tests)
 gtest_discover_tests(run_util_tests)
