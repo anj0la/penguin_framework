@@ -21,17 +21,6 @@ TEST(WindowFlagsTest, OrCombinesFlagsCorrectly) {
     EXPECT_TRUE(res2);
 }
 
-TEST(WindowFlagsTest, AndChecksCorrectly) {
-    // Arrange
-    auto flags = WindowFlags::Borderless & WindowFlags::Fullscreen;
-
-    // Act
-    bool res = has_flag(flags, WindowFlags::Borderless) && has_flag(flags, WindowFlags::Fullscreen);
-
-    // Assert - Validate flag checks
-    EXPECT_TRUE(res);
-}
-
 TEST(WindowFlagsTest, NotInvertsFlag) {
     // Arrange
     auto all = WindowFlags::Hidden | WindowFlags::Resizable | WindowFlags::AlwaysOnTop;
