@@ -69,7 +69,7 @@ struct Window::WindowImpl {
 	}
 	bool resize(Vector2i new_size) {
 		size = new_size;
-		if (min_size.x <= 0 || min_size.y <= 0) return false; // the vector's x and y coordinates must be greater than 0
+		if (new_size.x <= 0 || new_size.y <= 0) return false; // the vector's x and y coordinates must be greater than 0
 		return SDL_SetWindowSize(window.get(), size.x, size.y);
 	}
 
@@ -112,6 +112,9 @@ struct Window::WindowImpl {
 			bool res = SDL_RestoreWindow(window.get());
 			bool res_sync = SDL_SyncWindow(window.get());
 
+			maximized = false; // both flags should be false
+			minimized = false;
+
 			return res && res_sync;
 		}
 		return true; // no error occurs if not resizable
@@ -119,6 +122,9 @@ struct Window::WindowImpl {
 	}
 	bool restore_async() {
 		if (resizable) {
+			maximized = false; // both flags should be false
+			minimized = false;
+
 			return SDL_RestoreWindow(window.get());
 		}
 		return true; // no error occurs if not resizable
