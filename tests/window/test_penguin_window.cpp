@@ -113,7 +113,20 @@ TEST_F(WindowTestFixture, SetMaxSizeRestrictsSize) {
     EXPECT_EQ(actual_max_size.y, max_size.y);
 }
 
+TEST_F(WindowTestFixture, SetMaxSizeKeepsSize) {
+    // Arrange
+    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
+    const Vector2i max_size(-100, -400);
 
+    // Act
+    bool success = window.set_max_size(max_size);
+
+    // Assert
+    EXPECT_FALSE(success);
+    Vector2i actual_max_size = window.get_max_window_size();
+    EXPECT_EQ(actual_max_size.x, window.get_window_width()); // the max size should be the window size if it has not been set by default
+    EXPECT_EQ(actual_max_size.y, window.get_window_height());
+}
 TEST_F(WindowTestFixture, SetMinSizeRestrictsSize) {
     // Arrange
     Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
@@ -129,6 +142,20 @@ TEST_F(WindowTestFixture, SetMinSizeRestrictsSize) {
     EXPECT_EQ(actual_min_size.y, min_size.y);
 }
 
+TEST_F(WindowTestFixture, SetMinSizeKeepsSize) {
+    // Arrange
+    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
+    const Vector2i min_size(-800, -600);
+
+    // Act
+    bool success = window.set_min_size(min_size);
+
+    // Assert
+    EXPECT_FALSE(success);
+    Vector2i actual_min_size = window.get_min_window_size();
+    EXPECT_EQ(actual_min_size.x, window.get_window_width()); // the min size should be the window size if it has not been set by default
+    EXPECT_EQ(actual_min_size.y, window.get_window_height());
+}
 
 TEST_F(WindowTestFixture, ResizeChangesSize) {
     // Arrange
@@ -144,6 +171,22 @@ TEST_F(WindowTestFixture, ResizeChangesSize) {
     EXPECT_TRUE(success); 
     EXPECT_EQ(window.get_window_width(), new_size.x);
     EXPECT_EQ(window.get_window_height(), new_size.y);
+}
+
+TEST_F(WindowTestFixture, ResizeKeepsSize) {
+    // Arrange
+    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
+    const Vector2i new_size(-640, -480);
+    ASSERT_NE(window.get_window_width(), new_size.x); // Ensure size is different initially
+    ASSERT_NE(window.get_window_height(), new_size.y);
+
+    // Act
+    bool success = window.resize(new_size);
+
+    // Assert
+    // NOTE: No need to check if the window size is equal to Vector2i(800, 600).
+    // The size is not changed internally unless a valid size is passed to the function.
+    EXPECT_FALSE(success);
 }
 
 TEST_F(WindowTestFixture, ShowMakesHiddenWindowVisible) {

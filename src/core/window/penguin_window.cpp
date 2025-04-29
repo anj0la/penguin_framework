@@ -58,18 +58,18 @@ struct Window::WindowImpl {
 		return SDL_SetWindowTitle(window.get(), title.c_str());
 	}
 	bool set_max_size(Vector2i p_max_size) {
+		if (p_max_size.x < 0 || p_max_size.y < 0) return false; // the vector's x and y coordinates must be a positive integer
 		max_size = p_max_size;
-		if (max_size.x < 0 || max_size.y < 0) return false; // the vector's x and y coordinates must be a positive integer
 		return SDL_SetWindowMaximumSize(window.get(), max_size.x, max_size.y);
 	}
 	bool set_min_size(Vector2i p_min_size) {
+		if (p_min_size.x < 0 || p_min_size.y < 0) return false; // the vector's x and y coordinates must be a positive integer
 		min_size = p_min_size;
-		if (min_size.x < 0 || min_size.y < 0) return false; // the vector's x and y coordinates must be a positive integer
 		return SDL_SetWindowMinimumSize(window.get(), min_size.x, min_size.y);
 	}
 	bool resize(Vector2i new_size) {
-		size = new_size;
 		if (new_size.x <= 0 || new_size.y <= 0) return false; // the vector's x and y coordinates must be greater than 0
+		size = new_size;
 		return SDL_SetWindowSize(window.get(), size.x, size.y);
 	}
 
