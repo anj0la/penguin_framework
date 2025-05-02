@@ -1,6 +1,6 @@
 #pragma once
 
-enum class PF_Error {
+enum class Error {
 	Unknown = -1,
 	Window,
 	Renderer,

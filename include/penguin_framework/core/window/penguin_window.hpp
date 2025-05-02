@@ -8,10 +8,7 @@
 
 #include <memory>
 
-// Forward declaration of GraphicsSystem
-namespace penguin::core::system {
-	class GraphicsSystem;
-}
+using NativeWindowPtr = void*;
 
 namespace penguin::core::window {
 
@@ -94,12 +91,14 @@ namespace penguin::core::window {
 		bool is_focused() const;
 		bool is_open() const;
 
+		// Access to internal window pointer 
+		// NOTE: This is needed to create the renderer and other objects.
+		// It will be deleted once I have figured out how to connect the window, renderer and other objects.
+		NativeWindowPtr get_native_ptr() const;
+
 	private:
 		// Forward declaration
 		struct WindowImpl;
-
-		// Gives access to internal implementation (needed to create renderer)
-		friend class GraphicsSystem;
 
 		std::unique_ptr<WindowImpl> pimpl_;
 	};

@@ -10,14 +10,14 @@
 class Exception final : public std::exception {
 
 public:
-	Exception(const char* message, PF_Error error = PF_Error::Unknown) : message(message), error_val(error) {}
+	Exception(const char* message, Error error = Error::Unknown) : message(message), error_val(error) {}
 	~Exception() noexcept override = default;
 
 	[[nodiscard]] const char* what() const noexcept override { return message.c_str(); }
-	[[nodiscard]] PF_Error error() const noexcept { return error_val; }
+	[[nodiscard]] Error error() const noexcept { return error_val; }
 
-	inline static void throw_if(bool condition, const char* message, PF_Error error) { if (condition) throw Exception{ message, error }; }
+	inline static void throw_if(bool condition, const char* message, Error error) { if (condition) throw Exception{ message, error }; }
 private:
 	String message;
-	PF_Error error_val;
+	Error error_val;
 };

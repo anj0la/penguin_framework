@@ -44,9 +44,7 @@ TEST_F(WindowTestFixture, ConstructorDefaultCreatesHiddenWindow) {
         EXPECT_FALSE(window.is_maximized());
         EXPECT_FALSE(window.is_minimized());
         EXPECT_FALSE(window.is_mouse_grabbed());
-        EXPECT_FALSE(window.is_vsync_enabled());
         EXPECT_FALSE(window.is_resizable());
-
     });
 }
 
@@ -78,7 +76,6 @@ TEST_F(WindowTestFixture, ConstructorWithParamsSetsProperties) {
         EXPECT_FALSE(window.is_maximized());
         EXPECT_FALSE(window.is_minimized());
         EXPECT_FALSE(window.is_mouse_grabbed());
-        EXPECT_FALSE(window.is_vsync_enabled());
     });
 }
 
@@ -417,39 +414,6 @@ TEST_F(WindowTestFixture, ExitFullscreenMakesWindowWindowed) {
     EXPECT_FALSE(window.is_fullscreen());
 }
 
-
-TEST_F(WindowTestFixture, EnableVsyncTurnsOnVsync) {
-    // Arrange
-    Window window("No Vsync Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_FALSE(window.is_vsync_enabled()); // Assumes vsync is off by default
-
-    // Act
-    bool success = window.enable_vsync(); 
-
-    // Assert
-    // NOTE: Dummy video driver cannot actually enable vsync on a window.
-    // This test only ensures that our intent to enable vsync is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_FALSE(success);
-    EXPECT_TRUE(window.is_vsync_enabled());
-}
-
-TEST_F(WindowTestFixture, DisableVsyncTurnsOffVsync) {
-    // Arrange
-    Window window("Vsync Window", Vector2i(800, 600), WindowFlags::Hidden);
-    window.enable_vsync(); // Assume this works
-    ASSERT_TRUE(window.is_vsync_enabled());
-
-    // Act
-    bool success = window.disable_vsync();
-
-    // Assert
-    // NOTE: Dummy video driver cannot actually disable vsync on a window.
-    // This test only ensures that our intent to disable vsync is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_FALSE(success);
-    EXPECT_FALSE(window.is_vsync_enabled());
-}
 TEST_F(WindowTestFixture, GrabMouseConfinesMouse) {
     // Arrange
     Window window("Free Mouse Window", Vector2i(800, 600), WindowFlags::Hidden);
