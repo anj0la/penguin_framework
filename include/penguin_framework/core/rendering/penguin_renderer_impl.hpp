@@ -4,6 +4,7 @@
 #include <penguin_framework/core/math/rect2.hpp>
 #include <penguin_framework/core/math/circle2.hpp>
 #include <penguin_framework/core/math/colours.hpp>
+#include <penguin_framework/core/math/vector2i.hpp>
 
 #include <SDL3/SDL_video.h>
 #include <SDL3/SDL_render.h>
@@ -22,7 +23,7 @@ namespace penguin::core::rendering {
 
 		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
 
-		Renderer(const RendererImpl&) = delete;
+		RendererImpl(const RendererImpl&) = delete;
 		RendererImpl& operator=(const RendererImpl&) = delete;
 		RendererImpl(RendererImpl&&) noexcept = default;
 		RendererImpl& operator=(RendererImpl&&) noexcept = default;
@@ -31,6 +32,7 @@ namespace penguin::core::rendering {
 
 		bool display();
 		bool clear();
+		bool set_colour(Colour colour);
 
 		// Drawing functions
 
@@ -38,13 +40,14 @@ namespace penguin::core::rendering {
 		bool draw_pixel(Vector2 vec, Colour colour = Colours::White);
 		bool draw_rect(Rect2 rect, Colour outline = Colours::White);
 		bool draw_filled_rect(Rect2 rect, Colour fill = Colours::White);
-		bool draw_triange(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline = Colours::White);
-		bool draw_filled_triange(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill = Colours::White);
+		bool draw_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline = Colours::White);
+		bool draw_filled_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill = Colours::White);
 		bool draw_circle(Vector2 center, int rad, Colour outline = Colours::White);
-		bool draw_circle(Circle2 circle, Colour outline = Colours::White);
 		bool draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White);
-		bool draw_filled_circle(Circle2 circle, Colour fill = Colours::White);
 		bool draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White);
 		bool draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White);
+
+		// Helper functions
+		bool draw_horizontal_line(float x1, float x2, float y, Colour colour);
 	};
 }

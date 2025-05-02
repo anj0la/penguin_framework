@@ -98,8 +98,7 @@ add_library(penguin_framework
         "src/core/math/rect2i.cpp" 
         "src/core/math/colour.cpp"
         "src/core/window/penguin_window.cpp"
-        #"src/core/system/penguin_graphics_system.cpp" 
-        #"src/core/renderer/penguin_renderer.cpp"
+        "src/core/renderer/penguin_renderer.cpp"
         )
 
 add_library(penguin::penguin ALIAS penguin_framework)

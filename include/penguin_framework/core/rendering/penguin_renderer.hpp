@@ -32,8 +32,8 @@ namespace penguin::core::rendering {
 		bool draw_pixel(Vector2 vec, Colour colour = Colours::White);
 		bool draw_rect(Rect2 rect, Colour outline = Colours::White);
 		bool draw_filled_rect(Rect2 rect, Colour fill = Colours::White);
-		bool draw_triange(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill = Colours::White);
-		bool draw_filled_triange(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill = Colours::White);
+		bool draw_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline = Colours::White);
+		bool draw_filled_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill = Colours::White);
 		bool draw_circle(Vector2 center, int rad, Colour outline = Colours::White);
 		bool draw_circle(Circle2 circle, Colour outline = Colours::White);
 		bool draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White);
