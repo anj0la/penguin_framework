@@ -5,9 +5,9 @@
 
 using penguin::core::rendering::Renderer;
 
-Renderer::RendererImpl::RendererImpl(SDL_Window* window, const char* driver)
+Renderer::RendererImpl::RendererImpl(NativeWindowPtr window, const char* driver)
 	: renderer(SDL_CreateRenderer(
-		window,
+		window.as<SDL_Window>(),
 		String::compare("", driver) ? NULL : driver), // If empty, allow SDL to handle getting the driver.
 		&SDL_DestroyRenderer) {
 
@@ -278,7 +278,7 @@ bool Renderer::RendererImpl::draw_horizontal_line(float x1, float x2, float y, C
 
 // --- Define Renderer Methods ---
 
-Renderer::Renderer(window::Window& window, const char* driver_name = "") : pimpl_(std::make_unique<RendererImpl>(static_cast<SDL_Window*>(window.get_native_ptr()), driver_name)) {}
+Renderer::Renderer(window::Window& window, const char* driver_name = "") : pimpl_(std::make_unique<RendererImpl>(window.get_native_ptr(), driver_name)) {}
 Renderer::~Renderer() = default;
 
 // Displaying / clearing the renderer
@@ -301,3 +301,4 @@ bool Renderer::draw_filled_circle(Circle2 circle, Colour fill = Colours::White) 
 bool Renderer::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White) { return pimpl_->draw_ellipse(center, radius_x, radius_y, outline); }
 bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White) { return pimpl_->draw_filled_ellipse(center, radius_x, radius_y, fill); }
 
+NativeRendererPtr Renderer::get_native_ptr() const { return NativeRendererPtr{ pimpl_->renderer.get() }; }

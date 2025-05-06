@@ -2,13 +2,13 @@
 
 #include <penguin_framework/penguin_api.hpp>
 
+
+#include <penguin_framework/core/common/native_types.hpp>
 #include <penguin_framework/core/window/penguin_windowflags.hpp>
 #include <penguin_framework/core/math/vector2i.hpp>
 #include <penguin_framework/utils/string.hpp>
 
 #include <memory>
-
-using NativeWindowPtr = void*;
 
 namespace penguin::core::window {
 

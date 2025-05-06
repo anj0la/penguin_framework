@@ -4,8 +4,6 @@
 #include <penguin_framework/core/math/vector2.hpp>
 #include <numbers>
 
-constexpr float PI = 3.14159265358979323846f;
-
 struct PENGUIN_API [[nodiscard]] Circle2 {
 	Vector2 center;
 	float radius;

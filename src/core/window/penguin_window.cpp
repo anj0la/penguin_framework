@@ -219,7 +219,5 @@ bool Window::is_always_on_top() const { return pimpl_->always_on_top; }
 bool Window::is_focused() const { return pimpl_->focused; }
 bool Window::is_open() const { return pimpl_->open; }
 
-// Access to internal window pointer 
-// NOTE: This is needed to create the renderer and other objects.
-// It will be deleted once I have figured out how to connect the window, renderer and other objects.
-NativeWindowPtr Window::get_native_ptr() const { return static_cast<NativeWindowPtr>(pimpl_->window.get()); }
+// Implicit SDL_Window* -> void* conversion; no need for static_cast<NativeWindowPtr>.
+NativeWindowPtr Window::get_native_ptr() const { return NativeWindowPtr{ pimpl_->window.get() }; }

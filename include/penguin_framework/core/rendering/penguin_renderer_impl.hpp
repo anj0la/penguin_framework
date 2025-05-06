@@ -1,5 +1,7 @@
 #pragma once
 
+#include <penguin_framework/core/common/native_types.hpp>
+
 #include <penguin_framework/utils/exception.hpp>
 #include <penguin_framework/core/math/rect2.hpp>
 #include <penguin_framework/core/math/circle2.hpp>
@@ -19,7 +21,7 @@ namespace penguin::core::rendering {
 		std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> renderer;
 
 		// Constructor
-		RendererImpl(SDL_Window* window, const char* driver_name);
+		RendererImpl(NativeWindowPtr window, const char* driver_name);
 
 		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
 
