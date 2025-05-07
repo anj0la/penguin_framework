@@ -10,7 +10,7 @@ namespace penguin::core::rendering::assets {
 
 	class PENGUIN_API AssetLoader {
 	public:
-		AssetLoader(rendering::Renderer& renderer); // add text_renderer later
+		AssetLoader(NativeRendererPtr renderer_ptr); // add text_renderer later
 
 		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
 

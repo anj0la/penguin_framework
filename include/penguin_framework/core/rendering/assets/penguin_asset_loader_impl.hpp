@@ -1,6 +1,7 @@
 #pragma once
 
-#include <penguin_framework/core/rendering/penguin_renderer.hpp>
+#include <penguin_framework/core/common/native_types.hpp>
+
 #include <penguin_framework/core/rendering/assets/penguin_texture.hpp>
 #include <penguin_framework/utils/exception.hpp>
 #include <penguin_framework/utils/string.hpp>
@@ -9,9 +10,7 @@
 #include <penguin_framework/core/math/colours.hpp>
 #include <penguin_framework/core/math/vector2i.hpp>
 
-#include <SDL3/SDL_video.h>
 #include <SDL3/SDL_render.h>
-#include <SDL3/SDL_rect.h>
 
 #include <memory>
 #include <vector>
@@ -21,7 +20,7 @@ namespace penguin::core::rendering::assets {
 
 	struct AssetLoader::AssetLoaderImpl {
 	public:
-		AssetLoaderImpl(rendering::Renderer& renderer); // add text_renderer later
+		AssetLoaderImpl(NativeRendererPtr renderer); // add text_renderer later
 
 		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
 		
@@ -41,12 +40,17 @@ namespace penguin::core::rendering::assets {
 		// Font load(const char* path, int font_size);
 		// Text load(Font& font, const char* str, Vector2 position, Colour colour);
 
-		// text_renderer -> LATER
-		// image_cache
-		// font_cache -> LATER
-
 	private:
-		rendering::Renderer renderer;
-		std::unordered_map<String, Texture> texture_cache;
+
+		// AssetLoader MUST NOT outlive Renderer
+		// Created by the framework and managed:
+		//
+		// Renderer renderer;
+		// AssetLoader content(renderer.get_native_ptr());
+		//
+		// Then when the destructor is called, the AssetLoader is destroyed FIRST before the renderer
+
+		NativeRendererPtr ptr;
+		std::unordered_map<String, Texture> texture_cache; // need to figure out how to handle caching
 	};
 }

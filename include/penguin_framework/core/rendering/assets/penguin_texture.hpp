@@ -17,7 +17,7 @@ namespace penguin::core::rendering::assets {
 
 	class PENGUIN_API Texture {
 	public:
-		Texture(penguin::core::rendering::Renderer& renderer, const char* path);
+		Texture(NativeRendererPtr renderer, const char* path);
 		~Texture();
 
 		// Move constructor & assignment destructors (copy constructor / assignment not allowed)

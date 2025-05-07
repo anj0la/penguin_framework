@@ -5,13 +5,24 @@
 
 using penguin::core::rendering::assets::Texture;
 
-// MOVE THE UNIQUE PTR FROM ASSETLOADER TO TEXTURE
-Texture::TextureImpl::TextureImpl(std::unique_ptr <SDL_Texture, void(*)(SDL_Texture*)> image, const char* path) : img(std::move(image)) {
-	size.x = img->w;
-	size.y = img->h;
+Texture::TextureImpl::TextureImpl(NativeRendererPtr ptr, const char* path) : texture(nullptr, &SDL_DestroyTexture) {
+	SDL_Surface* surface = SDL_LoadBMP(path);
+
+	texture.reset(
+		SDL_CreateTextureFromSurface(ptr.as<SDL_Renderer>(), surface)
+	);
+
+	SDL_DestroySurface(surface);
+
+	size.x = texture->w;
+	size.y = texture->h;
 }
 
-NativeTexturePtr Texture::get_native_ptr() const { return NativeTexturePtr{ pimpl_->img.get() }; }
+// --- Define Texture ---
+
+Texture::Texture(NativeRendererPtr renderer, const char* path) : pimpl_(std::make_unique<TextureImpl>(renderer, path)) {}
+
+NativeTexturePtr Texture::get_native_ptr() const { return NativeTexturePtr{ pimpl_->texture.get() }; }
 
 /*
 

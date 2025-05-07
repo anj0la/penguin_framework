@@ -99,7 +99,7 @@ add_library(penguin_framework
         "src/core/math/colour.cpp"
         "src/core/window/penguin_window.cpp"
         "src/core/renderer/penguin_renderer.cpp"
-        "src/core/renderer/assets/penguin_texture.cpp")
+        "src/core/renderer/assets/penguin_texture.cpp" "src/core/renderer/assets/penguin_asset_loader.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 
