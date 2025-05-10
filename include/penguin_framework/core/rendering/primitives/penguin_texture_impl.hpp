@@ -15,7 +15,7 @@
 #include <memory>
 #include <vector>
 
-namespace penguin::core::rendering::assets {
+namespace penguin::core::rendering::primitives {
 
 	struct Texture::TextureImpl {
 

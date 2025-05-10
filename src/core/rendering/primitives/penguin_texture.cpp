@@ -1,9 +1,9 @@
-#include <penguin_framework/core/rendering/assets/penguin_texture.hpp>
-#include <penguin_framework/core/rendering/assets/penguin_texture_impl.hpp>
+#include <penguin_framework/core/rendering/primitives/penguin_texture.hpp>
+#include <penguin_framework/core/rendering/primitives/penguin_texture_impl.hpp>
 
 // --- Define TextureImpl ---
 
-using penguin::core::rendering::assets::Texture;
+using penguin::core::rendering::primitives::Texture;
 
 Texture::TextureImpl::TextureImpl(NativeRendererPtr ptr, const char* path) : texture(nullptr, &SDL_DestroyTexture) {
 	SDL_Surface* surface = SDL_LoadBMP(path);
@@ -16,11 +16,19 @@ Texture::TextureImpl::TextureImpl(NativeRendererPtr ptr, const char* path) : tex
 
 	size.x = texture->w;
 	size.y = texture->h;
+
+	Exception::throw_if(
+		!texture.get(),
+		"Texture was not initialized! Check if the path provided is an absolute path or exists!",
+		Error::Renderer);
 }
 
 // --- Define Texture ---
 
 Texture::Texture(NativeRendererPtr renderer, const char* path) : pimpl_(std::make_unique<TextureImpl>(renderer, path)) {}
+Texture::~Texture() = default;
+
+Vector2i Texture::get_size() const { return pimpl_->size; }
 
 NativeTexturePtr Texture::get_native_ptr() const { return NativeTexturePtr{ pimpl_->texture.get() }; }
 

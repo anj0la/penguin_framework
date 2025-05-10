@@ -13,20 +13,19 @@
 #include <memory>
 #include <vector>
 
-namespace penguin::core::rendering::assets {
+namespace penguin::core::rendering::primitives {
 
 	class PENGUIN_API Texture {
 	public:
 		Texture(NativeRendererPtr renderer, const char* path);
 		~Texture();
 
-		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
-
-		Texture(const Texture&) = delete;
-		Texture& operator=(const Texture&) = delete;
+		Texture(const Texture&) = default;
+		Texture& operator=(const Texture&) = default;
 		Texture(Texture&&) noexcept = default;
 		Texture& operator=(Texture&&) noexcept = default;
 
+		Vector2i get_size() const;
 		NativeTexturePtr get_native_ptr() const;
 
 	private:
