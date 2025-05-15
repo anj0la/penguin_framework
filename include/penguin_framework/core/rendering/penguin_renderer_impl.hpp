@@ -17,7 +17,7 @@
 
 namespace penguin::core::rendering {
 
-	struct Renderer::RendererImpl {
+	struct RendererImpl {
 		std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> renderer;
 
 		// Constructor
@@ -48,6 +48,11 @@ namespace penguin::core::rendering {
 		bool draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White);
 		bool draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White);
 		bool draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White);
+
+		//bool draw_sprite(Sprite spr);
+		//bool draw_sprite(Sprite spr, Rect2 source);
+		//bool draw_sprite(Sprite spr, Rect2 dest);
+		//bool draw_sprite(Sprite str, Rect2 source, Rect2 dest);
 
 		// Helper functions
 		bool draw_horizontal_line(float x1, float x2, float y, Colour colour);

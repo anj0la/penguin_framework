@@ -8,6 +8,9 @@
 
 namespace penguin::core::rendering::systems {
 
+	// Forward declaration
+	struct AssetManagerImpl;
+
 	class PENGUIN_API AssetManager {
 	public:
 		AssetManager(NativeRendererPtr renderer_ptr); // add text_renderer later
@@ -24,9 +27,6 @@ namespace penguin::core::rendering::systems {
 		std::shared_ptr<primitives::Texture> load(const char* path);
 
 	private:
-		// Forward declaration
-		struct AssetManagerImpl;
-
 		std::unique_ptr<AssetManagerImpl> pimpl_;
 	};
 }

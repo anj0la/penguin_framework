@@ -215,7 +215,6 @@ TEST_F(Vector2iTestFixutre, NotOperator) {
 	EXPECT_TRUE(!vector1);
 }
 
-
 // Scalar Operator Tests
 
 TEST_F(Vector2iTestFixutre, AddScalarOperator) {

@@ -1,12 +1,13 @@
 #include <penguin_framework/core/rendering/systems/penguin_texture_loader.hpp>
 #include <penguin_framework/core/rendering/systems/penguin_texture_loader_impl.hpp>
 
-// --- Define TextureLoaderImpl ---
+// --- Define TextureLoaderImpl Methods ---
 
 using penguin::core::rendering::systems::TextureLoader;
+using penguin::core::rendering::systems::TextureLoaderImpl;
 using penguin::core::rendering::primitives::Texture;
 
-std::shared_ptr<Texture> TextureLoader::TextureLoaderImpl::load(NativeRendererPtr renderer, const char* path) {
+std::shared_ptr<Texture> TextureLoaderImpl::load(NativeRendererPtr renderer, const char* path) {
     String path_str(path);
 
     auto it = texture_cache.find(path_str);
@@ -24,10 +25,9 @@ std::shared_ptr<Texture> TextureLoader::TextureLoaderImpl::load(NativeRendererPt
     return new_texture;
 }
 
-// --- Define TextureLoader ---
+// --- Define TextureLoader Methods ---
 
 TextureLoader::TextureLoader() : pimpl_(std::make_unique<TextureLoaderImpl>()) {}
-
 TextureLoader::~TextureLoader() = default;
 
 std::shared_ptr<Texture> TextureLoader::load(NativeRendererPtr renderer, const char* path) {

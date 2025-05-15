@@ -9,6 +9,14 @@
 
 namespace penguin::core::rendering::primitives {
 
+	struct SpriteImpl;
+
+	enum class PENGUIN_API FlipMode {
+		None = 0,
+		Horizontal = 1,
+		Vertical = 2
+	};
+
 	class PENGUIN_API Sprite {
 	public:
 		Sprite(std::shared_ptr<Texture> tex);
@@ -23,14 +31,14 @@ namespace penguin::core::rendering::primitives {
 
 		NativeTexturePtr get_native_ptr() const;
 		Vector2 get_position() const;
-		Vector2 get_size() const;
+		Vector2i get_size() const;
 		float get_angle() const;
 		Vector2 get_anchor_point() const;
 		bool is_hidden() const;
 		FlipMode get_flip_mode() const;
 		Rect2 get_bounding_box() const;
 
-		void set_texture(std::shared_ptr<Texture> tex);
+		void set_texture(std::shared_ptr<Texture> texture);
 		void set_position(Vector2 new_pos);
 		void set_position(float x, float y);
 		void set_angle(float new_angle);
@@ -44,8 +52,6 @@ namespace penguin::core::rendering::primitives {
 		bool intersects(const Sprite& other) const;
 
 	private:
-		struct SpriteImpl;
-
 		std::unique_ptr<SpriteImpl> pimpl_;
 
 	};

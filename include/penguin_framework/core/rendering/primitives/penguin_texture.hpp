@@ -15,6 +15,9 @@
 
 namespace penguin::core::rendering::primitives {
 
+	// Forward declaration
+	struct TextureImpl;
+
 	class PENGUIN_API Texture {
 	public:
 		Texture(NativeRendererPtr renderer, const char* path);
@@ -25,12 +28,10 @@ namespace penguin::core::rendering::primitives {
 		Texture(Texture&&) noexcept = default;
 		Texture& operator=(Texture&&) noexcept = default;
 
-		Vector2i get_size() const;
 		NativeTexturePtr get_native_ptr() const;
+		Vector2i get_size() const;
 
 	private:
-		struct TextureImpl;
-
 		std::unique_ptr<TextureImpl> pimpl_;
 
 	};

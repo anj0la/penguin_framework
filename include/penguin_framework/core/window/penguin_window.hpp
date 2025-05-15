@@ -2,7 +2,6 @@
 
 #include <penguin_framework/penguin_api.hpp>
 
-
 #include <penguin_framework/core/common/native_types.hpp>
 #include <penguin_framework/core/window/penguin_windowflags.hpp>
 #include <penguin_framework/core/math/vector2i.hpp>
@@ -11,6 +10,9 @@
 #include <memory>
 
 namespace penguin::core::window {
+
+	// Forward declaration
+	struct WindowImpl;
 
 	class PENGUIN_API Window {
 	public:
@@ -51,9 +53,6 @@ namespace penguin::core::window {
 		bool enter_fullscreen();
 		bool exit_fullscreen();
 
-		bool enable_vsync();
-		bool disable_vsync();
-
 		bool grab_mouse();
 		bool release_mouse();
 
@@ -91,9 +90,6 @@ namespace penguin::core::window {
 		bool is_focused() const;
 		bool is_open() const;
 
-		// Access to internal window pointer 
-		// NOTE: This is needed to create the renderer and other objects.
-		// It will be deleted once I have figured out how to connect the window, renderer and other objects.
 		NativeWindowPtr get_native_ptr() const;
 
 	private:

@@ -4,7 +4,6 @@
 
 using penguin::core::window::Window;
 using penguin::core::window::WindowFlags;
-using penguin::core::window::WindowVSyncFlags;
 
 // Setting Up the Test Suite
 
@@ -18,7 +17,6 @@ protected:
 	void TearDown() override {
 		SDL_Quit();
 	}
-
 };
 
 // Constructor Test
@@ -199,7 +197,6 @@ TEST_F(WindowTestFixture, ShowMakesHiddenWindowVisible) {
     EXPECT_FALSE(window.is_hidden()); 
 }
 
-
 TEST_F(WindowTestFixture, HideMakesVisibleWindowHidden) {
     // Arrange
     Window window("Visible Window", Vector2i(800, 600)); // No hidden flag
@@ -279,7 +276,6 @@ TEST_F(WindowTestFixture, MaximizeDoesNothingOnNonResizableWindow) {
     EXPECT_FALSE(window.is_maximized()); 
 }
 
-
 TEST_F(WindowTestFixture, RestoreReturnsMinimizedWindowToNormal) {
     // Arrange
     Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
@@ -315,7 +311,6 @@ TEST_F(WindowTestFixture, RestoreReturnsMaximizedWindowToNormal) {
     EXPECT_FALSE(window.is_maximized());
     EXPECT_FALSE(window.is_minimized()); 
 }
-
 
 TEST_F(WindowTestFixture, RestoreAsyncCallSucceeds) {
     // Arrange
@@ -359,7 +354,6 @@ TEST_F(WindowTestFixture, DisableResizingMakesWindowFixed) {
     EXPECT_FALSE(window.is_resizable());
 }
 
-
 TEST_F(WindowTestFixture, DisableBordersRemovesBorder) {
     // Arrange
     Window window("Bordered Window", Vector2i(800, 600), WindowFlags::Hidden); // Starts bordered (default)
@@ -385,7 +379,6 @@ TEST_F(WindowTestFixture, EnableBordersAddsBorder) {
     EXPECT_TRUE(success);
     EXPECT_TRUE(window.is_bordered());
 }
-
 
 TEST_F(WindowTestFixture, EnterFullscreenMakesWindowFullscreen) {
     // Arrange
@@ -426,6 +419,7 @@ TEST_F(WindowTestFixture, GrabMouseConfinesMouse) {
     EXPECT_TRUE(success);
     EXPECT_TRUE(window.is_mouse_grabbed());
 }
+
 TEST_F(WindowTestFixture, ReleaseMouseFreesMouse) {
     // Arrange
     Window window("Grabbed Mouse Window", Vector2i(800, 600), WindowFlags::Hidden);

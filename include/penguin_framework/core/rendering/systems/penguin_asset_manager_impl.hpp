@@ -1,7 +1,5 @@
 #pragma once
 
-#include <penguin_framework/core/rendering/systems/penguin_asset_manager.hpp>
-
 #include <penguin_framework/core/common/native_types.hpp>
 #include <penguin_framework/core/rendering/systems/penguin_texture_loader.hpp>
 #include <penguin_framework/core/rendering/primitives/penguin_texture.hpp>
@@ -12,10 +10,11 @@
 #include <penguin_framework/core/math/vector2i.hpp>
 
 #include <memory>
+#include <filesystem>
 
 namespace penguin::core::rendering::systems {
 
-	struct AssetManager::AssetManagerImpl {
+	struct AssetManagerImpl {
 	public:
 		// AssetManager MUST NOT outlive Renderer
 		// Created by the framework and managed:

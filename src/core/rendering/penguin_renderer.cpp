@@ -1,11 +1,12 @@
 #include <penguin_framework/core/rendering/penguin_renderer.hpp>
 #include <penguin_framework/core/rendering/penguin_renderer_impl.hpp>
 
-// --- Define RendererImpl ---
+// --- Define RendererImpl Methods ---
 
 using penguin::core::rendering::Renderer;
+using penguin::core::rendering::RendererImpl;
 
-Renderer::RendererImpl::RendererImpl(NativeWindowPtr window, const char* driver)
+RendererImpl::RendererImpl(NativeWindowPtr window, const char* driver)
 	: renderer(SDL_CreateRenderer(
 		window.as<SDL_Window>(),
 		String::compare("", driver) ? NULL : driver), // If empty, allow SDL to handle getting the driver.
@@ -17,52 +18,52 @@ Renderer::RendererImpl::RendererImpl(NativeWindowPtr window, const char* driver)
 
 // Displaying / clearing the renderer
 
-bool Renderer::RendererImpl::display() {
+bool RendererImpl::display() {
 	return SDL_RenderPresent(renderer.get());
 }
 
-bool Renderer::RendererImpl::set_colour(Colour colour) {
+bool RendererImpl::set_colour(Colour colour) {
 	return SDL_SetRenderDrawColor(renderer.get(), colour.r, colour.g, colour.b, colour.a);
 }
 
-bool Renderer::RendererImpl::clear() {
+bool RendererImpl::clear() {
 	set_colour(Colours::Black);
 	return SDL_RenderClear(renderer.get());
 }
 
 // Drawing functions
 
-bool Renderer::RendererImpl::draw_line(Vector2 vec1, Vector2 vec2, Colour colour = Colours::White) {
+bool RendererImpl::draw_line(Vector2 vec1, Vector2 vec2, Colour colour = Colours::White) {
 	set_colour(colour);
 	return SDL_RenderLine(renderer.get(), vec1.x, vec1.y, vec2.x, vec2.y);
 }
 
-bool Renderer::RendererImpl::draw_pixel(Vector2 vec, Colour colour = Colours::White) {
+bool RendererImpl::draw_pixel(Vector2 vec, Colour colour = Colours::White) {
 	set_colour(colour);
 	return SDL_RenderPoint(renderer.get(), vec.x, vec.y);
 }
 
-bool Renderer::RendererImpl::draw_rect(Rect2 rect, Colour outline = Colours::White) {
+bool RendererImpl::draw_rect(Rect2 rect, Colour outline = Colours::White) {
 	set_colour(outline);
 	SDL_FRect frect = { rect.position.x, rect.position.y, rect.size.x, rect.size.y };
 	return SDL_RenderRect(renderer.get(), &frect);
 }
 
-bool Renderer::RendererImpl::draw_filled_rect(Rect2 rect, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_rect(Rect2 rect, Colour fill = Colours::White) {
 	set_colour(fill);
 	SDL_FRect frect = { rect.position.x, rect.position.y, rect.size.x, rect.size.y };
 	return SDL_RenderFillRect(renderer.get(), &frect);
 }
 
-bool Renderer::RendererImpl::draw_triangle(Vector2 x, Vector2 y, Vector2 z, Colour outline = Colours::White) {
+bool RendererImpl::draw_triangle(Vector2 x, Vector2 y, Vector2 z, Colour outline = Colours::White) {
 	return draw_line(x, y, outline) && draw_line(y, z, outline) && draw_line(x, z, outline);
 }
 
-bool Renderer::RendererImpl::draw_filled_triangle(Vector2 x, Vector2 y, Vector2 z, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_triangle(Vector2 x, Vector2 y, Vector2 z, Colour fill = Colours::White) {
 	return true; // will implement later
 }
 
-bool Renderer::RendererImpl::draw_circle(Vector2 center, int rad, Colour outline = Colours::White) {
+bool RendererImpl::draw_circle(Vector2 center, int rad, Colour outline = Colours::White) {
 	// Initial points and decision variable.
 	int x = rad - 1;
 	int y = 0;
@@ -102,7 +103,7 @@ bool Renderer::RendererImpl::draw_circle(Vector2 center, int rad, Colour outline
 	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
-bool Renderer::RendererImpl::draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White) {
 	// Convert to Vector2i
 	Vector2i center_(center.x, center.y);
 
@@ -137,7 +138,7 @@ bool Renderer::RendererImpl::draw_filled_circle(Vector2 center, int radius, Colo
 	return true;
 }
 
-bool Renderer::RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White) {
+bool RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White) {
 	// Squares of the radii for the ellipse.
 	int rx2 = radius_x * radius_x;
 	int ry2 = radius_y * radius_y;
@@ -203,7 +204,7 @@ bool Renderer::RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radi
 	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
-bool Renderer::RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White) {
 	// Squares of the radii for the ellipse.
 	int rx2 = radius_x * radius_x;
 	int ry2 = radius_y * radius_y;
@@ -271,7 +272,7 @@ bool Renderer::RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, i
 
 // Helper functions
 
-bool Renderer::RendererImpl::draw_horizontal_line(float x1, float x2, float y, Colour colour) {
+bool RendererImpl::draw_horizontal_line(float x1, float x2, float y, Colour colour) {
 	set_colour(colour);
 	return SDL_RenderLine(renderer.get(), x1, y, x2, y); // Faster to call SDL than converting to Vector2
 }

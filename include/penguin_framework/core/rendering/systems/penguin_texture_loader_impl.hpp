@@ -18,7 +18,7 @@
 
 namespace penguin::core::rendering::systems {
 
-	struct TextureLoader::TextureLoaderImpl {
+	struct TextureLoaderImpl {
 
 		std::unordered_map<String, std::shared_ptr<primitives::Texture>> texture_cache;
 

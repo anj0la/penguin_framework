@@ -2,7 +2,6 @@
 
 #include <penguin_framework/penguin_api.hpp>
 
-
 #include <cmath>
 #include <compare>
 

@@ -12,6 +12,9 @@
 
 namespace penguin::core::rendering {
 
+	// Forward declaration
+	struct RendererImpl;
+
 	class PENGUIN_API Renderer {
 	public:
 		explicit Renderer(window::Window& window, const char* driver_name = "");
@@ -53,9 +56,6 @@ namespace penguin::core::rendering {
 		NativeRendererPtr get_native_ptr() const;
 
 	private:
-		// Forward declaration
-		struct RendererImpl;
-
 		std::unique_ptr<RendererImpl> pimpl_;
 	};
 }

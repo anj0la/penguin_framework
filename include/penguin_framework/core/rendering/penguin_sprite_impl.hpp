@@ -1,7 +1,6 @@
 #pragma once
 
 #include <penguin_framework/core/common/native_types.hpp>
-#include <penguin_framework/core/rendering/penguin_sprite.hpp>
 #include <penguin_framework/core/rendering/primitives/penguin_texture.hpp>
 
 #include <penguin_framework/core/math/rect2.hpp>
@@ -17,13 +16,7 @@
 
 namespace penguin::core::rendering::primitives {
 
-	enum class FlipMode {
-		None = 0, // SDL_FLIP_NONE
-		Horizontal = 1, // SDL_FLIP_HORIZONTAL
-		Vertical = 2 // SDL_FLIP_VERTICAL
-	};
-
-	struct Sprite::SpriteImpl {
+	struct SpriteImpl {
 		std::shared_ptr<Texture> texture;
 		Vector2 position;
 		Vector2i size;
@@ -58,10 +51,8 @@ namespace penguin::core::rendering::primitives {
 
 		void set_texture(std::shared_ptr<Texture> tex);
 		void set_position(Vector2 new_pos);
-		void set_position(float x, float y);
 		void set_angle(float new_angle);
 		void set_anchor_point(Vector2 new_anchor_point);
-		void set_anchor_point(float x, float y);
 		void show();
 		void hide();
 		void set_flip_mode(FlipMode new_mode);

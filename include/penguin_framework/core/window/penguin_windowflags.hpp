@@ -1,30 +1,24 @@
 #pragma once
 
 #include <cstdint>
-#include <SDL3/SDL_video.h>
 
 namespace penguin::core::window {
 
-	enum class WindowFlags : uint64_t {
+	enum class PENGUIN_API WindowFlags : uint64_t {
 		None = 0,
-		Fullscreen = SDL_WINDOW_FULLSCREEN,
-		Resizable = SDL_WINDOW_RESIZABLE,
-		Hidden = SDL_WINDOW_HIDDEN,
-		Borderless = SDL_WINDOW_BORDERLESS,
-		Minimized = SDL_WINDOW_MINIMIZED,
-		Maximized = SDL_WINDOW_MAXIMIZED,
-		MouseGrabbed = SDL_WINDOW_MOUSE_GRABBED,
-		InputFocus = SDL_WINDOW_INPUT_FOCUS,
-		MouseFocus = SDL_WINDOW_MOUSE_FOCUS,
-		MouseRelativeMode = SDL_WINDOW_MOUSE_RELATIVE_MODE,
-		AlwaysOnTop = SDL_WINDOW_ALWAYS_ON_TOP,
-		Transparent = SDL_WINDOW_TRANSPARENT,
-		NotFocusable = SDL_WINDOW_NOT_FOCUSABLE
-	};
-
-	enum class WindowVSyncFlags : int {
-		VSync_Adaptive = -1,
-		VSync_Disabled
+		Fullscreen = (0x0000000000000001ULL),				
+		Hidden = (0x0000000000000008ULL),					
+		Borderless = (0x0000000000000010ULL),				
+		Resizable = (0x0000000000000020ULL),				
+		Minimized = (0x0000000000000040ULL),				
+		Maximized = (0x0000000000000080ULL),				
+		MouseGrabbed = (0x0000000000000100ULL),				
+		InputFocus = (0x0000000000000200ULL),				
+		MouseFocus = (0x0000000000000400ULL),				
+		MouseRelativeMode = (0x0000000000008000ULL),		
+		AlwaysOnTop = (0x0000000000010000ULL),			
+		Transparent = (0x0000000040000000ULL),				
+		NotFocusable = (0x0000000080000000ULL)			
 	};
 
 	// Enable bitwise operations for WindowFlags
@@ -49,7 +43,4 @@ namespace penguin::core::window {
 		return (flags & test) != WindowFlags::None;
 	}
 
-	inline SDL_WindowFlags to_sdl_flags(WindowFlags flags) {
-		return static_cast<SDL_WindowFlags>(static_cast<uint64_t>(flags));
-	}
 }

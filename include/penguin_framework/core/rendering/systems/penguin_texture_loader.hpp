@@ -10,6 +10,9 @@
 
 namespace penguin::core::rendering::systems {
 
+	// Forward declaration
+	struct TextureLoaderImpl;
+
 	class PENGUIN_API TextureLoader {
 	public:
 		TextureLoader();
@@ -25,9 +28,6 @@ namespace penguin::core::rendering::systems {
 		// Load functions
 		std::shared_ptr<primitives::Texture> load(NativeRendererPtr renderer, const char* path);
 	private:
-		// Forward declaration
-		struct TextureLoaderImpl;
-
 		std::unique_ptr<TextureLoaderImpl> pimpl_;
 	};
 }

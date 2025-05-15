@@ -2,11 +2,12 @@
 #include <penguin_framework/core/window/penguin_window_impl.hpp>
 
 using penguin::core::window::Window;
+using penguin::core::window::WindowImpl;
 
-// --- Define WindowImpl ---
+// --- Define WindowImpl Methods ---
 
-Window::WindowImpl::WindowImpl(const char* p_title, Vector2i p_size, WindowFlags p_flags)
-	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, to_sdl_flags(p_flags)), &SDL_DestroyWindow), title(p_title) {
+WindowImpl::WindowImpl(const char* p_title, Vector2i p_size, WindowFlags p_flags)
+	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, static_cast<SDL_WindowFlags>(p_flags)), &SDL_DestroyWindow), title(p_title) {
 
 	Exception::throw_if(
 		!window,
@@ -21,7 +22,7 @@ Window::WindowImpl::WindowImpl(const char* p_title, Vector2i p_size, WindowFlags
 	set_flags(p_flags);
 }
 
-void Window::WindowImpl::set_flags(WindowFlags& flags) {
+void WindowImpl::set_flags(WindowFlags& flags) {
 	resizable = has_flag(flags, WindowFlags::Resizable);
 	hidden = has_flag(flags, WindowFlags::Hidden);
 	minimized = has_flag(flags, WindowFlags::Maximized);
@@ -33,42 +34,42 @@ void Window::WindowImpl::set_flags(WindowFlags& flags) {
 	focused = has_flag(flags, WindowFlags::InputFocus) || has_flag(flags, WindowFlags::MouseFocus);
 }
 
-bool Window::WindowImpl::set_title(const char* new_title) {
+bool WindowImpl::set_title(const char* new_title) {
 	title = new_title;
 	return SDL_SetWindowTitle(window.get(), title.c_str());
 }
 
-bool Window::WindowImpl::set_max_size(Vector2i p_max_size) {
+bool WindowImpl::set_max_size(Vector2i p_max_size) {
 	if (p_max_size.x < 0 || p_max_size.y < 0) return false; // the vector's x and y coordinates must be a positive integer
 	max_size = p_max_size;
 	return SDL_SetWindowMaximumSize(window.get(), max_size.x, max_size.y);
 }
-bool Window::WindowImpl::set_min_size(Vector2i p_min_size) {
+bool WindowImpl::set_min_size(Vector2i p_min_size) {
 	if (p_min_size.x < 0 || p_min_size.y < 0) return false; // the vector's x and y coordinates must be a positive integer
 	min_size = p_min_size;
 	return SDL_SetWindowMinimumSize(window.get(), min_size.x, min_size.y);
 }
-bool Window::WindowImpl::resize(Vector2i new_size) {
+bool WindowImpl::resize(Vector2i new_size) {
 	if (new_size.x <= 0 || new_size.y <= 0) return false; // the vector's x and y coordinates must be greater than 0
 	size = new_size;
 	return SDL_SetWindowSize(window.get(), size.x, size.y);
 }
 
-bool Window::WindowImpl::show() {
+bool WindowImpl::show() {
 	if (hidden) {
 		hidden = false;
 		return SDL_ShowWindow(window.get());
 	}
 	return true; // indicates that no error occured (hidden is already false, indicating the window is already visible)
 }
-bool Window::WindowImpl::hide() {
+bool WindowImpl::hide() {
 	if (!hidden) {
 		hidden = true;
 		return SDL_HideWindow(window.get());
 	}
 	return true; // indicates that no error occured (hidden is already true, indicating the window is already invisible)
 }
-bool Window::WindowImpl::minimize() {
+bool WindowImpl::minimize() {
 	if (resizable && !minimized) {
 		minimized = true;
 		maximized = false; // Ensures the window isn't also marked as "maximized"
@@ -76,7 +77,7 @@ bool Window::WindowImpl::minimize() {
 	}
 	return true; // if the window is already minimized OR not resizable, we still mark as true as it ran without error
 }
-bool Window::WindowImpl::maximize() {
+bool WindowImpl::maximize() {
 	if (resizable && !maximized) {
 		maximized = true;
 		minimized = false; // Ensures the window isn't also marked as "minimized"
@@ -86,7 +87,7 @@ bool Window::WindowImpl::maximize() {
 	return true; // if the window is already minimized OR not resizable, we still mark as true as it ran without error
 }
 
-bool Window::WindowImpl::restore() {
+bool WindowImpl::restore() {
 	if (resizable) {
 		bool res = SDL_RestoreWindow(window.get());
 		bool res_sync = SDL_SyncWindow(window.get());
@@ -99,7 +100,7 @@ bool Window::WindowImpl::restore() {
 	return true; // no error occurs if not resizable
 
 }
-bool Window::WindowImpl::restore_async() {
+bool WindowImpl::restore_async() {
 	if (resizable) {
 		maximized = false; // both flags should be false
 		minimized = false;
@@ -111,52 +112,52 @@ bool Window::WindowImpl::restore_async() {
 
 // Functions to toggle window states
 
-bool Window::WindowImpl::enable_resizing() {
+bool WindowImpl::enable_resizing() {
 	resizable = true;
 	return SDL_SetWindowResizable(window.get(), resizable);
 }
-bool Window::WindowImpl::disable_resizing() {
+bool WindowImpl::disable_resizing() {
 	resizable = false;
 	return SDL_SetWindowResizable(window.get(), resizable);
 }
-bool Window::WindowImpl::enable_borders() {
+bool WindowImpl::enable_borders() {
 	bordered = true;
 	return SDL_SetWindowBordered(window.get(), bordered);
 }
-bool Window::WindowImpl::disable_borders() {
+bool WindowImpl::disable_borders() {
 	bordered = false;
 	return SDL_SetWindowBordered(window.get(), bordered);
 }
-bool Window::WindowImpl::enter_fullscreen() {
+bool WindowImpl::enter_fullscreen() {
 	fullscreen = true;
 	return SDL_SetWindowFullscreen(window.get(), fullscreen);
 }
-bool Window::WindowImpl::exit_fullscreen() {
+bool WindowImpl::exit_fullscreen() {
 	fullscreen = false;
 	return SDL_SetWindowFullscreen(window.get(), fullscreen);
 }
 
-bool Window::WindowImpl::grab_mouse() {
+bool WindowImpl::grab_mouse() {
 	mouse_grabbed = true;
 	return SDL_SetWindowMouseGrab(window.get(), mouse_grabbed);
 }
-bool Window::WindowImpl::release_mouse() {
+bool WindowImpl::release_mouse() {
 	mouse_grabbed = false;
 	return SDL_SetWindowMouseGrab(window.get(), mouse_grabbed);
 }
-bool Window::WindowImpl::add_always_on_top() {
+bool WindowImpl::add_always_on_top() {
 	always_on_top = true;
 	return SDL_SetWindowAlwaysOnTop(window.get(), always_on_top);
 }
-bool Window::WindowImpl::remove_always_on_top() {
+bool WindowImpl::remove_always_on_top() {
 	always_on_top = false;
 	return SDL_SetWindowAlwaysOnTop(window.get(), always_on_top);
 }
-bool Window::WindowImpl::gain_focus() {
+bool WindowImpl::gain_focus() {
 	focused = true;
 	return SDL_SetWindowFocusable(window.get(), focused);
 }
-bool Window::WindowImpl::lose_foucs() {
+bool WindowImpl::lose_foucs() {
 	focused = false;
 	return SDL_SetWindowFocusable(window.get(), focused);
 }
