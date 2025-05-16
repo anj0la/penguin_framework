@@ -2,6 +2,8 @@
 
 #include <penguin_framework/core/common/native_types.hpp>
 
+#include <penguin_framework/core/rendering/primitives/penguin_sprite.hpp>
+
 #include <penguin_framework/utils/exception.hpp>
 #include <penguin_framework/core/math/rect2.hpp>
 #include <penguin_framework/core/math/circle2.hpp>
@@ -17,8 +19,14 @@
 
 namespace penguin::core::rendering {
 
+	enum class RendererVSyncFlags : int {
+		VSync_Adaptive = -1,
+		VSync_Disabled
+	};
+
 	struct RendererImpl {
 		std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> renderer;
+		bool vsync_enabled = false; // disabled by default
 
 		// Constructor
 		RendererImpl(NativeWindowPtr window, const char* driver_name);
@@ -36,6 +44,12 @@ namespace penguin::core::rendering {
 		bool clear();
 		bool set_colour(Colour colour);
 
+		// VSync functions
+
+		bool enable_vsync();
+		bool disable_vsync();
+		bool is_vsync_enabled() const;
+
 		// Drawing functions
 
 		bool draw_line(Vector2 vec1, Vector2 vec2, Colour colour = Colours::White);
@@ -49,12 +63,29 @@ namespace penguin::core::rendering {
 		bool draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White);
 		bool draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White);
 
-		//bool draw_sprite(Sprite spr);
-		//bool draw_sprite(Sprite spr, Rect2 source);
-		//bool draw_sprite(Sprite spr, Rect2 dest);
-		//bool draw_sprite(Sprite str, Rect2 source, Rect2 dest);
+		// Drawing functions for Sprites
+
+		bool draw_sprite(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite(primitives::Sprite spr);
+
+		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite_rotated(primitives::Sprite spr);
+
+		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite_scaled(primitives::Sprite spr);
+
+		// Additional functions for Sprites
+
+		bool modulate_sprite(primitives::Sprite spr, Colour colour = Colours::Transparent);
 
 		// Helper functions
+
 		bool draw_horizontal_line(float x1, float x2, float y, Colour colour);
 	};
 }

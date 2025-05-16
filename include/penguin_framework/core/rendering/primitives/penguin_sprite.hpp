@@ -11,7 +11,7 @@ namespace penguin::core::rendering::primitives {
 
 	struct SpriteImpl;
 
-	enum class PENGUIN_API FlipMode {
+	enum class FlipMode : int {
 		None = 0,
 		Horizontal = 1,
 		Vertical = 2

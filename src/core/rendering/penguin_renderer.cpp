@@ -5,6 +5,8 @@
 
 using penguin::core::rendering::Renderer;
 using penguin::core::rendering::RendererImpl;
+using penguin::core::rendering::RendererVSyncFlags;
+using penguin::core::rendering::primitives::Sprite;
 
 RendererImpl::RendererImpl(NativeWindowPtr window, const char* driver)
 	: renderer(SDL_CreateRenderer(
@@ -29,6 +31,22 @@ bool RendererImpl::set_colour(Colour colour) {
 bool RendererImpl::clear() {
 	set_colour(Colours::Black);
 	return SDL_RenderClear(renderer.get());
+}
+
+// VSync functions
+
+bool RendererImpl::enable_vsync() {
+	vsync_enabled = true;
+	return SDL_SetRenderVSync(renderer.get(), static_cast<int>(RendererVSyncFlags::VSync_Adaptive));
+}
+
+bool RendererImpl::disable_vsync() {
+	vsync_enabled = false;
+	return SDL_SetRenderVSync(renderer.get(), static_cast<int>(RendererVSyncFlags::VSync_Disabled));
+}
+
+bool RendererImpl::is_vsync_enabled() const {
+	return vsync_enabled;
 }
 
 // Drawing functions
@@ -269,6 +287,56 @@ bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_
 	set_colour(fill);
 	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
+
+// Drawing functions for Sprites
+
+bool RendererImpl::draw_sprite(Sprite spr, Rect2 source, Rect2 dest) {
+	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
+	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
+	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, &sdl_dest);
+}
+
+bool RendererImpl::draw_sprite(Sprite spr, Rect2 source) {
+	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
+	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, nullptr);
+}
+
+bool RendererImpl::draw_sprite(Sprite spr, Rect2 dest) {
+	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
+	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, &sdl_dest);
+}
+bool RendererImpl::draw_sprite(Sprite spr) {
+	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, nullptr);
+}
+
+bool RendererImpl::draw_sprite_rotated(Sprite spr, Rect2 source, Rect2 dest) {
+	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
+	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
+	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
+	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, &sdl_dest, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+}
+
+bool RendererImpl::draw_sprite_rotated(Sprite spr, Rect2 source) {
+	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
+	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
+	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, nullptr, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+}
+
+bool RendererImpl::draw_sprite_rotated(Sprite spr, Rect2 dest) {
+	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
+	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
+	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, &sdl_dest, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+}
+
+bool RendererImpl::draw_sprite_rotated(Sprite spr) {
+	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
+	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, nullptr, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+}
+
+bool draw_sprite_scaled(Sprite spr, Rect2 source, Rect2 dest);
+bool draw_sprite_scaled(Sprite spr, Rect2 source);
+bool draw_sprite_scaled(Sprite spr, Rect2 dest);
+bool draw_sprite_scaled(Sprite spr);
 
 // Helper functions
 

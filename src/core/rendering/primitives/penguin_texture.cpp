@@ -36,25 +36,3 @@ Texture& Texture::operator=(Texture&&) noexcept = default;
 
 NativeTexturePtr Texture::get_native_ptr() const { return NativeTexturePtr{ pimpl_->texture.get() }; }
 Vector2i Texture::get_size() const { return pimpl_->size; }
-
-/*
-
-bool Image::ImageImpl::draw(SDL_Renderer* renderer) {
-	return SDL_RenderTexture(renderer, img.get(), nullptr, nullptr);
-}
-
-bool Image::ImageImpl::draw(SDL_Renderer* renderer, Rect2 source) {
-	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
-	return SDL_RenderTexture(renderer, img.get(), &sdl_source, nullptr);
-}
-
-bool Image::ImageImpl::draw(SDL_Renderer* renderer, Rect2 dest) {
-	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
-	return SDL_RenderTexture(renderer, img.get(), nullptr, &sdl_dest);
-}
-
-bool Image::ImageImpl::draw(SDL_Renderer* renderer, Rect2 source, Rect2 dest) {
-	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
-	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
-	return SDL_RenderTexture(renderer, img.get(), &sdl_source, &sdl_dest);
-}*/

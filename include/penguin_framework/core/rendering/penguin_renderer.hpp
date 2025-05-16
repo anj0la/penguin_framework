@@ -45,12 +45,6 @@ namespace penguin::core::rendering {
 		bool draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White);
 		bool draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White);
 
-		// Drawing sprites
-		//bool draw_sprite(Sprite spr);
-		//bool draw_sprite(Sprite spr, Rect2 source);
-		//bool draw_sprite(Sprite spr, Rect2 dest);
-		//bool draw_sprite(Sprite str, Rect2 source, Rect2 dest);
-
 		NativeRendererPtr get_native_ptr() const;
 
 	private:
