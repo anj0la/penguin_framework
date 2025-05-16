@@ -3,7 +3,6 @@
 #include <penguin_framework/penguin_api.hpp>
 
 #include <penguin_framework/core/common/native_types.hpp>
-
 #include <penguin_framework/core/rendering/primitives/penguin_texture.hpp>
 
 #include <memory>
@@ -18,12 +17,10 @@ namespace penguin::core::rendering::systems {
 		TextureLoader();
 		~TextureLoader();
 
-		// Copy & move (including assigment) not allowed
+		// Deleting move semantics
 
 		TextureLoader(const TextureLoader&) = delete;
 		TextureLoader& operator=(const TextureLoader&) = delete;
-		TextureLoader(TextureLoader&&) noexcept = delete;
-		TextureLoader& operator=(TextureLoader&&) noexcept = delete;
 
 		// Load functions
 		std::shared_ptr<primitives::Texture> load(NativeRendererPtr renderer, const char* path);

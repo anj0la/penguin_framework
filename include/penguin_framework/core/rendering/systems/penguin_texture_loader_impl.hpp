@@ -15,12 +15,13 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <string_view>
 
 namespace penguin::core::rendering::systems {
 
 	struct TextureLoaderImpl {
 
-		std::unordered_map<String, std::shared_ptr<primitives::Texture>> texture_cache;
+		std::unordered_map<std::string_view, std::shared_ptr<primitives::Texture>> texture_cache;
 
 		TextureLoaderImpl() = default;
 

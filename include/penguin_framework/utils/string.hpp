@@ -2,6 +2,7 @@
 
 #include <penguin_framework/penguin_api.hpp>
 
+#include <string_view>
 #include <cstring>
 #include <cstddef>
 #include <utility>

@@ -80,6 +80,9 @@ void SpriteImpl::set_bounding_box(Rect2 bound_box) {
 Sprite::Sprite(std::shared_ptr<Texture> tex) : pimpl_(std::make_unique<SpriteImpl>(tex)) {}
 Sprite::~Sprite() = default;
 
+Sprite::Sprite(Sprite&&) noexcept = default;
+Sprite& Sprite::operator=(Sprite&&) noexcept = default;
+
 // --- Getters ---
 
 NativeTexturePtr Sprite::get_native_ptr() const { return pimpl_->get_native_ptr(); }

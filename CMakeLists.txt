@@ -101,7 +101,8 @@ add_library(penguin_framework
         "src/core/rendering/penguin_renderer.cpp"
         "src/core/rendering/primitives/penguin_texture.cpp" 
         "src/core/rendering/primitives/penguin_sprite.cpp" 
-        "src/core/rendering/systems/penguin_texture_loader.cpp" "src/core/rendering/systems/penguin_asset_manager.cpp")
+        "src/core/rendering/systems/penguin_texture_loader.cpp" 
+        "src/core/rendering/systems/penguin_asset_manager.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 

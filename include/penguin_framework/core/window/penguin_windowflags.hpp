@@ -4,7 +4,7 @@
 
 namespace penguin::core::window {
 
-	enum class PENGUIN_API WindowFlags : uint64_t {
+	enum class WindowFlags : uint64_t {
 		None = 0,
 		Fullscreen = (0x0000000000000001ULL),				
 		Hidden = (0x0000000000000008ULL),					

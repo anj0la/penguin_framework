@@ -24,10 +24,13 @@ TextureImpl::TextureImpl(NativeRendererPtr ptr, const char* path) : texture(null
 		Error::Renderer);
 }
 
-// --- Define Texture ---
+// --- Define Texture Methods ---
 
 Texture::Texture(NativeRendererPtr renderer, const char* path) : pimpl_(std::make_unique<TextureImpl>(renderer, path)) {}
 Texture::~Texture() = default;
+
+Texture::Texture(Texture&&) noexcept = default;
+Texture& Texture::operator=(Texture&&) noexcept = default;
 
 // --- Getters ---
 

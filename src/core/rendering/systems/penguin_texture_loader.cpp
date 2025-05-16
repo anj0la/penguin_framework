@@ -8,7 +8,8 @@ using penguin::core::rendering::systems::TextureLoaderImpl;
 using penguin::core::rendering::primitives::Texture;
 
 std::shared_ptr<Texture> TextureLoaderImpl::load(NativeRendererPtr renderer, const char* path) {
-    String path_str(path);
+    std::string_view path_str(path);
+    // String path_str(path);
 
     auto it = texture_cache.find(path_str);
     if (it != texture_cache.end()) {

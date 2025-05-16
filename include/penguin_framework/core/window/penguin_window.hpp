@@ -19,12 +19,10 @@ namespace penguin::core::window {
 		Window(const char* p_title = "", Vector2i p_size = Vector2i(640, 480), WindowFlags p_flags = WindowFlags::None);
 		~Window();
 
-		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
+		// Deleting move semantics
 
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
-		Window(Window&&) noexcept = default;         
-		Window& operator=(Window&&) noexcept = default;
 
 		// Functions to change window title / sizes
 
@@ -93,9 +91,6 @@ namespace penguin::core::window {
 		NativeWindowPtr get_native_ptr() const;
 
 	private:
-		// Forward declaration
-		struct WindowImpl;
-
 		std::unique_ptr<WindowImpl> pimpl_;
 	};
 }

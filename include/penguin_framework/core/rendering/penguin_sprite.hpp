@@ -22,12 +22,8 @@ namespace penguin::core::rendering::primitives {
 		Sprite(std::shared_ptr<Texture> tex);
 		~Sprite();
 
-		// Copy and move constructors
-
-		Sprite(const Sprite&) = default;
-		Sprite& operator=(const Sprite&) = default;
-		Sprite(Sprite&&) noexcept = default;
-		Sprite& operator=(Sprite&&) noexcept = default;
+		Sprite(Sprite&&) noexcept;
+		Sprite& operator=(Sprite&&) noexcept;
 
 		NativeTexturePtr get_native_ptr() const;
 		Vector2 get_position() const;

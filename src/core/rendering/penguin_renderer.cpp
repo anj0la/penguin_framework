@@ -33,37 +33,37 @@ bool RendererImpl::clear() {
 
 // Drawing functions
 
-bool RendererImpl::draw_line(Vector2 vec1, Vector2 vec2, Colour colour = Colours::White) {
+bool RendererImpl::draw_line(Vector2 vec1, Vector2 vec2, Colour colour) {
 	set_colour(colour);
 	return SDL_RenderLine(renderer.get(), vec1.x, vec1.y, vec2.x, vec2.y);
 }
 
-bool RendererImpl::draw_pixel(Vector2 vec, Colour colour = Colours::White) {
+bool RendererImpl::draw_pixel(Vector2 vec, Colour colour) {
 	set_colour(colour);
 	return SDL_RenderPoint(renderer.get(), vec.x, vec.y);
 }
 
-bool RendererImpl::draw_rect(Rect2 rect, Colour outline = Colours::White) {
+bool RendererImpl::draw_rect(Rect2 rect, Colour outline) {
 	set_colour(outline);
 	SDL_FRect frect = { rect.position.x, rect.position.y, rect.size.x, rect.size.y };
 	return SDL_RenderRect(renderer.get(), &frect);
 }
 
-bool RendererImpl::draw_filled_rect(Rect2 rect, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_rect(Rect2 rect, Colour fill) {
 	set_colour(fill);
 	SDL_FRect frect = { rect.position.x, rect.position.y, rect.size.x, rect.size.y };
 	return SDL_RenderFillRect(renderer.get(), &frect);
 }
 
-bool RendererImpl::draw_triangle(Vector2 x, Vector2 y, Vector2 z, Colour outline = Colours::White) {
+bool RendererImpl::draw_triangle(Vector2 x, Vector2 y, Vector2 z, Colour outline) {
 	return draw_line(x, y, outline) && draw_line(y, z, outline) && draw_line(x, z, outline);
 }
 
-bool RendererImpl::draw_filled_triangle(Vector2 x, Vector2 y, Vector2 z, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_triangle(Vector2 x, Vector2 y, Vector2 z, Colour fill) {
 	return true; // will implement later
 }
 
-bool RendererImpl::draw_circle(Vector2 center, int rad, Colour outline = Colours::White) {
+bool RendererImpl::draw_circle(Vector2 center, int rad, Colour outline) {
 	// Initial points and decision variable.
 	int x = rad - 1;
 	int y = 0;
@@ -103,7 +103,7 @@ bool RendererImpl::draw_circle(Vector2 center, int rad, Colour outline = Colours
 	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
-bool RendererImpl::draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_circle(Vector2 center, int radius, Colour fill) {
 	// Convert to Vector2i
 	Vector2i center_(center.x, center.y);
 
@@ -138,7 +138,7 @@ bool RendererImpl::draw_filled_circle(Vector2 center, int radius, Colour fill = 
 	return true;
 }
 
-bool RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White) {
+bool RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline) {
 	// Squares of the radii for the ellipse.
 	int rx2 = radius_x * radius_x;
 	int ry2 = radius_y * radius_y;
@@ -204,7 +204,7 @@ bool RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colo
 	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
-bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White) {
+bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill) {
 	// Squares of the radii for the ellipse.
 	int rx2 = radius_x * radius_x;
 	int ry2 = radius_y * radius_y;
@@ -279,7 +279,7 @@ bool RendererImpl::draw_horizontal_line(float x1, float x2, float y, Colour colo
 
 // --- Define Renderer Methods ---
 
-Renderer::Renderer(window::Window& window, const char* driver_name = "") : pimpl_(std::make_unique<RendererImpl>(window.get_native_ptr(), driver_name)) {}
+Renderer::Renderer(window::Window& window, const char* driver_name) : pimpl_(std::make_unique<RendererImpl>(window.get_native_ptr(), driver_name)) {}
 Renderer::~Renderer() = default;
 
 // Displaying / clearing the renderer
@@ -289,17 +289,17 @@ bool Renderer::clear() { return pimpl_->clear(); }
 
 // Drawing functions
 
-bool Renderer::draw_line(Vector2 vec1, Vector2 vec2, Colour colour = Colours::White) { return pimpl_->draw_line(vec1, vec2, colour); }
-bool Renderer::draw_pixel(Vector2 vec, Colour colour = Colours::White) { return pimpl_->draw_pixel(vec, colour); }
-bool Renderer::draw_rect(Rect2 rect, Colour outline = Colours::White) { return pimpl_->draw_rect(rect, outline); }
-bool Renderer::draw_filled_rect(Rect2 rect, Colour fill = Colours::White) { return pimpl_->draw_filled_rect(rect, fill); }
-bool Renderer::draw_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline = Colours::White) { return pimpl_->draw_triangle(vec1, vec2, vec3, outline); }
-bool Renderer::draw_filled_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill = Colours::White) { return pimpl_->draw_filled_triangle(vec1, vec2, vec3, fill); }
-bool Renderer::draw_circle(Vector2 center, int rad, Colour outline = Colours::White) { return pimpl_->draw_circle(center, rad, outline); }
-bool Renderer::draw_circle(Circle2 circle, Colour outline = Colours::White) { return pimpl_->draw_circle(circle.center, static_cast<int>(circle.radius), outline); }
-bool Renderer::draw_filled_circle(Vector2 center, int radius, Colour fill = Colours::White) { return pimpl_->draw_filled_circle(center, radius, fill); }
-bool Renderer::draw_filled_circle(Circle2 circle, Colour fill = Colours::White) { return pimpl_->draw_filled_circle(circle.center, static_cast<int>(circle.radius), fill); }
-bool Renderer::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White) { return pimpl_->draw_ellipse(center, radius_x, radius_y, outline); }
-bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White) { return pimpl_->draw_filled_ellipse(center, radius_x, radius_y, fill); }
+bool Renderer::draw_line(Vector2 vec1, Vector2 vec2, Colour colour) { return pimpl_->draw_line(vec1, vec2, colour); }
+bool Renderer::draw_pixel(Vector2 vec, Colour colour) { return pimpl_->draw_pixel(vec, colour); }
+bool Renderer::draw_rect(Rect2 rect, Colour outline) { return pimpl_->draw_rect(rect, outline); }
+bool Renderer::draw_filled_rect(Rect2 rect, Colour fill) { return pimpl_->draw_filled_rect(rect, fill); }
+bool Renderer::draw_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline) { return pimpl_->draw_triangle(vec1, vec2, vec3, outline); }
+bool Renderer::draw_filled_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill) { return pimpl_->draw_filled_triangle(vec1, vec2, vec3, fill); }
+bool Renderer::draw_circle(Vector2 center, int rad, Colour outline) { return pimpl_->draw_circle(center, rad, outline); }
+bool Renderer::draw_circle(Circle2 circle, Colour outline) { return pimpl_->draw_circle(circle.center, static_cast<int>(circle.radius), outline); }
+bool Renderer::draw_filled_circle(Vector2 center, int radius, Colour fill) { return pimpl_->draw_filled_circle(center, radius, fill); }
+bool Renderer::draw_filled_circle(Circle2 circle, Colour fill) { return pimpl_->draw_filled_circle(circle.center, static_cast<int>(circle.radius), fill); }
+bool Renderer::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline) { return pimpl_->draw_ellipse(center, radius_x, radius_y, outline); }
+bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill) { return pimpl_->draw_filled_ellipse(center, radius_x, radius_y, fill); }
 
 NativeRendererPtr Renderer::get_native_ptr() const { return NativeRendererPtr{ pimpl_->renderer.get() }; }

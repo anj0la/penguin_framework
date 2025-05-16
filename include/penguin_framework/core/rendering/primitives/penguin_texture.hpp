@@ -23,17 +23,14 @@ namespace penguin::core::rendering::primitives {
 		Texture(NativeRendererPtr renderer, const char* path);
 		~Texture();
 
-		Texture(const Texture&) = default;
-		Texture& operator=(const Texture&) = default;
-		Texture(Texture&&) noexcept = default;
-		Texture& operator=(Texture&&) noexcept = default;
+		Texture(Texture&&) noexcept;
+		Texture& operator=(Texture&&) noexcept;
 
 		NativeTexturePtr get_native_ptr() const;
 		Vector2i get_size() const;
 
 	private:
 		std::unique_ptr<TextureImpl> pimpl_;
-
 	};
 
 

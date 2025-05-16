@@ -17,15 +17,13 @@ namespace penguin::core::rendering {
 
 	class PENGUIN_API Renderer {
 	public:
-		explicit Renderer(window::Window& window, const char* driver_name = "");
+		Renderer(window::Window& window, const char* driver_name = "");
 		~Renderer();
 
-		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
+		// Deleting move semantics
 
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;
-		Renderer(Renderer&&) noexcept = default;
-		Renderer& operator=(Renderer&&) noexcept = default;
 
 		// Displaying / clearing the renderer
 

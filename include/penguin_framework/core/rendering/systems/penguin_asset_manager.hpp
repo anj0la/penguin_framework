@@ -16,12 +16,10 @@ namespace penguin::core::rendering::systems {
 		AssetManager(NativeRendererPtr renderer_ptr); // add text_renderer later
 		~AssetManager();
 
-		// Move constructor & assignment destructors (copy constructor / assignment not allowed)
+		// Deleting move semantics
 
 		AssetManager(const AssetManager&) = delete;
 		AssetManager& operator=(const AssetManager&) = delete;
-		AssetManager(AssetManager&&) noexcept = default;
-		AssetManager& operator=(AssetManager&&) noexcept = default;
 
 		// Various load functions
 		std::shared_ptr<primitives::Texture> load(const char* path);
