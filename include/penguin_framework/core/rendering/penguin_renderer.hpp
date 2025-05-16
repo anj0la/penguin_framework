@@ -17,7 +17,7 @@ namespace penguin::core::rendering {
 
 	class PENGUIN_API Renderer {
 	public:
-		Renderer(window::Window& window, const char* driver_name = "");
+		Renderer(NativeWindowPtr window_ptr, const char* driver_name = "");
 		~Renderer();
 
 		// Deleting move semantics

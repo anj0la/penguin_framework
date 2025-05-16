@@ -11,7 +11,7 @@ class WindowTestFixture : public ::testing::Test {
 protected:
 	void SetUp() override {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
-		ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL video subsystem could not be initialized because of: " << SDL_GetError();
+		ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
 	}
 
 	void TearDown() override {

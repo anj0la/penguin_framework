@@ -279,7 +279,7 @@ bool RendererImpl::draw_horizontal_line(float x1, float x2, float y, Colour colo
 
 // --- Define Renderer Methods ---
 
-Renderer::Renderer(window::Window& window, const char* driver_name) : pimpl_(std::make_unique<RendererImpl>(window.get_native_ptr(), driver_name)) {}
+Renderer::Renderer(NativeWindowPtr window_ptr, const char* driver_name) : pimpl_(std::make_unique<RendererImpl>(window_ptr, driver_name)) {}
 Renderer::~Renderer() = default;
 
 // Displaying / clearing the renderer
