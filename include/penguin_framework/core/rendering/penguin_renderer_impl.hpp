@@ -65,24 +65,25 @@ namespace penguin::core::rendering {
 
 		// Drawing functions for Sprites
 
-		bool draw_sprite(primitives::Sprite spr, Rect2 source, Rect2 dest);
-		bool draw_sprite(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite(primitives::Sprite spr, Rect2 dest);
-		bool draw_sprite(primitives::Sprite spr);
+		bool draw_sprite(NativeTexturePtr spr_texture, Rect2 source, Rect2 dest);
+		bool draw_sprite(NativeTexturePtr spr_texture);
+		bool draw_sprite_from(NativeTexturePtr spr_texture, Rect2 source);
+		bool draw_sprite_to(NativeTexturePtr spr_texture, Rect2 dest);
 
-		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 source, Rect2 dest);
-		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 dest);
-		bool draw_sprite_rotated(primitives::Sprite spr);
+		bool draw_sprite_rotated(NativeTexturePtr spr_texture, Rect2 source, Rect2 dest, float angle, Vector2 anchor_point, primitives::FlipMode mode);
+		bool draw_sprite_rotated(NativeTexturePtr spr_texture, float angle, Vector2 anchor_point, primitives::FlipMode mode);
+		bool draw_sprite_rotated_from(NativeTexturePtr spr_texture, Rect2 source, float angle, Vector2 anchor_point, primitives::FlipMode mode);
+		bool draw_sprite_rotated_to(NativeTexturePtr spr_texture, Rect2 dest, float angle, Vector2 anchor_point, primitives::FlipMode mode);
 
-		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 source, Rect2 dest);
-		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 dest);
-		bool draw_sprite_scaled(primitives::Sprite spr);
+		bool draw_sprite_scaled(NativeTexturePtr spr_texture, Rect2 source, Rect2 dest, Vector2 scale);
+		bool draw_sprite_scaled(NativeTexturePtr spr_texture, Vector2 scale);
+		bool draw_sprite_scaled_from(NativeTexturePtr spr_texture, Rect2 source, Vector2 scale);
+		bool draw_sprite_scaled_to(NativeTexturePtr spr_texture, Rect2 dest, Vector2 scale);
 
 		// Additional functions for Sprites
 
-		bool modulate_sprite(primitives::Sprite spr, Colour colour = Colours::Transparent);
+		bool add_sprite_tint(NativeTexturePtr spr_texture, Colour tint);
+		bool remove_sprite_tint(NativeTexturePtr spr_texture);
 
 		// Helper functions
 

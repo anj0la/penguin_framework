@@ -7,6 +7,7 @@ using penguin::core::rendering::Renderer;
 using penguin::core::rendering::RendererImpl;
 using penguin::core::rendering::RendererVSyncFlags;
 using penguin::core::rendering::primitives::Sprite;
+using penguin::core::rendering::primitives::FlipMode;
 
 RendererImpl::RendererImpl(NativeWindowPtr window, const char* driver)
 	: renderer(SDL_CreateRenderer(
@@ -290,53 +291,93 @@ bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_
 
 // Drawing functions for Sprites
 
-bool RendererImpl::draw_sprite(Sprite spr, Rect2 source, Rect2 dest) {
+bool RendererImpl::draw_sprite(NativeTexturePtr spr_texture, Rect2 source, Rect2 dest) {
 	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
 	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
-	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, &sdl_dest);
+	return SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), &sdl_source, &sdl_dest);
 }
 
-bool RendererImpl::draw_sprite(Sprite spr, Rect2 source) {
+bool RendererImpl::draw_sprite(NativeTexturePtr spr_texture) {
+	return SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), nullptr, nullptr);
+}
+
+bool RendererImpl::draw_sprite_from(NativeTexturePtr spr_texture, Rect2 source) {
 	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
-	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, nullptr);
+	return SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), &sdl_source, nullptr);
 }
 
-bool RendererImpl::draw_sprite(Sprite spr, Rect2 dest) {
+bool RendererImpl::draw_sprite_to(NativeTexturePtr spr_texture, Rect2 dest) {
 	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
-	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, &sdl_dest);
-}
-bool RendererImpl::draw_sprite(Sprite spr) {
-	return SDL_RenderTexture(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, nullptr);
+	return SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), nullptr, &sdl_dest);
 }
 
-bool RendererImpl::draw_sprite_rotated(Sprite spr, Rect2 source, Rect2 dest) {
+bool RendererImpl::draw_sprite_rotated(NativeTexturePtr spr_texture, Rect2 source, Rect2 dest, float angle, Vector2 anchor_point, FlipMode mode) {
 	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
 	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
-	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
-	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, &sdl_dest, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+	SDL_FPoint sdl_center = { anchor_point.x, anchor_point.y };
+	return SDL_RenderTextureRotated(renderer.get(), spr_texture.as<SDL_Texture>(), &sdl_source, &sdl_dest, angle, &sdl_center, static_cast<SDL_FlipMode>(mode));
 }
 
-bool RendererImpl::draw_sprite_rotated(Sprite spr, Rect2 source) {
+bool RendererImpl::draw_sprite_rotated(NativeTexturePtr spr_texture, float angle, Vector2 anchor_point, FlipMode mode) {
+	SDL_FPoint sdl_center = { anchor_point.x, anchor_point.y };
+	return SDL_RenderTextureRotated(renderer.get(), spr_texture.as<SDL_Texture>(), nullptr, nullptr, angle, &sdl_center, static_cast<SDL_FlipMode>(mode));
+}
+bool RendererImpl::draw_sprite_rotated_from(NativeTexturePtr spr_texture, Rect2 source, float angle, Vector2 anchor_point, FlipMode mode) {
 	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
-	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
-	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), &sdl_source, nullptr, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+	SDL_FPoint sdl_center = { anchor_point.x, anchor_point.y };
+	return SDL_RenderTextureRotated(renderer.get(), spr_texture.as<SDL_Texture>(), &sdl_source, nullptr, angle, &sdl_center, static_cast<SDL_FlipMode>(mode));
 }
 
-bool RendererImpl::draw_sprite_rotated(Sprite spr, Rect2 dest) {
+bool RendererImpl::draw_sprite_rotated_to(NativeTexturePtr spr_texture, Rect2 dest, float angle, Vector2 anchor_point, FlipMode mode) {
 	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
-	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
-	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, &sdl_dest, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+	SDL_FPoint sdl_center = { anchor_point.x, anchor_point.y };
+	return SDL_RenderTextureRotated(renderer.get(), spr_texture.as<SDL_Texture>(), nullptr, &sdl_dest, angle, &sdl_center, static_cast<SDL_FlipMode>(mode));
 }
 
-bool RendererImpl::draw_sprite_rotated(Sprite spr) {
-	SDL_FPoint sdl_center = { spr.get_anchor_point().x, spr.get_anchor_point().y };
-	return SDL_RenderTextureRotated(renderer.get(), spr.get_native_ptr().as<SDL_Texture>(), nullptr, nullptr, spr.get_angle(), &sdl_center, static_cast<SDL_FlipMode>(spr.get_flip_mode()));
+bool RendererImpl::draw_sprite_scaled(NativeTexturePtr spr_texture, Rect2 source, Rect2 dest, Vector2 scale) {
+	bool res_from_render_scale = SDL_SetRenderScale(renderer.get(), scale.x, scale.y);
+
+	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
+	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
+
+	bool res_from_render_texture = SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), &sdl_source, &sdl_dest);
+	bool res_from_reset_scale = SDL_SetRenderScale(renderer.get(), 1.0f, 1.0f); // Reset scale
+	return res_from_render_scale && res_from_render_texture && res_from_reset_scale;
 }
 
-bool draw_sprite_scaled(Sprite spr, Rect2 source, Rect2 dest);
-bool draw_sprite_scaled(Sprite spr, Rect2 source);
-bool draw_sprite_scaled(Sprite spr, Rect2 dest);
-bool draw_sprite_scaled(Sprite spr);
+bool RendererImpl::draw_sprite_scaled(NativeTexturePtr spr_texture, Vector2 scale) {
+	bool res_from_render_scale = SDL_SetRenderScale(renderer.get(), scale.x, scale.y);
+	bool res_from_render_texture = SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), nullptr, nullptr);
+	bool res_from_reset_scale = SDL_SetRenderScale(renderer.get(), 1.0f, 1.0f); // Reset scale
+	return res_from_render_scale && res_from_render_texture && res_from_reset_scale;
+}
+
+bool RendererImpl::draw_sprite_scaled_from(NativeTexturePtr spr_texture, Rect2 source, Vector2 scale) {
+	bool res_from_render_scale = SDL_SetRenderScale(renderer.get(), scale.x, scale.y);
+
+	SDL_FRect sdl_source{ source.position.x, source.position.y, source.size.x, source.size.y };
+
+	bool res_from_render_texture = SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), &sdl_source, nullptr);
+	bool res_from_reset_scale = SDL_SetRenderScale(renderer.get(), 1.0f, 1.0f); // Reset scale
+	return res_from_render_scale && res_from_render_texture && res_from_reset_scale;
+}
+bool RendererImpl::draw_sprite_scaled_to(NativeTexturePtr spr_texture, Rect2 dest, Vector2 scale) {
+	bool res_from_render_scale = SDL_SetRenderScale(renderer.get(), scale.x, scale.y);
+
+	SDL_FRect sdl_dest{ dest.position.x, dest.position.y, dest.size.x, dest.size.y };
+
+	bool res_from_render_texture = SDL_RenderTexture(renderer.get(), spr_texture.as<SDL_Texture>(), nullptr, &sdl_dest);
+	bool res_from_reset_scale = SDL_SetRenderScale(renderer.get(), 1.0f, 1.0f); // Reset scale
+	return res_from_render_scale && res_from_render_texture && res_from_reset_scale;
+}
+
+bool RendererImpl::add_sprite_tint(NativeTexturePtr spr_texture, Colour tint) {
+	return SDL_SetTextureColorMod(spr_texture.as<SDL_Texture>(), tint.r, tint.g, tint.b);
+}
+
+bool RendererImpl::remove_sprite_tint(NativeTexturePtr spr_texture) {
+	return SDL_SetTextureColorMod(spr_texture.as<SDL_Texture>(), Colours::Transparent.r, Colours::Transparent.g, Colours::Transparent.b);
+}
 
 // Helper functions
 
@@ -369,5 +410,27 @@ bool Renderer::draw_filled_circle(Vector2 center, int radius, Colour fill) { ret
 bool Renderer::draw_filled_circle(Circle2 circle, Colour fill) { return pimpl_->draw_filled_circle(circle.center, static_cast<int>(circle.radius), fill); }
 bool Renderer::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline) { return pimpl_->draw_ellipse(center, radius_x, radius_y, outline); }
 bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill) { return pimpl_->draw_filled_ellipse(center, radius_x, radius_y, fill); }
+
+// Drawing functions for Sprites
+
+bool Renderer::draw_sprite(Sprite spr, Rect2 source, Rect2 dest) { return pimpl_->draw_sprite(spr.get_native_ptr(), source, dest); }
+bool Renderer::draw_sprite(Sprite spr) { return pimpl_->draw_sprite(spr.get_native_ptr()); }
+bool Renderer::draw_sprite_from(Sprite spr, Rect2 source) { return pimpl_->draw_sprite_from(spr.get_native_ptr(), source); }
+bool Renderer::draw_sprite_to(Sprite spr, Rect2 dest) { return pimpl_->draw_sprite_to(spr.get_native_ptr(), dest); }
+
+bool Renderer::draw_sprite_rotated(Sprite spr, Rect2 source, Rect2 dest) { return pimpl_->draw_sprite_rotated(spr.get_native_ptr(), source, dest, spr.get_angle(), spr.get_anchor_point(), spr.get_flip_mode()); }
+bool Renderer::draw_sprite_rotated(Sprite spr) { return pimpl_->draw_sprite_rotated(spr.get_native_ptr(), spr.get_angle(), spr.get_anchor_point(), spr.get_flip_mode()); }
+bool Renderer::draw_sprite_rotated_from(Sprite spr, Rect2 source) { return pimpl_->draw_sprite_rotated_from(spr.get_native_ptr(), source, spr.get_angle(), spr.get_anchor_point(), spr.get_flip_mode()); }
+bool Renderer::draw_sprite_rotated_to(Sprite spr, Rect2 dest) { return pimpl_->draw_sprite_rotated_to(spr.get_native_ptr(), dest, spr.get_angle(), spr.get_anchor_point(), spr.get_flip_mode()); }
+
+bool Renderer::draw_sprite_scaled(Sprite spr, Rect2 source, Rect2 dest) { return pimpl_->draw_sprite_scaled(spr.get_native_ptr(), source, dest, spr.get_scale()); }
+bool Renderer::draw_sprite_scaled(Sprite spr) { return pimpl_->draw_sprite_scaled(spr.get_native_ptr(), spr.get_scale()); }
+bool Renderer::draw_sprite_scaled_from(Sprite spr, Rect2 source) { return pimpl_->draw_sprite_scaled_from(spr.get_native_ptr(), source, spr.get_scale()); }
+bool Renderer::draw_sprite_scaled_to(Sprite spr, Rect2 dest) { return pimpl_->draw_sprite_scaled_to(spr.get_native_ptr(), dest, spr.get_scale()); }
+
+// Additional functions for Sprites
+
+bool Renderer::add_sprite_tint(Sprite spr) { return pimpl_->add_sprite_tint(spr.get_native_ptr(), spr.get_colour_tint()); }
+bool Renderer::remove_sprite_tint(Sprite spr) { return pimpl_->remove_sprite_tint(spr.get_native_ptr()); }
 
 NativeRendererPtr Renderer::get_native_ptr() const { return NativeRendererPtr{ pimpl_->renderer.get() }; }

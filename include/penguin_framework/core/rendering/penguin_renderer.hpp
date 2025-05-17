@@ -45,6 +45,28 @@ namespace penguin::core::rendering {
 		bool draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline = Colours::White);
 		bool draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill = Colours::White);
 
+		// Drawing functions for Sprites
+
+		bool draw_sprite(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite(primitives::Sprite spr);
+		bool draw_sprite_from(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_to(primitives::Sprite spr, Rect2 dest);
+
+		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite_rotated(primitives::Sprite spr);
+		bool draw_sprite_rotated_from(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_rotated_to(primitives::Sprite spr, Rect2 dest);
+
+		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite_scaled(primitives::Sprite spr);
+		bool draw_sprite_scaled_from(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_scaled_to(primitives::Sprite spr, Rect2 dest);
+
+		// Additional functions for Sprites
+
+		bool add_sprite_tint(primitives::Sprite spr);
+		bool remove_sprite_tint(primitives::Sprite spr);
+
 		NativeRendererPtr get_native_ptr() const;
 
 	private:
