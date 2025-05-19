@@ -13,6 +13,7 @@
 
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 namespace penguin::core::rendering::primitives {
 
@@ -20,8 +21,8 @@ namespace penguin::core::rendering::primitives {
 		std::shared_ptr<Texture> texture;
 		Vector2 position;
 		Vector2i size;
-		Vector2 scale;
-		float angle;
+		Vector2 scale; // A Vector between (0.0, 0.0) and (1.0, 1.0) -> normalized
+		double angle;
 		Vector2 anchor_point;
 		bool visible;
 		FlipMode mode;
@@ -30,7 +31,7 @@ namespace penguin::core::rendering::primitives {
 
 		// Constructor
 		SpriteImpl(std::shared_ptr<Texture> p_texture, Vector2 p_position = Vector2(0.0f,0.0f), Vector2 p_scale = Vector2(1.0f, 1.0f),
-			Vector2 p_anchor_point = Vector2(0.0f, 0.0f), float p_angle = 0.0f, bool p_visible = true, FlipMode p_mode = FlipMode::None, Colour p_modulate = Colours::Transparent);
+			double p_angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool p_visible = true, FlipMode p_mode = FlipMode::None, Colour p_modulate = Colours::Transparent);
 
 		// Copy and move constructors
 
@@ -45,7 +46,7 @@ namespace penguin::core::rendering::primitives {
 		Vector2 get_position() const;
 		Vector2i get_size() const;
 		Vector2 get_scale() const;
-		float get_angle() const;
+		double get_angle() const;
 		Vector2 get_anchor_point() const;
 		bool is_hidden() const;
 		FlipMode get_flip_mode() const;
@@ -57,8 +58,8 @@ namespace penguin::core::rendering::primitives {
 		void set_texture(std::shared_ptr<Texture> new_texture);
 		void set_position(Vector2 new_position);
 		void set_scale(Vector2 new_scale);
-		void set_angle(float new_angle);
-		void set_anchor_point(Vector2 new_anchor_point);
+		void set_angle(double new_angle);
+		void set_anchor_point(Vector2 new_center);
 		void show();
 		void hide();
 		void set_flip_mode(FlipMode new_mode);

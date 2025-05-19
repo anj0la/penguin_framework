@@ -4,6 +4,7 @@
 #include <penguin_framework/core/math/vector2.hpp>
 
 struct PENGUIN_API [[nodiscard]] Rect2 {
+	
 	Vector2 position, size;
 
 	// Default constructor
@@ -34,5 +35,4 @@ struct PENGUIN_API [[nodiscard]] Rect2 {
 	Vector2 center() const;
 	bool contains(const Vector2& point) const;
 	bool intersects(const Rect2& r) const;
-
 };

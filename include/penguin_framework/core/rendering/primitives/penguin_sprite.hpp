@@ -20,7 +20,7 @@ namespace penguin::core::rendering::primitives {
 	class PENGUIN_API Sprite {
 	public:
 		Sprite(std::shared_ptr<Texture> tex, Vector2 position = Vector2(0.0f, 0.0f), Vector2 scale = Vector2(1.0f, 1.0f),
-			Vector2 anchor_point = Vector2(0.0f, 0.0f), float angle = 0.0f, bool visible = true, FlipMode mode = FlipMode::None, Colour modulate = Colours::Transparent);		
+			double angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool visible = true, FlipMode mode = FlipMode::None, Colour modulate = Colours::Transparent);
 		~Sprite();
 
 		Sprite(Sprite&&) noexcept;
@@ -30,7 +30,7 @@ namespace penguin::core::rendering::primitives {
 		Vector2 get_position() const;
 		Vector2i get_size() const;
 		Vector2 get_scale() const;
-		float get_angle() const;
+		double get_angle() const;
 		Vector2 get_anchor_point() const;
 		bool is_hidden() const;
 		FlipMode get_flip_mode() const;
@@ -42,8 +42,8 @@ namespace penguin::core::rendering::primitives {
 		void set_position(float x, float y);
 		void set_scale(Vector2 new_scale);
 		void set_scale(float x, float y);
-		void set_angle(float new_angle);
-		void set_anchor_point(Vector2 new_anchor_point);
+		void set_angle(double new_angle);
+		void set_anchor_point(Vector2 new_center);
 		void set_anchor_point(float x, float y);
 		void show();
 		void hide();

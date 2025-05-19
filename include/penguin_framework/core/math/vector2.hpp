@@ -90,4 +90,12 @@ struct PENGUIN_API [[nodiscard]] Vector2 {
 	Vector2 normalized() const;
 	float distance_to(const Vector2& v) const;
 	float distance_squared_to(const Vector2& v) const;
+
+	// Special Vectors
+
+	static const Vector2 Zero;
+	static const Vector2 One;
+	static const Vector2 UnitX;
+	static const Vector2 UnitY;
 };
+

@@ -24,3 +24,19 @@ TEST(ColourTest, RegularConstructorClamped) {
 	EXPECT_EQ(colour.b, 100); // Not clamped
 	EXPECT_EQ(colour.a, 255); // Clamped to max
 }
+
+TEST(ColourTest, EqualityOperators) {
+	// Arrange
+	Colour colour1(100, 150, 200, 255);
+	Colour colour2(100, 150, 200, 255);
+	Colour colour3(100, 150, 200, 0);
+
+	// Act & Assert
+	EXPECT_TRUE(colour1 == colour2);
+	EXPECT_FALSE(colour1 != colour2);
+
+	EXPECT_FALSE(colour1 == colour3);
+	EXPECT_TRUE(colour1 != colour3);
+
+
+}

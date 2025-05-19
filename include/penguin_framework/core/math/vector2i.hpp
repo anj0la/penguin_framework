@@ -86,4 +86,11 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	int length_squared() const;
 	float distance_to(const Vector2i& v) const;
 	int distance_squared_to(const Vector2i& v) const;
+
+	// Special Vectors
+
+	static const Vector2i Zero;
+	static const Vector2i One;
+	static const Vector2i UnitX;
+	static const Vector2i UnitY;
 };

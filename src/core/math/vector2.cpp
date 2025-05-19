@@ -54,7 +54,7 @@ void Vector2::normalize() {
 Vector2 Vector2::normalized() const {
 	float len = length();
 	if (len == 0.0f) {
-		return Vector2(); // Original vector has zero lengh (ZERO vector)
+		return Vector2::Zero;
 	}
 	return Vector2(x / len, y / len);
 }
@@ -66,3 +66,10 @@ float Vector2::distance_to(const Vector2& v) const {
 float Vector2::distance_squared_to(const Vector2& v) const {
 	return (x - v.x) * (x - v.x) + (y - v.y) * (y - v.y);
 }
+
+// Special Vectors
+
+const Vector2 Vector2::Zero{ 0.0, 0.0 };
+const Vector2 Vector2::One{ 1.0, 1.0 };
+const Vector2 Vector2::UnitX{ 1.0, 0.0 };
+const Vector2 Vector2::UnitY{ 0.0, 1.0 };

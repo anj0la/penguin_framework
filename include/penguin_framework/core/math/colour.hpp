@@ -21,6 +21,11 @@ struct PENGUIN_API [[nodiscard]] Colour {
     Colour(Colour&& c) noexcept = default; // Move constructor
     Colour& operator=(const Colour& c) = default; // Copy assignment operator
     Colour& operator=(Colour&& c) noexcept = default; // Move assignment operator
+
+    // Equality operators
+
+    constexpr bool operator==(const Colour& colour) const { return colour.r == r && colour.g == g && colour.b == b && colour.a == a; }
+    constexpr bool operator!=(const Colour& colour) const { return colour.r != r || colour.g != g || colour.b != b || colour.a != a; }
 };
 
 

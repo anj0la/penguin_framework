@@ -34,3 +34,10 @@ float Vector2i::distance_to(const Vector2i& v) const {
 int Vector2i::distance_squared_to(const Vector2i& v) const {
 	return (x - v.x) * (x - v.x) + (y - v.y) * (y - v.y);
 }
+
+// Special Vectors
+
+const Vector2i Vector2i::Zero{ 0, 0 };
+const Vector2i Vector2i::One{ 1, 1 };
+const Vector2i Vector2i::UnitX{ 1, 0 };
+const Vector2i Vector2i::UnitY{ 0, 1 };

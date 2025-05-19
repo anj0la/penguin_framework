@@ -4,7 +4,9 @@
 
 #include <penguin_framework/core/common/native_types.hpp>
 #include <penguin_framework/core/window/penguin_window.hpp>
+#include <penguin_framework/core/rendering/primitives/penguin_sprite.hpp>
 #include <penguin_framework/core/math/rect2.hpp>
+#include <penguin_framework/core/math/vector2.hpp>
 #include <penguin_framework/core/math/circle2.hpp>
 #include <penguin_framework/core/math/colours.hpp>
 
@@ -47,25 +49,24 @@ namespace penguin::core::rendering {
 
 		// Drawing functions for Sprites
 
-		bool draw_sprite(primitives::Sprite spr, Rect2 source, Rect2 dest);
-		bool draw_sprite(primitives::Sprite spr);
+		bool draw_sprite_full(primitives::Sprite spr);
 		bool draw_sprite_from(primitives::Sprite spr, Rect2 source);
 		bool draw_sprite_to(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite_from_to(primitives::Sprite spr, Rect2 source, Rect2 dest);
 
-		bool draw_sprite_rotated(primitives::Sprite spr, Rect2 source, Rect2 dest);
-		bool draw_sprite_rotated(primitives::Sprite spr);
-		bool draw_sprite_rotated_from(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_rotated_to(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite_transformed(primitives::Sprite spr);
+		bool draw_sprite_transformed_ex(primitives::Sprite spr, Vector2 anchor_point);
+		bool draw_sprite_from_transformed(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_from_transformed_ex(primitives::Sprite spr, Rect2 source, Vector2 anchor_point);
+		bool draw_sprite_to_transformed(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite_to_transformed_ex(primitives::Sprite spr, Rect2 dest, Vector2 anchor_point);
+		bool draw_sprite_from_to_transformed(primitives::Sprite spr, Rect2 source, Rect2 dest);
+		bool draw_sprite_from_to_transformed_ex(primitives::Sprite spr, Rect2 source, Rect2 dest, Vector2 anchor_point);
 
-		bool draw_sprite_scaled(primitives::Sprite spr, Rect2 source, Rect2 dest);
-		bool draw_sprite_scaled(primitives::Sprite spr);
-		bool draw_sprite_scaled_from(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_scaled_to(primitives::Sprite spr, Rect2 dest);
-
-		// Additional functions for Sprites
-
-		bool add_sprite_tint(primitives::Sprite spr);
-		bool remove_sprite_tint(primitives::Sprite spr);
+		bool draw_sprite_global_scaled(primitives::Sprite spr);
+		bool draw_sprite_from_scaled(primitives::Sprite spr, Rect2 source);
+		bool draw_sprite_to_scaled(primitives::Sprite spr, Rect2 dest);
+		bool draw_sprite_from_to_scaled(primitives::Sprite spr, Rect2 source, Rect2 dest);
 
 		NativeRendererPtr get_native_ptr() const;
 

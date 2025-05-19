@@ -3,7 +3,6 @@
 #include <penguin_framework/penguin_api.hpp>
 
 #include <penguin_framework/core/common/native_types.hpp>
-#include <penguin_framework/core/rendering/penguin_renderer.hpp>
 #include <penguin_framework/utils/exception.hpp>
 #include <penguin_framework/core/math/rect2.hpp>
 #include <penguin_framework/core/math/circle2.hpp>

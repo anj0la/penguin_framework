@@ -9,12 +9,12 @@ using penguin::core::rendering::primitives::Texture;
 using penguin::core::rendering::primitives::FlipMode;
 
 SpriteImpl::SpriteImpl(std::shared_ptr<Texture> p_texture, Vector2 p_position, Vector2 p_scale,
-	Vector2 p_anchor_point, float p_angle, bool p_visible, FlipMode p_mode, Colour p_tint) {
+	double p_angle, Vector2 p_anchor_point, bool p_visible, FlipMode p_mode, Colour p_tint) {
 	size = p_texture.get()->get_size();
 	position = p_position;
 	scale = p_scale;
-	anchor_point = p_anchor_point;
 	angle = p_angle;
+	anchor_point = std::clamp(p_anchor_point, Vector2::Zero, Vector2::One); // normalizes vector (if value is less than 0, assume Zero vector, if value is greater than 1, assume One vector)
 	visible = p_visible;
 	mode = p_mode;
 	tint = p_tint;
@@ -37,7 +37,7 @@ Vector2 SpriteImpl::get_scale() const {
 	return scale;
 }
 
-float SpriteImpl::get_angle() const {
+double SpriteImpl::get_angle() const {
 	return angle;
 }
 
@@ -73,12 +73,12 @@ void SpriteImpl::set_scale(Vector2 new_scale) {
 	scale = new_scale;
 }
 
-void SpriteImpl::set_angle(float new_angle) {
+void SpriteImpl::set_angle(double new_angle) {
 	angle = new_angle;
 }
 
-void SpriteImpl::set_anchor_point(Vector2 new_anchor_point) {
-	anchor_point = new_anchor_point;
+void SpriteImpl::set_anchor_point(Vector2 new_center) {
+	anchor_point = new_center;
 }
 
 void SpriteImpl::show() {
@@ -103,8 +103,8 @@ void SpriteImpl::set_bounding_box(Rect2 new_bounding_box) {
 
 // --- Define Sprite Methods ---
 
-Sprite::Sprite(std::shared_ptr<Texture> tex, Vector2 position, Vector2 scale, Vector2 anchor_point,
-	float angle, bool visible, FlipMode mode, Colour modulate) : pimpl_(std::make_unique<SpriteImpl>(tex, position, scale, anchor_point, angle, visible, mode, modulate)) {}
+Sprite::Sprite(std::shared_ptr<Texture> tex, Vector2 position, Vector2 scale,
+	double angle, Vector2 anchor_point, bool visible, FlipMode mode, Colour modulate) : pimpl_(std::make_unique<SpriteImpl>(tex, position, scale, angle, anchor_point, visible, mode, modulate)) {}
 Sprite::~Sprite() = default;
 
 Sprite::Sprite(Sprite&&) noexcept = default;
@@ -112,33 +112,98 @@ Sprite& Sprite::operator=(Sprite&&) noexcept = default;
 
 // --- Getters ---
 
-NativeTexturePtr Sprite::get_native_ptr() const { return pimpl_->get_native_ptr(); }
+NativeTexturePtr Sprite::get_native_ptr() const { 
+	return pimpl_->get_native_ptr(); 
+}
 
-Vector2 Sprite::get_position() const { return pimpl_->get_position(); }
-Vector2i Sprite::get_size() const { return pimpl_->get_size(); }
-Vector2 Sprite::get_scale() const { return pimpl_->get_scale(); }
-float Sprite::get_angle() const { return pimpl_->get_angle(); }
-Vector2 Sprite::get_anchor_point() const { return pimpl_->get_anchor_point(); }
-bool Sprite::is_hidden() const { return pimpl_->is_hidden(); }
-FlipMode Sprite::get_flip_mode() const { return pimpl_->get_flip_mode(); }
-Colour Sprite::get_colour_tint() const { return pimpl_->get_colour_tint(); }
-Rect2 Sprite::get_bounding_box() const { return pimpl_->get_bounding_box(); }
+Vector2 Sprite::get_position() const {
+	return pimpl_->get_position(); 
+}
+
+Vector2i Sprite::get_size() const { 
+	return pimpl_->get_size(); 
+}
+
+Vector2 Sprite::get_scale() const { 
+	return pimpl_->get_scale(); 
+}
+
+double Sprite::get_angle() const { 
+	return pimpl_->get_angle(); 
+}
+
+Vector2 Sprite::get_anchor_point() const {
+	return pimpl_->get_anchor_point();
+}
+
+bool Sprite::is_hidden() const { 
+	return pimpl_->is_hidden(); 
+}
+
+FlipMode Sprite::get_flip_mode() const { 
+	return pimpl_->get_flip_mode(); 
+}
+
+Colour Sprite::get_colour_tint() const { 
+	return pimpl_->get_colour_tint(); 
+}
+
+Rect2 Sprite::get_bounding_box() const { 
+	return pimpl_->get_bounding_box(); 
+}
 
 // --- Setters ---
 
-void Sprite::set_texture(std::shared_ptr<Texture> texture) { pimpl_->set_texture(texture); }
-void Sprite::set_position(Vector2 new_position) { pimpl_->set_position(new_position); }
-void Sprite::set_position(float x, float y) { pimpl_->set_position(Vector2(x, y)); }
-void Sprite::set_scale(Vector2 new_scale) { pimpl_->set_scale(new_scale); }
-void Sprite::set_scale(float x, float y) { pimpl_->set_scale(Vector2(x, y)); }
-void Sprite::set_angle(float new_angle) { pimpl_->set_angle(new_angle); }
-void Sprite::set_anchor_point(Vector2 new_anchor_point) { pimpl_->set_anchor_point(new_anchor_point); }
-void Sprite::set_anchor_point(float x, float y) { pimpl_->set_anchor_point(Vector2(x, y)); }
-void Sprite::show() { pimpl_->show(); }
-void Sprite::hide() { pimpl_->hide(); }
-void Sprite::set_flip_mode(FlipMode new_mode) { pimpl_->set_flip_mode(new_mode); }
-void Sprite::set_colour_tint(Colour new_modulate) { pimpl_->set_colour_tint(new_modulate); }
-void Sprite::set_bounding_box(Rect2 new_bounding_box) { pimpl_->set_bounding_box(new_bounding_box); }
+void Sprite::set_texture(std::shared_ptr<Texture> texture) { 
+	pimpl_->set_texture(texture); 
+}
+
+void Sprite::set_position(Vector2 new_position) { 
+	pimpl_->set_position(new_position); 
+}
+
+void Sprite::set_position(float x, float y) { 
+	pimpl_->set_position(Vector2(x, y)); 
+}
+
+void Sprite::set_scale(Vector2 new_scale) { 
+	pimpl_->set_scale(new_scale); 
+}
+void Sprite::set_scale(float x, float y) { 
+	pimpl_->set_scale(Vector2(x, y)); 
+}
+
+void Sprite::set_angle(double new_angle) { 
+	pimpl_->set_angle(new_angle); 
+}
+
+void Sprite::set_anchor_point(Vector2 new_center) {
+	pimpl_->set_anchor_point(new_center);
+}
+
+void Sprite::set_anchor_point(float x, float y) {
+	pimpl_->set_anchor_point(Vector2(x, y));
+}
+
+void Sprite::show() { 
+	pimpl_->show(); 
+}
+
+void Sprite::hide() { 
+	pimpl_->hide(); 
+}
+
+void Sprite::set_flip_mode(FlipMode new_mode) { 
+	pimpl_->set_flip_mode(new_mode); 
+}
+
+void Sprite::set_colour_tint(Colour new_modulate) { 
+	pimpl_->set_colour_tint(new_modulate); 
+}
+
+void Sprite::set_bounding_box(Rect2 new_bounding_box) { 
+	pimpl_->set_bounding_box(new_bounding_box); 
+}
 
 // --- Collision detection ---
 
