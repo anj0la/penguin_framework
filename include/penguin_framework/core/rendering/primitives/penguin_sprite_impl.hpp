@@ -31,7 +31,7 @@ namespace penguin::core::rendering::primitives {
 
 		// Constructor
 		SpriteImpl(std::shared_ptr<Texture> p_texture, Vector2 p_position = Vector2(0.0f,0.0f), Vector2 p_scale = Vector2(1.0f, 1.0f),
-			double p_angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool p_visible = true, FlipMode p_mode = FlipMode::None, Colour p_modulate = Colours::Transparent);
+			double p_angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool p_visible = true, FlipMode p_mode = FlipMode::None, Colour p_modulate = Colours::NoTint);
 
 		// Copy and move constructors
 

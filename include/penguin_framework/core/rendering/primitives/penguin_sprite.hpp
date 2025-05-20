@@ -20,7 +20,7 @@ namespace penguin::core::rendering::primitives {
 	class PENGUIN_API Sprite {
 	public:
 		Sprite(std::shared_ptr<Texture> tex, Vector2 position = Vector2(0.0f, 0.0f), Vector2 scale = Vector2(1.0f, 1.0f),
-			double angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool visible = true, FlipMode mode = FlipMode::None, Colour modulate = Colours::Transparent);
+			double angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool visible = true, FlipMode mode = FlipMode::None, Colour modulate = Colours::NoTint);
 		~Sprite();
 
 		Sprite(Sprite&&) noexcept;

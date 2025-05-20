@@ -30,8 +30,7 @@ bool RendererImpl::set_colour(Colour colour) {
 }
 
 bool RendererImpl::clear() {
-	set_colour(Colours::Black);
-	return SDL_RenderClear(renderer.get());
+	return set_colour(Colours::Black) && SDL_RenderClear(renderer.get());
 }
 
 // VSync functions
@@ -53,33 +52,39 @@ bool RendererImpl::is_vsync_enabled() const {
 // Drawing functions
 
 bool RendererImpl::draw_line(Vector2 vec1, Vector2 vec2, Colour colour) {
-	set_colour(colour);
-	return SDL_RenderLine(renderer.get(), vec1.x, vec1.y, vec2.x, vec2.y);
+	return set_colour(colour) && SDL_RenderLine(renderer.get(), vec1.x, vec1.y, vec2.x, vec2.y);
 }
 
 bool RendererImpl::draw_pixel(Vector2 vec, Colour colour) {
-	set_colour(colour);
-	return SDL_RenderPoint(renderer.get(), vec.x, vec.y);
+	return set_colour(colour) && SDL_RenderPoint(renderer.get(), vec.x, vec.y);
 }
 
 bool RendererImpl::draw_rect(Rect2 rect, Colour outline) {
-	set_colour(outline);
+	bool colour_applied = set_colour(outline);
 	SDL_FRect frect = { rect.position.x, rect.position.y, rect.size.x, rect.size.y };
-	return SDL_RenderRect(renderer.get(), &frect);
+	return colour_applied && SDL_RenderRect(renderer.get(), &frect);
 }
 
 bool RendererImpl::draw_filled_rect(Rect2 rect, Colour fill) {
-	set_colour(fill);
+	bool colour_applied = set_colour(fill);
 	SDL_FRect frect = { rect.position.x, rect.position.y, rect.size.x, rect.size.y };
-	return SDL_RenderFillRect(renderer.get(), &frect);
+	return colour_applied && SDL_RenderFillRect(renderer.get(), &frect);
 }
 
-bool RendererImpl::draw_triangle(Vector2 x, Vector2 y, Vector2 z, Colour outline) {
-	return draw_line(x, y, outline) && draw_line(y, z, outline) && draw_line(x, z, outline);
+bool RendererImpl::draw_triangle(Vector2 p1, Vector2 p2, Vector2 p3, Colour outline) {
+	return draw_line(p1, p2, outline) && draw_line(p2, p3, outline) && draw_line(p1, p3, outline);
 }
 
-bool RendererImpl::draw_filled_triangle(Vector2 x, Vector2 y, Vector2 z, Colour fill) {
-	return true; // will implement later
+bool RendererImpl::draw_filled_triangle(Vector2 p1, Vector2 p2, Vector2 p3, Colour fill) {
+	bool colour_applied = set_colour(fill);
+
+	SDL_Vertex vertices[] = {
+		{ {p1.x, p1.y}, {fill.r, fill.g, fill.b, fill.a}, {0, 0} },
+		{ {p2.x, p2.y}, {fill.r, fill.g, fill.b, fill.a}, {0, 0} },
+		{ {p3.x, p3.y}, {fill.r, fill.g, fill.b, fill.a}, {0, 0} }
+	};
+
+	return colour_applied && SDL_RenderGeometry(renderer.get(), nullptr, vertices, 3, nullptr, 0);
 }
 
 bool RendererImpl::draw_circle(Vector2 center, int rad, Colour outline) {
@@ -117,9 +122,7 @@ bool RendererImpl::draw_circle(Vector2 center, int rad, Colour outline) {
 		}
 	}
 
-	// Draw the circle.
-	set_colour(outline);
-	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
+	return set_colour(outline) && SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
 bool RendererImpl::draw_filled_circle(Vector2 center, int radius, Colour fill) {
@@ -218,9 +221,7 @@ bool RendererImpl::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colo
 		}
 	}
 
-	// Draw the ellipse.
-	set_colour(outline);
-	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
+	return 	set_colour(outline) && SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
 bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill) {
@@ -284,54 +285,52 @@ bool RendererImpl::draw_filled_ellipse(Vector2 center, int radius_x, int radius_
 		}
 	}
 
-	// Draw the filled ellipse.
-	set_colour(fill);
-	return SDL_RenderPoints(renderer.get(), points.data(), points.size());
+	return set_colour(fill) && SDL_RenderPoints(renderer.get(), points.data(), points.size());
 }
 
 // Drawing functions for Sprites
 
-bool RendererImpl::draw_sprite_full(NativeTexturePtr spr_texture, const Colour& tint) {
-	return internal_draw_sprite(spr_texture, nullptr, nullptr, tint);
+bool RendererImpl::draw_sprite(NativeTexturePtr spr_texture, const Colour* tint_override) {
+	return internal_draw_sprite(spr_texture, nullptr, nullptr, tint_override);
 }
 
-bool RendererImpl::draw_sprite_from(NativeTexturePtr spr_texture, const Rect2* source, const Colour& tint) {
-	return internal_draw_sprite(spr_texture, source, nullptr, tint);
+bool RendererImpl::draw_sprite_from(NativeTexturePtr spr_texture, const Rect2* source, const Colour* tint_override) {
+	return internal_draw_sprite(spr_texture, source, nullptr, tint_override);
 }
 
-bool RendererImpl::draw_sprite_to(NativeTexturePtr spr_texture, const Rect2* dest, const Colour& tint) {
-	return internal_draw_sprite(spr_texture, nullptr, dest, tint);
+bool RendererImpl::draw_sprite_to(NativeTexturePtr spr_texture, const Rect2* dest, const Colour* tint_override) {
+	return internal_draw_sprite(spr_texture, nullptr, dest, tint_override);
 }
 
-bool RendererImpl::draw_sprite_from_to(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest, const Colour& tint) {
-	return internal_draw_sprite(spr_texture, source, dest, tint);
+bool RendererImpl::draw_sprite_from_to(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest, const Colour* tint_override) {
+	return internal_draw_sprite(spr_texture, source, dest, tint_override);
 }
 
-bool RendererImpl::draw_sprite_transformed(NativeTexturePtr spr_texture, double angle, const Vector2* anchor_point, FlipMode mode, const Colour& tint) {
-	return internal_draw_rotated_flipped(spr_texture, nullptr, nullptr, angle, anchor_point, mode, tint);
+bool RendererImpl::draw_sprite_transformed(NativeTexturePtr spr_texture, double angle, const Vector2* anchor_point, FlipMode mode, const Colour* tint_override) {
+	return internal_draw_rotated_flipped(spr_texture, nullptr, nullptr, angle, anchor_point, mode, tint_override);
 }
 
-bool RendererImpl::draw_sprite_from_transformed(NativeTexturePtr spr_texture, const Rect2* source, double angle, const Vector2* anchor_point, FlipMode mode, const Colour& tint) {
-	return internal_draw_rotated_flipped(spr_texture, source, nullptr, angle, anchor_point, mode, tint);
+bool RendererImpl::draw_sprite_from_transformed(NativeTexturePtr spr_texture, const Rect2* source, double angle, const Vector2* anchor_point, FlipMode mode, const Colour* tint_override) {
+	return internal_draw_rotated_flipped(spr_texture, source, nullptr, angle, anchor_point, mode, tint_override);
 }
 
-bool RendererImpl::draw_sprite_to_transformed(NativeTexturePtr spr_texture, const Rect2* dest, double angle, const Vector2* anchor_point, FlipMode mode, const Colour& tint) {
-	return internal_draw_rotated_flipped(spr_texture, nullptr, dest, angle, anchor_point, mode, tint);
+bool RendererImpl::draw_sprite_to_transformed(NativeTexturePtr spr_texture, const Rect2* dest, double angle, const Vector2* anchor_point, FlipMode mode, const Colour* tint_override) {
+	return internal_draw_rotated_flipped(spr_texture, nullptr, dest, angle, anchor_point, mode, tint_override);
 }
 
-bool RendererImpl::draw_sprite_from_to_transformed(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest, double angle, const Vector2* anchor_point, FlipMode mode, const Colour& tint) {
-	return internal_draw_rotated_flipped(spr_texture, source, dest, angle, anchor_point, mode, tint);
+bool RendererImpl::draw_sprite_from_to_transformed(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest, double angle, const Vector2* anchor_point, FlipMode mode, const Colour* tint_override) {
+	return internal_draw_rotated_flipped(spr_texture, source, dest, angle, anchor_point, mode, tint_override);
 }
 
-bool RendererImpl::draw_sprite_global_scaled(NativeTexturePtr spr_texture, const Vector2* scale, const Colour& tint) {
-	return internal_draw_fullscreen_scaled(spr_texture, nullptr, scale, tint);
+bool RendererImpl::draw_sprite_global_scaled(NativeTexturePtr spr_texture, const Vector2* scale, const Colour* tint_override) {
+	return internal_draw_fullscreen_scaled(spr_texture, nullptr, scale, tint_override);
 }
 
-bool RendererImpl::draw_sprite_from_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Vector2* scale, const Colour& tint) {
-	return internal_draw_fullscreen_scaled(spr_texture, source, scale, tint);
+bool RendererImpl::draw_sprite_from_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Vector2* scale, const Colour* tint_override) {
+	return internal_draw_fullscreen_scaled(spr_texture, source, scale, tint_override);
 }
 
-bool RendererImpl::draw_sprite_to_scaled(NativeTexturePtr spr_texture, const Rect2* dest, const Vector2* scale, const Colour& tint) {
+bool RendererImpl::draw_sprite_to_scaled(NativeTexturePtr spr_texture, const Rect2* dest, const Vector2* scale, const Colour* tint_override) {
 	Rect2 final_dest;
 	const Rect2* final_dest_ptr = nullptr;
 
@@ -342,10 +341,10 @@ bool RendererImpl::draw_sprite_to_scaled(NativeTexturePtr spr_texture, const Rec
 	};
 	final_dest_ptr = &final_dest;
 	
-	return internal_draw_sprite(spr_texture, nullptr, final_dest_ptr, tint);
+	return internal_draw_sprite(spr_texture, nullptr, final_dest_ptr, tint_override);
 }
 
-bool RendererImpl::draw_sprite_from_to_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest, const Vector2* scale, const Colour& tint) {
+bool RendererImpl::draw_sprite_from_to_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest, const Vector2* scale, const Colour* tint_override) {
 	Rect2 final_dest;
 	const Rect2* final_dest_ptr = nullptr;
 
@@ -356,9 +355,8 @@ bool RendererImpl::draw_sprite_from_to_scaled(NativeTexturePtr spr_texture, cons
 	};
 	final_dest_ptr = &final_dest;
 
-	return internal_draw_sprite(spr_texture, source, final_dest_ptr, tint);
+	return internal_draw_sprite(spr_texture, source, final_dest_ptr, tint_override);
 }
-
 
 // Helper functions
 
@@ -367,7 +365,7 @@ bool RendererImpl::draw_horizontal_line(float x1, float x2, float y, Colour colo
 	return SDL_RenderLine(renderer.get(), x1, y, x2, y); // Faster to call SDL than converting to Vector2
 }
 
-bool RendererImpl::internal_draw_sprite(NativeTexturePtr spr_texture, const Rect2* source_ptr, const Rect2* dest_ptr, const Colour& tint) {
+bool RendererImpl::internal_draw_sprite(NativeTexturePtr spr_texture, const Rect2* source_ptr, const Rect2* dest_ptr, const Colour* tint_ptr) {
 	SDL_FRect sdl_source, sdl_dest;
 	SDL_FRect* sdl_source_ptr = nullptr;
 	SDL_FRect* sdl_dest_ptr = nullptr;
@@ -391,12 +389,12 @@ bool RendererImpl::internal_draw_sprite(NativeTexturePtr spr_texture, const Rect
 		sdl_dest_ptr = &sdl_dest;
 	}
 
-	if (tint == Colours::Transparent) {
+	if (!tint_ptr) { // No tint exists, call function as normal
 		return SDL_RenderTexture(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr); // No need to apply tint
 	}
 
-	bool applied_tint = SDL_SetTextureColorMod(texture, tint.r, tint.g, tint.b);
-	bool applied_alpha_tint = SDL_SetTextureAlphaMod(texture, tint.a);
+	bool applied_tint = SDL_SetTextureColorMod(texture, tint_ptr->r, tint_ptr->g, tint_ptr->b);
+	bool applied_alpha_tint = SDL_SetTextureAlphaMod(texture, tint_ptr->a);
 	bool rendered_texture = SDL_RenderTexture(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr);
 	bool removed_tint = SDL_SetTextureColorMod(texture, Colours::Transparent.r, Colours::Transparent.g, Colours::Transparent.b);
 	bool removed_alpha_tint = SDL_SetTextureAlphaMod(texture, Colours::Transparent.a);
@@ -404,7 +402,7 @@ bool RendererImpl::internal_draw_sprite(NativeTexturePtr spr_texture, const Rect
 	return applied_tint && applied_alpha_tint && rendered_texture && removed_tint && removed_alpha_tint; // checks that EVERY SDL call was successful
 }
 
-bool RendererImpl::internal_draw_rotated_flipped(NativeTexturePtr spr_texture, const Rect2* source_ptr, const Rect2* dest_ptr, double angle, const Vector2* anchor, FlipMode mode, const Colour& tint) {
+bool RendererImpl::internal_draw_rotated_flipped(NativeTexturePtr spr_texture, const Rect2* source_ptr, const Rect2* dest_ptr, double angle, const Vector2* anchor, FlipMode mode, const Colour* tint_ptr) {
 	SDL_FRect sdl_source, sdl_dest;
 	SDL_FRect* sdl_source_ptr = nullptr;
 	SDL_FRect* sdl_dest_ptr = nullptr;
@@ -430,18 +428,26 @@ bool RendererImpl::internal_draw_rotated_flipped(NativeTexturePtr spr_texture, c
 		sdl_dest_ptr = &sdl_dest;
 	}
 	if (anchor) {
-		sdl_anchor.x = anchor->x;
-		sdl_anchor.y = anchor->y;
-
+		if (sdl_dest_ptr) { // Anchor is relative to the destination rect
+			sdl_anchor.x = anchor->x * sdl_dest_ptr->w;
+			sdl_anchor.y = anchor->y * sdl_dest_ptr->h;
+		}
+		else {
+			// No dest_ptr, anchor is relative to the entire render target
+			int output_w, output_h;
+			SDL_GetRenderOutputSize(renderer.get(), &output_w, &output_h);
+			sdl_anchor.x = anchor->x * static_cast<float>(output_w);
+			sdl_anchor.y = anchor->y * static_cast<float>(output_h);
+		}
 		sdl_anchor_ptr = &sdl_anchor;
 	}
 
-	if (tint == Colours::Transparent) {
+	if (!tint_ptr) {
 		return SDL_RenderTextureRotated(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr, angle, sdl_anchor_ptr, static_cast<SDL_FlipMode>(mode)); // No need to apply tint
 	}
 
-	bool applied_tint = SDL_SetTextureColorMod(texture, tint.r, tint.g, tint.b);
-	bool applied_alpha_tint = SDL_SetTextureAlphaMod(texture, tint.a);
+	bool applied_tint = SDL_SetTextureColorMod(texture, tint_ptr->r, tint_ptr->g, tint_ptr->b);
+	bool applied_alpha_tint = SDL_SetTextureAlphaMod(texture, tint_ptr->a);
 	bool rendered_texture = SDL_RenderTextureRotated(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr, angle, sdl_anchor_ptr, static_cast<SDL_FlipMode>(mode));
 	bool removed_tint = SDL_SetTextureColorMod(texture, Colours::Transparent.r, Colours::Transparent.g, Colours::Transparent.b);
 	bool removed_alpha_tint = SDL_SetTextureAlphaMod(texture, Colours::Transparent.a);
@@ -449,7 +455,7 @@ bool RendererImpl::internal_draw_rotated_flipped(NativeTexturePtr spr_texture, c
 	return applied_tint && applied_alpha_tint && rendered_texture && removed_tint && removed_alpha_tint; // checks that EVERY SDL call was successful
 }
 
-bool RendererImpl::internal_draw_fullscreen_scaled(NativeTexturePtr spr_texture, const Rect2* source_ptr, const Vector2* scale_factor, const Colour& tint) {
+bool RendererImpl::internal_draw_fullscreen_scaled(NativeTexturePtr spr_texture, const Rect2* source_ptr, const Vector2* scale_factor, const Colour* tint_ptr) {
 	SDL_FRect sdl_source, sdl_dest;
 	SDL_FRect* sdl_source_ptr = nullptr;
 	SDL_FRect* sdl_dest_ptr = nullptr;
@@ -465,20 +471,20 @@ bool RendererImpl::internal_draw_fullscreen_scaled(NativeTexturePtr spr_texture,
 		sdl_source_ptr = &sdl_source;
 	}
 
-	if (tint == Colours::Transparent) { // No need to apply tint
+	if (!tint_ptr) { // No need to apply tint
 		bool scaled_texture = SDL_SetRenderScale(renderer.get(), scale_factor->x, scale_factor->y);
 		bool rendered_texture = SDL_RenderTexture(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr);
 		bool reset_scale = SDL_SetRenderScale(renderer.get(), 1.0f, 1.0f);
 		return scaled_texture && rendered_texture && reset_scale;
 	}
 
-	bool applied_tint = SDL_SetTextureColorMod(texture, tint.r, tint.g, tint.b);
-	bool applied_alpha_tint = SDL_SetTextureAlphaMod(texture, tint.a);
+	bool applied_tint = SDL_SetTextureColorMod(texture, tint_ptr->r, tint_ptr->g, tint_ptr->b);
+	bool applied_alpha_tint = SDL_SetTextureAlphaMod(texture, tint_ptr->a);
 	bool scaled_texture = SDL_SetRenderScale(renderer.get(), scale_factor->x, scale_factor->y);
 	bool rendered_texture = SDL_RenderTexture(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr);
 	bool reset_scale = SDL_SetRenderScale(renderer.get(), 1.0f, 1.0f);
-	bool removed_tint = SDL_SetTextureColorMod(texture, Colours::Transparent.r, Colours::Transparent.g, Colours::Transparent.b);
-	bool removed_alpha_tint = SDL_SetTextureAlphaMod(texture, Colours::Transparent.a);
+	bool removed_tint = SDL_SetTextureColorMod(texture, Colours::NoTint.r, Colours::NoTint.g, Colours::NoTint.b);
+	bool removed_alpha_tint = SDL_SetTextureAlphaMod(texture, Colours::NoTint.a);
 
 	return applied_tint && applied_alpha_tint && scaled_texture && rendered_texture && reset_scale && removed_tint && removed_alpha_tint; // checks that EVERY SDL call was successful
 }
@@ -495,86 +501,140 @@ bool Renderer::clear() { return pimpl_->clear(); }
 
 // Drawing functions
 
-bool Renderer::draw_line(Vector2 vec1, Vector2 vec2, Colour colour) { return pimpl_->draw_line(vec1, vec2, colour); }
-bool Renderer::draw_pixel(Vector2 vec, Colour colour) { return pimpl_->draw_pixel(vec, colour); }
-bool Renderer::draw_rect(Rect2 rect, Colour outline) { return pimpl_->draw_rect(rect, outline); }
-bool Renderer::draw_filled_rect(Rect2 rect, Colour fill) { return pimpl_->draw_filled_rect(rect, fill); }
-bool Renderer::draw_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline) { return pimpl_->draw_triangle(vec1, vec2, vec3, outline); }
-bool Renderer::draw_filled_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill) { return pimpl_->draw_filled_triangle(vec1, vec2, vec3, fill); }
-bool Renderer::draw_circle(Vector2 center, int rad, Colour outline) { return pimpl_->draw_circle(center, rad, outline); }
-bool Renderer::draw_circle(Circle2 circle, Colour outline) { return pimpl_->draw_circle(circle.center, static_cast<int>(circle.radius), outline); }
-bool Renderer::draw_filled_circle(Vector2 center, int radius, Colour fill) { return pimpl_->draw_filled_circle(center, radius, fill); }
-bool Renderer::draw_filled_circle(Circle2 circle, Colour fill) { return pimpl_->draw_filled_circle(circle.center, static_cast<int>(circle.radius), fill); }
-bool Renderer::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline) { return pimpl_->draw_ellipse(center, radius_x, radius_y, outline); }
-bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill) { return pimpl_->draw_filled_ellipse(center, radius_x, radius_y, fill); }
+bool Renderer::draw_line(Vector2 vec1, Vector2 vec2, Colour colour) { 
+	return pimpl_->draw_line(vec1, vec2, colour); 
+}
+
+bool Renderer::draw_pixel(Vector2 vec, Colour colour) { 
+	return pimpl_->draw_pixel(vec, colour); 
+}
+
+bool Renderer::draw_rect(Rect2 rect, Colour outline) { 
+	return pimpl_->draw_rect(rect, outline); 
+}
+
+bool Renderer::draw_filled_rect(Rect2 rect, Colour fill) { 
+	return pimpl_->draw_filled_rect(rect, fill); 
+}
+
+bool Renderer::draw_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour outline) { 
+	return pimpl_->draw_triangle(vec1, vec2, vec3, outline); 
+}
+
+bool Renderer::draw_filled_triangle(Vector2 vec1, Vector2 vec2, Vector2 vec3, Colour fill) { 
+	return pimpl_->draw_filled_triangle(vec1, vec2, vec3, fill); 
+}
+
+bool Renderer::draw_circle(Vector2 center, int rad, Colour outline) { 
+	return pimpl_->draw_circle(center, rad, outline); 
+}
+
+bool Renderer::draw_circle(Circle2 circle, Colour outline) { 
+	return pimpl_->draw_circle(circle.center, static_cast<int>(circle.radius), outline); 
+}
+
+bool Renderer::draw_filled_circle(Vector2 center, int radius, Colour fill) { 
+	return pimpl_->draw_filled_circle(center, radius, fill); 
+}
+
+bool Renderer::draw_filled_circle(Circle2 circle, Colour fill) { 
+	return pimpl_->draw_filled_circle(circle.center, static_cast<int>(circle.radius), fill); 
+}
+
+bool Renderer::draw_ellipse(Vector2 center, int radius_x, int radius_y, Colour outline) { 
+	return pimpl_->draw_ellipse(center, radius_x, radius_y, outline); 
+}
+
+bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, Colour fill) { 
+	return pimpl_->draw_filled_ellipse(center, radius_x, radius_y, fill); 
+}
 
 // Drawing functions for Sprites
 
-bool Renderer::draw_sprite_full(Sprite spr) { 
-	return pimpl_->draw_sprite_full(spr.get_native_ptr(), spr.get_colour_tint()); 
+bool Renderer::draw_sprite(Sprite spr) { 
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite(spr.get_native_ptr(), &tint);
 }
 
 bool Renderer::draw_sprite_from(Sprite spr, Rect2 source) { 
-	return pimpl_->draw_sprite_from(spr.get_native_ptr(), &source, spr.get_colour_tint());
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_from(spr.get_native_ptr(), &source, &tint);
 }
 
-bool Renderer::draw_sprite_to(Sprite spr, Rect2 dest) { 
-	return pimpl_->draw_sprite_to(spr.get_native_ptr(), &dest, spr.get_colour_tint());
+bool Renderer::draw_sprite_to(Sprite spr, Rect2 dest_override) { 
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_to(spr.get_native_ptr(), &dest_override, &tint);
 }
 
-bool Renderer::draw_sprite_from_to(Sprite spr, Rect2 source, Rect2 dest) { 
-	return pimpl_->draw_sprite_from_to(spr.get_native_ptr(), &source, &dest, spr.get_colour_tint());
+bool Renderer::draw_sprite_from_to(Sprite spr, Rect2 source, Rect2 dest_override) { 
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_from_to(spr.get_native_ptr(), &source, &dest_override, &tint);
 }
 
 bool Renderer::draw_sprite_transformed(Sprite spr) { 
-	return pimpl_->draw_sprite_transformed(spr.get_native_ptr(), spr.get_angle(), nullptr, spr.get_flip_mode(), spr.get_colour_tint());
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_transformed(spr.get_native_ptr(), spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
 bool Renderer::draw_sprite_transformed_ex(Sprite spr, Vector2 anchor_point) {
-	return pimpl_->draw_sprite_transformed(spr.get_native_ptr(), spr.get_angle(), &anchor_point, spr.get_flip_mode(), spr.get_colour_tint());
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_transformed(spr.get_native_ptr(), spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
 bool Renderer::draw_sprite_from_transformed(Sprite spr, Rect2 source) {
-	return pimpl_->draw_sprite_from_transformed(spr.get_native_ptr(), &source, spr.get_angle(), nullptr, spr.get_flip_mode(), spr.get_colour_tint());
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_from_transformed(spr.get_native_ptr(), &source, spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
 bool Renderer::draw_sprite_from_transformed_ex(Sprite spr, Rect2 source, Vector2 anchor_point) {
-	return pimpl_->draw_sprite_from_transformed(spr.get_native_ptr(), &source, spr.get_angle(), &anchor_point, spr.get_flip_mode(), spr.get_colour_tint());
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_from_transformed(spr.get_native_ptr(), &source, spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_to_transformed(Sprite spr, Rect2 dest) {
-	return pimpl_->draw_sprite_to_transformed(spr.get_native_ptr(), &dest, spr.get_angle(), nullptr, spr.get_flip_mode(), spr.get_colour_tint());
+bool Renderer::draw_sprite_to_transformed(Sprite spr, Rect2 dest_override) {
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_to_transformed(spr.get_native_ptr(), &dest_override, spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_to_transformed_ex(Sprite spr, Rect2 dest, Vector2 anchor_point) {
-	return pimpl_->draw_sprite_to_transformed(spr.get_native_ptr(), &dest, spr.get_angle(), &anchor_point, spr.get_flip_mode(), spr.get_colour_tint());
+bool Renderer::draw_sprite_to_transformed_ex(Sprite spr, Rect2 dest_override, Vector2 anchor_point) {
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_to_transformed(spr.get_native_ptr(), &dest_override, spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_from_to_transformed(Sprite spr, Rect2 source, Rect2 dest) {
-	return pimpl_->draw_sprite_from_to_transformed(spr.get_native_ptr(), &source, &dest, spr.get_angle(), nullptr, spr.get_flip_mode(), spr.get_colour_tint());
+bool Renderer::draw_sprite_from_to_transformed(Sprite spr, Rect2 source, Rect2 dest_override) {
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_from_to_transformed(spr.get_native_ptr(), &source, &dest_override, spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_from_to_transformed_ex(Sprite spr, Rect2 source, Rect2 dest, Vector2 anchor_point) {
-	return pimpl_->draw_sprite_from_to_transformed(spr.get_native_ptr(), &source, &dest, spr.get_angle(), &anchor_point, spr.get_flip_mode(), spr.get_colour_tint());
+bool Renderer::draw_sprite_from_to_transformed_ex(Sprite spr, Rect2 source, Rect2 dest_override, Vector2 anchor_point) {
+	Colour tint = spr.get_colour_tint();
+	return pimpl_->draw_sprite_from_to_transformed(spr.get_native_ptr(), &source, &dest_override, spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
 bool Renderer::draw_sprite_global_scaled(Sprite spr) {
+	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
-	return pimpl_->draw_sprite_global_scaled(spr.get_native_ptr(), &scale_val, spr.get_colour_tint());
+	return pimpl_->draw_sprite_global_scaled(spr.get_native_ptr(), &scale_val, &tint);
 }
 
 bool Renderer::draw_sprite_from_scaled(Sprite spr, Rect2 source) {
+	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
-	return pimpl_->draw_sprite_from_scaled(spr.get_native_ptr(), &source, &scale_val, spr.get_colour_tint());
+	return pimpl_->draw_sprite_from_scaled(spr.get_native_ptr(), &source, &scale_val, &tint);
 }
 
-bool Renderer::draw_sprite_to_scaled(Sprite spr, Rect2 dest) {
+bool Renderer::draw_sprite_to_scaled(Sprite spr, Rect2 dest_override) {
+	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
-	return pimpl_->draw_sprite_to_scaled(spr.get_native_ptr(), &dest, &scale_val, spr.get_colour_tint());
+	return pimpl_->draw_sprite_to_scaled(spr.get_native_ptr(), &dest_override, &scale_val, &tint);
 }
 
-bool Renderer::draw_sprite_from_to_scaled(Sprite spr, Rect2 source, Rect2 dest) {
+bool Renderer::draw_sprite_from_to_scaled(Sprite spr, Rect2 source, Rect2 dest_override) {
+	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
-	return pimpl_->draw_sprite_from_to_scaled(spr.get_native_ptr(), &source, &dest, &scale_val, spr.get_colour_tint());
+	return pimpl_->draw_sprite_from_to_scaled(spr.get_native_ptr(), &source, &dest_override, &scale_val, &tint);
 }
-NativeRendererPtr Renderer::get_native_ptr() const { return NativeRendererPtr{ pimpl_->renderer.get() }; }
+
+NativeRendererPtr Renderer::get_native_ptr() const { return NativeRendererPtr{ 
+	pimpl_->renderer.get() }; 
+}

@@ -8,10 +8,11 @@ namespace Colours {
 
 	// Basic shades
 
+	 inline const Colour NoTint{ 255, 255, 255, 255 }; 
 	 inline const Colour White{ 255, 255, 255, 255 };
 	 inline const Colour Grey{ 128, 128, 128, 255 };
 	 inline const Colour Black{ 0, 0, 0, 255 };
-	 inline const Colour Transparent{ 0, 0, 0, 0 };
+	 inline const Colour Transparent{ 0, 0, 0, 0 }; // Transparent Black
 
 	// Grey shades
 
