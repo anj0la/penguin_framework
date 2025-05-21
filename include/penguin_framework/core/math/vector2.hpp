@@ -1,6 +1,7 @@
 #pragma once
 
 #include <penguin_framework/penguin_api.hpp>
+#include <penguin_framework/core/math/math_funcs.hpp>
 
 #include <cmath>
 #include <compare>
@@ -31,14 +32,14 @@ struct PENGUIN_API [[nodiscard]] Vector2 {
 	constexpr Vector2 operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
 	constexpr Vector2 operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
 	constexpr Vector2 operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
-	constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); } // need to handle division by 0
+	constexpr Vector2 operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
 
 	// Assignment operators
  
 	constexpr Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
 	constexpr Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
 	constexpr Vector2& operator*=(const Vector2& v) { x *= v.x; y *= v.y; return *this; }
-	constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; } // need to handle division by 0
+	constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; }
 
 	// Comparison operators
 
@@ -55,14 +56,14 @@ struct PENGUIN_API [[nodiscard]] Vector2 {
 	constexpr Vector2 operator+(float scalar) const { return Vector2(x + scalar, y + scalar); }
 	constexpr Vector2 operator-(float scalar) const { return Vector2(x - scalar, y - scalar); }
 	constexpr Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
-	constexpr Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); } // need to handle division by 0
+	constexpr Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); } 
 
 	// Scalar assignment operators
 
 	constexpr Vector2& operator+=(float scalar) { x += scalar; y += scalar; return *this; }
 	constexpr Vector2& operator-=(float scalar) { x -= scalar; y -= scalar; return *this; }
 	constexpr Vector2& operator*=(float scalar) { x *= scalar; y *= scalar; return *this; }
-	constexpr Vector2& operator/=(float scalar) { x /= scalar; y /= scalar; return *this; } // need to handle division by 0
+	constexpr Vector2& operator/=(float scalar) { x /= scalar; y /= scalar; return *this; }
 
 	// Scalar comparison operators
 

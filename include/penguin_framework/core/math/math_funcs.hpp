@@ -1,82 +1,83 @@
 #pragma once
 
 #include <penguin_framework/core/math/math_types.hpp>
+#include <penguin_framework/core/math/math_compat.hpp>
 #include <cmath>
 #include <algorithm>
 #include <cfloat>
 
 namespace penguin::math {
 
-    inline bool is_equal_approx(double a, double b, double p_epsilon = epsilon) {
+    constexpr bool is_equal_approx(double a, double b, double p_epsilon = epsilon) {
 
-        if (std::isnan(a) || std::isnan(b)) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
-        if (std::isinf(a) || std::isinf(b)) {
+        if (compat::p_isinf(a) || compat::p_isinf(b)) {
             return a == b;
         }
 
-        return fabs(a - b) <= (std::max(fabs(a), fabs(b)) * p_epsilon);
+        return compat::p_abs(a - b) <= (std::max(compat::p_abs(a), compat::p_abs(b)) * p_epsilon);
     }
 
-    inline bool is_equal_approx(float a, float b, float p_epsilon = static_cast<float>(epsilon)) {
+    constexpr bool is_equal_approx(float a, float b, float p_epsilon = static_cast<float>(epsilon)) {
 
-        if (std::isnan(a) || std::isnan(b)) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
-        if (std::isinf(a) || std::isinf(b)) {
+        if (compat::p_isinf(a) || compat::p_isinf(b)) {
             return a == b;
         }
 
-        return fabs(a - b) <= (std::max(fabs(a), fabs(b)) * p_epsilon);
+        return compat::p_abs(a - b) <= (std::max(compat::p_abs(a), compat::p_abs(b)) * p_epsilon);
     }
     
-    inline bool is_almost_equal(double a, double b, double absolute_epsilon = DBL_EPSILON * 10, double relative_epsilon = epsilon) {
+    constexpr bool is_almost_equal(double a, double b, double absolute_epsilon = DBL_EPSILON * 10, double relative_epsilon = epsilon) {
         if (a == b) {
             return true;
         }
 
-        if (std::isnan(a) || std::isnan(b)) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
-        float diff = fabs(a - b);
+        float diff = compat::p_abs(a - b);
         if (diff <= absolute_epsilon) {
             return true;
         }
 
-        return diff <= (std::max(fabs(a), fabs(b)) * relative_epsilon);
+        return diff <= (std::max(compat::p_abs(a), compat::p_abs(b)) * relative_epsilon);
     }
 
-    inline bool is_almost_equal(float a, float b, float absolute_epsilon = FLT_EPSILON * 10, float relative_epsilon = static_cast<float>(epsilon)) {
+    constexpr bool is_almost_equal(float a, float b, float absolute_epsilon = FLT_EPSILON * 10, float relative_epsilon = static_cast<float>(epsilon)) {
         if (a == b) {
             return true;
         }
 
-        if (std::isnan(a) || std::isnan(b)) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
-        float diff = fabs(a - b);
+        float diff = compat::p_abs(a - b);
         if (diff <= absolute_epsilon) {
             return true;
         }
 
-        return diff <= (std::max(fabs(a), fabs(b)) * relative_epsilon);
+        return diff <= (std::max(compat::p_abs(a), compat::p_abs(b)) * relative_epsilon);
     }
 
-    inline bool is_zero_approx(double a) {
-        return std::fabs(a) < epsilon;
+    constexpr bool is_zero_approx(double a) {
+        return compat::p_abs(a) < epsilon;
     }
 
-    inline bool is_zero_approx(float a) {
-        return std::fabs(a) < static_cast<float>(epsilon);
+    constexpr bool is_zero_approx(float a) {
+        return compat::p_abs(a) < static_cast<float>(epsilon);
     }
 
-    bool is_def_greater_than(double a, double b, double p_epsilon = epsilon) {
-        if (std::isnan(a) || std::isnan(b)) {
+    constexpr bool is_def_greater_than(double a, double b, double p_epsilon = epsilon) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
@@ -84,23 +85,23 @@ namespace penguin::math {
             return false;
         }
 
-        if (std::isinf(a) && a > 0 && std::isinf(b) && b < 0) {
+        if (compat::p_isinf(a) && a > 0 && compat::p_isinf(b) && b < 0) {
             return true;
         }
 
-        if (std::isinf(a) && a > 0 && !std::isinf(b)) {
+        if (compat::p_isinf(a) && a > 0 && !compat::p_isinf(b)) {
             return true;
         }
 
-        if (!std::isinf(a) && std::isinf(b) && b < 0) {
+        if (!compat::p_isinf(a) && compat::p_isinf(b) && b < 0) {
             return true;
         }
 
-        return (a - b) > ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+        return (a - b) > ((compat::p_abs(a) < compat::p_abs(b) ? compat::p_abs(b) : compat::p_abs(a)) * epsilon);
     }
 
-    inline bool is_def_greater_than(float a, float b, float p_epsilon = static_cast<float>(epsilon)) {
-        if (std::isnan(a) || std::isnan(b)) {
+    constexpr bool is_def_greater_than(float a, float b, float p_epsilon = static_cast<float>(epsilon)) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
@@ -108,23 +109,23 @@ namespace penguin::math {
             return false;
         }
 
-        if (std::isinf(a) && a > 0 && std::isinf(b) && b < 0) {
+        if (compat::p_isinf(a) && a > 0 && compat::p_isinf(b) && b < 0) {
             return true;
         }
 
-        if (std::isinf(a) && a > 0 && !std::isinf(b)) {
+        if (compat::p_isinf(a) && a > 0 && !compat::p_isinf(b)) {
             return true;
         }
 
-        if (!std::isinf(a) && std::isinf(b) && b < 0) {
+        if (!compat::p_isinf(a) && compat::p_isinf(b) && b < 0) {
             return true;
         }
 
-        return (a - b) > ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+        return (a - b) > ((compat::p_abs(a) < compat::p_abs(b) ? compat::p_abs(b) : compat::p_abs(a)) * epsilon);
     }
 
-    inline bool is_def_less_than(double a, double b, double p_epsilon = epsilon) {
-        if (std::isnan(a) || std::isnan(b)) {
+    constexpr bool is_def_less_than(double a, double b, double p_epsilon = epsilon) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
@@ -132,23 +133,23 @@ namespace penguin::math {
             return false;
         }
 
-        if (std::isinf(b) && b > 0 && std::isinf(a) && a < 0) {
+        if (compat::p_isinf(b) && b > 0 && compat::p_isinf(a) && a < 0) {
             return true;
         }
 
-        if (std::isinf(b) && b > 0 && !std::isinf(a)) {
+        if (compat::p_isinf(b) && b > 0 && !compat::p_isinf(a)) {
             return true;
         }
 
-        if (!std::isinf(b) && std::isinf(a) && a < 0) {
+        if (!compat::p_isinf(b) && compat::p_isinf(a) && a < 0) {
             return true;
         }
 
-        return (b - a) > ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+        return (b - a) > ((compat::p_abs(a) < compat::p_abs(b) ? compat::p_abs(b) : compat::p_abs(a)) * epsilon);
     }
 
-    inline bool is_def_less_than(float a, float b, float p_epsilon = static_cast<float>(epsilon)) {
-        if (std::isnan(a) || std::isnan(b)) {
+    constexpr bool is_def_less_than(float a, float b, float p_epsilon = static_cast<float>(epsilon)) {
+        if (compat::p_isnan(a) || compat::p_isnan(b)) {
             return false;
         }
 
@@ -156,19 +157,19 @@ namespace penguin::math {
             return false;
         }
 
-        if (std::isinf(b) && b > 0 && std::isinf(a) && a < 0) {
+        if (compat::p_isinf(b) && b > 0 && compat::p_isinf(a) && a < 0) {
             return true;
         }
 
-        if (std::isinf(b) && b > 0 && !std::isinf(a)) {
+        if (compat::p_isinf(b) && b > 0 && !compat::p_isinf(a)) {
             return true;
         }
 
-        if (!std::isinf(b) && std::isinf(a) && a < 0) { 
+        if (!compat::p_isinf(b) && compat::p_isinf(a) && a < 0) { 
             return true; 
         }
 
-        return (b - a) > ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+        return (b - a) > ((compat::p_abs(a) < compat::p_abs(b) ? compat::p_abs(b) : compat::p_abs(a)) * epsilon);
     }
 
 }

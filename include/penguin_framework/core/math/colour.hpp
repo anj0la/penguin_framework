@@ -3,6 +3,7 @@
 #include <penguin_framework/penguin_api.hpp>
 #include <penguin_framework/core/math/math_funcs.hpp>
 #include <algorithm>
+#include <cstdint>
 
 struct PENGUIN_API [[nodiscard]] Colour {
 
@@ -20,6 +21,13 @@ struct PENGUIN_API [[nodiscard]] Colour {
         b(std::clamp(p_b, 0.0f, 1.0f)),
         a(std::clamp(p_a, 0.0f, 1.0f)) {}
 
+    constexpr Colour(float p_r, float p_g, float p_b) :
+        r(std::clamp(p_r, 0.0f, 1.0f)),
+        g(std::clamp(p_g, 0.0f, 1.0f)),
+        b(std::clamp(p_b, 0.0f, 1.0f)),
+        a(1.0f) {
+    }
+
     // Copy and move constructors
 
     constexpr Colour(const Colour& c) = default; // Copy constructor
@@ -27,7 +35,7 @@ struct PENGUIN_API [[nodiscard]] Colour {
     constexpr Colour& operator=(const Colour& c) = default; // Copy assignment operator
     constexpr Colour& operator=(Colour&& c) noexcept = default; // Move assignment operator
 
-    // Equality operators
+    // Comparision operators
 
     constexpr bool operator==(const Colour& c) const { 
         return penguin::math::is_almost_equal(r, c.r) &&
@@ -85,8 +93,6 @@ struct PENGUIN_API [[nodiscard]] Colour {
         return *this;
     }
 
-    // Comparison operators
-
     // Unary operators
 
     constexpr Colour operator~() const { return Colour(1.0f - r, 1.0f - g, 1.0f - b, a); } // Inverts colour
@@ -137,7 +143,8 @@ struct PENGUIN_API [[nodiscard]] Colour {
 
     // Static functions 
 
-    static Colour from_rgba();
-    static Colour from_hex();
+    static Colour from_rgb(uint8_t red, uint8_t green, uint8_t blue);
+    static Colour from_rgba(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
+    static Colour from_argb(uint32_t p_argb);
 };
 

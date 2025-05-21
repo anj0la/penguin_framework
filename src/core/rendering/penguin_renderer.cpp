@@ -26,7 +26,7 @@ bool RendererImpl::display() {
 }
 
 bool RendererImpl::set_colour(Colour colour) {
-	return SDL_SetRenderDrawColor(renderer.get(), colour.r, colour.g, colour.b, colour.a);
+	return SDL_SetRenderDrawColorFloat(renderer.get(), colour.r, colour.g, colour.b, colour.a);
 }
 
 bool RendererImpl::clear() {

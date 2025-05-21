@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <compare>
+#include <cassert>
 
 struct PENGUIN_API [[nodiscard]] Vector2i {
 	static constexpr int ORIGIN = 0; /// The origin for all Vector2i objects -> (0, 0)
@@ -30,14 +31,24 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	constexpr Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
 	constexpr Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
 	constexpr Vector2i operator*(const Vector2i& v) const { return Vector2i(x * v.x, y * v.y); }
-	constexpr Vector2i operator/(const Vector2i& v) const { return Vector2i(x / v.x, y / v.y); }
+
+	constexpr Vector2i operator/(const Vector2i& v) const { 
+		assert(v.x != 0 && v.y != 0 && "Vector2i: Division by zero attempted.");
+		return Vector2i(x / v.x, y / v.y); 
+	}
 
 	// Assignment operators
 
 	constexpr Vector2i& operator+=(const Vector2i& v) { x += v.x; y += v.y; return *this; }
 	constexpr Vector2i& operator-=(const Vector2i& v) { x -= v.x; y -= v.y; return *this; }
 	constexpr Vector2i& operator*=(const Vector2i& v) { x *= v.x; y *= v.y; return *this; }
-	constexpr Vector2i& operator/=(const Vector2i& v) { x /= v.x; y /= v.y; return *this; }
+
+	constexpr Vector2i& operator/=(const Vector2i& v) { 
+		assert(v.x != 0 && v.y != 0 && "Vector2i: Division by zero attempted.");
+		x /= v.x; 
+		y /= v.y; 
+		return *this; 
+	}
 
 	// Comparison operators
 
@@ -56,14 +67,22 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	constexpr Vector2i operator+(int scalar) const { return Vector2i(x + scalar, y + scalar); }
 	constexpr Vector2i operator-(int scalar) const { return Vector2i(x - scalar, y - scalar); }
 	constexpr Vector2i operator*(int scalar) const { return Vector2i(x * scalar, y * scalar); }
-	constexpr Vector2i operator/(int scalar) const { return Vector2i(x / scalar, y / scalar); }
+
+	constexpr Vector2i operator/(int scalar) const { 
+		assert(scalar != 0 && "Vector2i: Division by zero attempted.");
+		return Vector2i(x / scalar, y / scalar); }
 
 	// Scalar assignment operators
 
 	constexpr Vector2i& operator+=(int scalar) { x += scalar; y += scalar; return *this; }
 	constexpr Vector2i& operator-=(int scalar) { x -= scalar; y -= scalar; return *this; }
 	constexpr Vector2i& operator*=(int scalar) { x *= scalar; y *= scalar; return *this; }
-	constexpr Vector2i& operator/=(int scalar) { x /= scalar; y /= scalar; return *this; } // need to handle division by 0
+
+	constexpr Vector2i& operator/=(int scalar) { 
+		assert(scalar != 0 && "Vector2i: Division by zero attempted.");
+		x /= scalar; y /= scalar; return *this; 
+	}
+
 	constexpr Vector2i& operator%=(int scalar) { x %= scalar; y %= scalar; return *this; }
 
 	// Scalar comparison operators

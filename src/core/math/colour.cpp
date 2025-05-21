@@ -1,11 +1,17 @@
 #include <penguin_framework/core/math/colour.hpp>
-#include <algorithm> // For std::clamp
 
-//Colour::Colour() : r(0u), g(0u), b(0u), a(255u) {}
-//
-//Colour::Colour(unsigned int p_r, unsigned int p_g, unsigned int p_b, unsigned int p_a) :
-//    r(std::clamp(p_r, 0u, 255u)),
-//    g(std::clamp(p_g, 0u, 255u)),
-//    b(std::clamp(p_b, 0u, 255u)),
-//    a(std::clamp(p_a, 0u, 255u)) {
-//}
+Colour Colour::from_rgb(uint8_t red, uint8_t green, uint8_t blue) {
+    return Colour(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f); // opaque by default
+}
+
+Colour Colour::from_rgba(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
+	return Colour(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+}
+
+Colour Colour::from_argb(uint32_t p_argb) {
+    uint8_t a = (p_argb >> 24) & 0xFF;
+    uint8_t r = (p_argb >> 16) & 0xFF;
+    uint8_t g = (p_argb >> 8) & 0xFF;
+    uint8_t b = p_argb & 0xFF;
+    return from_rgba(r, g, b, a);
+}

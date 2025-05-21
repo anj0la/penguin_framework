@@ -1,7 +1,7 @@
 #include <penguin_framework/core/math/vector2.hpp>
 
 Vector2 Vector2::abs() const {
-	return Vector2(std::fabsf(x), std::fabsf(y));
+	return Vector2(std::fabs(x), std::fabs(y));
 }
 
 Vector2 Vector2::floor() const {
@@ -43,8 +43,8 @@ float Vector2::length_squared() const {
 }
 
 void Vector2::normalize() {
-	float len = length(); // Directly compute the length of the vector
-	if (len == 0.0f) {
+	float len = length();
+	if (penguin::math::is_zero_approx(len)) {
 		return; // Avoids division by zero
 	}
 	x /= len;
@@ -52,11 +52,9 @@ void Vector2::normalize() {
 }
 
 Vector2 Vector2::normalized() const {
-	float len = length();
-	if (len == 0.0f) {
-		return Vector2::Zero;
-	}
-	return Vector2(x / len, y / len);
+	Vector2 v = *this;
+	v.normalize();
+	return v;
 }
 
 float Vector2::distance_to(const Vector2& v) const {
@@ -69,7 +67,7 @@ float Vector2::distance_squared_to(const Vector2& v) const {
 
 // Special Vectors
 
-const Vector2 Vector2::Zero{ 0.0, 0.0 };
-const Vector2 Vector2::One{ 1.0, 1.0 };
-const Vector2 Vector2::UnitX{ 1.0, 0.0 };
-const Vector2 Vector2::UnitY{ 0.0, 1.0 };
+const Vector2 Vector2::Zero{ 0.0f, 0.0f };
+const Vector2 Vector2::One{ 1.0f, 1.0f };
+const Vector2 Vector2::UnitX{ 1.0f, 0.0f };
+const Vector2 Vector2::UnitY{ 0.0f, 1.0f };
