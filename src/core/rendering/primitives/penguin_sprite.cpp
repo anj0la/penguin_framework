@@ -1,7 +1,7 @@
 #include <penguin_framework/core/rendering/primitives/penguin_sprite.hpp>
 #include <penguin_framework/core/rendering/primitives/penguin_sprite_impl.hpp>
 
-// --- Define SpriteImpl Methods ---
+// Define SpriteImpl Methods
 
 using penguin::core::rendering::primitives::Sprite;
 using penguin::core::rendering::primitives::SpriteImpl;
@@ -101,7 +101,7 @@ void SpriteImpl::set_bounding_box(Rect2 new_bounding_box) {
 	bounding_box = new_bounding_box;
 }
 
-// --- Define Sprite Methods ---
+// Define Sprite Methods
 
 Sprite::Sprite(std::shared_ptr<Texture> tex, Vector2 position, Vector2 scale,
 	double angle, Vector2 anchor_point, bool visible, FlipMode mode, Colour modulate) : pimpl_(std::make_unique<SpriteImpl>(tex, position, scale, angle, anchor_point, visible, mode, modulate)) {}
@@ -110,7 +110,7 @@ Sprite::~Sprite() = default;
 Sprite::Sprite(Sprite&&) noexcept = default;
 Sprite& Sprite::operator=(Sprite&&) noexcept = default;
 
-// --- Getters ---
+// Getters
 
 NativeTexturePtr Sprite::get_native_ptr() const { 
 	return pimpl_->get_native_ptr(); 
@@ -152,7 +152,7 @@ Rect2 Sprite::get_bounding_box() const {
 	return pimpl_->get_bounding_box(); 
 }
 
-// --- Setters ---
+// Setters
 
 void Sprite::set_texture(std::shared_ptr<Texture> texture) { 
 	pimpl_->set_texture(texture); 
@@ -205,7 +205,7 @@ void Sprite::set_bounding_box(Rect2 new_bounding_box) {
 	pimpl_->set_bounding_box(new_bounding_box); 
 }
 
-// --- Collision detection ---
+// Collision detection
 
 bool Sprite::intersects(const Sprite& other) const {
 	return pimpl_->get_bounding_box().intersects(other.get_bounding_box());

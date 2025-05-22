@@ -7,12 +7,12 @@
 #include <cassert>
 
 struct PENGUIN_API [[nodiscard]] Vector2i {
-	static constexpr int ORIGIN = 0; /// The origin for all Vector2i objects -> (0, 0)
+	static constexpr int Origin = 0; /// The origin for all Vector2i objects -> (0, 0)
 
 	int x, y; /// The x and y components of the vector.
 
 	// Default constructor (x, y = ORIGIN)
-	constexpr Vector2i() : x(ORIGIN), y(ORIGIN) {}
+	constexpr Vector2i() : x(Origin), y(Origin) {}
 
 	// Regular constructors
 
@@ -60,7 +60,7 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	constexpr Vector2i operator%(const Vector2i& v) const { return Vector2i(x % v.x, y % v.y); }
 	constexpr Vector2i operator%(int scalar) const { return Vector2i(x % scalar, y % scalar); }
 	constexpr Vector2i operator-() const { return Vector2i(-x, -y); }
-	constexpr bool operator!() const { return x != ORIGIN && y != ORIGIN; }
+	constexpr bool operator!() const { return x != Origin && y != Origin; }
 
 	// Scalar operators
 

@@ -65,20 +65,20 @@ namespace penguin::core::rendering {
 
 		// Drawing functions for Sprites
 
-		bool draw_sprite(NativeTexturePtr spr_texture, const Colour* tint_override);
-		bool draw_sprite_from(NativeTexturePtr spr_texture, const Rect2* source, const Colour* tint_override);
-		bool draw_sprite_to(NativeTexturePtr spr_texture, const Rect2* dest_override, const Colour* tint_override);
-		bool draw_sprite_from_to(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest_override, const Colour* tint_override);
+		bool draw_sprite(NativeTexturePtr spr_texture, const Colour* tint_ptr);
+		bool draw_sprite_from(NativeTexturePtr spr_texture, const Rect2* source, const Colour* tint_ptr);
+		bool draw_sprite_to(NativeTexturePtr spr_texture, const Rect2* dest_override, const Colour* tint_ptr);
+		bool draw_sprite_from_to(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest_override, const Colour* tint_ptr);
 
-		bool draw_sprite_transformed(NativeTexturePtr spr_texture, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_override);
-		bool draw_sprite_from_transformed(NativeTexturePtr spr_texture, const Rect2* source, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_override);
-		bool draw_sprite_to_transformed(NativeTexturePtr spr_texture, const Rect2* dest_override, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_override);
-		bool draw_sprite_from_to_transformed(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest_override, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_override);
+		bool draw_sprite_transformed(NativeTexturePtr spr_texture, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_ptr);
+		bool draw_sprite_from_transformed(NativeTexturePtr spr_texture, const Rect2* source, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_ptr);
+		bool draw_sprite_to_transformed(NativeTexturePtr spr_texture, const Rect2* dest_override, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_ptr);
+		bool draw_sprite_from_to_transformed(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest_override, double angle, const Vector2* anchor_point, primitives::FlipMode mode, const Colour* tint_ptr);
 
-		bool draw_sprite_global_scaled(NativeTexturePtr spr_texture, const Vector2* scale, const Colour* tint_override);
-		bool draw_sprite_from_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Vector2* scale, const Colour* tint_override); 
-		bool draw_sprite_to_scaled(NativeTexturePtr spr_texture, const Rect2* dest_override, const Vector2* scale, const Colour* tint_override); 
-		bool draw_sprite_from_to_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest_override, const Vector2* scale, const Colour* tint_override);
+		bool draw_sprite_global_scaled(NativeTexturePtr spr_texture, const Vector2* scale, const Colour* tint_ptr);
+		bool draw_sprite_from_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Vector2* scale, const Colour* tint_ptr); 
+		bool draw_sprite_to_scaled(NativeTexturePtr spr_texture, const Rect2* dest_override, const Vector2* scale, const Colour* tint_ptr); 
+		bool draw_sprite_from_to_scaled(NativeTexturePtr spr_texture, const Rect2* source, const Rect2* dest_override, const Vector2* scale, const Colour* tint_ptr);
 
 		// Helper functions
 

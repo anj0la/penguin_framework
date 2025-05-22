@@ -4,7 +4,7 @@
 using penguin::core::window::Window;
 using penguin::core::window::WindowImpl;
 
-// --- Define WindowImpl Methods ---
+// Define WindowImpl Methods
 
 WindowImpl::WindowImpl(const char* p_title, Vector2i p_size, WindowFlags p_flags)
 	: window(SDL_CreateWindow(p_title, p_size.x, p_size.y, static_cast<SDL_WindowFlags>(p_flags)), &SDL_DestroyWindow), title(p_title) {
@@ -162,7 +162,7 @@ bool WindowImpl::lose_foucs() {
 	return SDL_SetWindowFocusable(window.get(), focused);
 }
 
-// --- Define Window Methods ---
+// Define Window Methods
 
 Window::Window(const char* p_title, Vector2i p_size, WindowFlags p_flags) : pimpl_(std::make_unique<WindowImpl>(p_title, p_size, p_flags)) {}
 Window::~Window() = default;

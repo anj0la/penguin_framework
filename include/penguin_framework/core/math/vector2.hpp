@@ -7,13 +7,13 @@
 #include <compare>
 
 struct PENGUIN_API [[nodiscard]] Vector2 {
-	static constexpr float ORIGIN = 0.0f; /// The origin for all Vector2 objects -> (0.0, 0.0)
+	static constexpr float Origin = 0.0f; /// The origin for all Vector2 objects -> (0.0, 0.0)
 
 	float x, y; /// The x and y components of the vector.
 
 	// Default constructor (x, y = ORIGIN)
 
-	constexpr Vector2() : x(ORIGIN), y(ORIGIN) {}
+	constexpr Vector2() : x(Origin), y(Origin) {}
 
 	// Regular constructors
 
@@ -43,13 +43,12 @@ struct PENGUIN_API [[nodiscard]] Vector2 {
 
 	// Comparison operators
 
-	constexpr bool operator==(const Vector2& v) const { return x == v.x && y == v.y; }
-	constexpr bool operator!=(const Vector2& v) const { return x != v.x || y != v.y; }
+	constexpr bool operator==(const Vector2& v) const { return penguin::math::is_almost_equal(x, v.x) && penguin::math::is_almost_equal(y, v.y); }
+	constexpr bool operator!=(const Vector2& v) const { return !(*this == v); }
 
 	// Unary operators
 
 	constexpr Vector2 operator-() const { return Vector2(-x, -y); }
-	constexpr bool operator!() const { return x != ORIGIN && y != ORIGIN; }
 
 	// Scalar operators
 
@@ -64,11 +63,6 @@ struct PENGUIN_API [[nodiscard]] Vector2 {
 	constexpr Vector2& operator-=(float scalar) { x -= scalar; y -= scalar; return *this; }
 	constexpr Vector2& operator*=(float scalar) { x *= scalar; y *= scalar; return *this; }
 	constexpr Vector2& operator/=(float scalar) { x /= scalar; y /= scalar; return *this; }
-
-	// Scalar comparison operators
-
-	constexpr bool operator==(float scalar) const { return x == scalar && y == scalar; }
-	constexpr bool operator!=(float scalar) const { return x != scalar || y != scalar; }
 
 	// Other comparsion operators
 	

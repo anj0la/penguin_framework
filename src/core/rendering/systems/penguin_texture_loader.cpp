@@ -1,7 +1,7 @@
 #include <penguin_framework/core/rendering/systems/penguin_texture_loader.hpp>
 #include <penguin_framework/core/rendering/systems/penguin_texture_loader_impl.hpp>
 
-// --- Define TextureLoaderImpl Methods ---
+// Define TextureLoaderImpl Methods
 
 using penguin::core::rendering::systems::TextureLoader;
 using penguin::core::rendering::systems::TextureLoaderImpl;
@@ -26,7 +26,7 @@ std::shared_ptr<Texture> TextureLoaderImpl::load(NativeRendererPtr renderer, con
     return new_texture;
 }
 
-// --- Define TextureLoader Methods ---
+// Define TextureLoader Methods
 
 TextureLoader::TextureLoader() : pimpl_(std::make_unique<TextureLoaderImpl>()) {}
 TextureLoader::~TextureLoader() = default;
