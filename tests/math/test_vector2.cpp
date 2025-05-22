@@ -145,7 +145,7 @@ TEST(Vector2Test, OperatorDivideVector) {
 	Vector2 result = v1 / v2;
 
 	// Assert
-	ExpectVector2Near(expected, result); // EXPECT_FLOAT_EQ has a limit of 4 ULPs, this allows us to test if the results are near with more ULPs
+	ExpectVector2Near(expected, result); // EXPECT_FLOAT_EQ has a limit of 4 ULPs, allows to test if the results are near with more ULPs
 }
 
 TEST(Vector2Test, OperatorDivideVectorByZero_Extended) {
@@ -343,8 +343,8 @@ TEST(Vector2Test, OperatorThreeWayComparison) {
     Vector2 v_equal(1.0f, 2.0f);
 
     // Act & Assert
-    EXPECT_TRUE(v1 < v2);   // y component differs
-    EXPECT_TRUE(v1 < v3);   // x component differs
+    EXPECT_TRUE(v1 < v2);
+    EXPECT_TRUE(v1 < v3);
     EXPECT_FALSE(v2 < v1);
     EXPECT_FALSE(v3 < v1);
 
@@ -729,7 +729,7 @@ TEST(Vector2Test, Dot) {
     // Arrange
     Vector2 v1(1.0f, 2.0f);
     Vector2 v2(3.0f, 4.0f);
-    float expected = 1.0f * 3.0f + 2.0f * 4.0f; // 3 + 8 = 11
+    float expected = 1.0f * 3.0f + 2.0f * 4.0f; 
 
     // Act
     float result = v1.dot(v2);
@@ -742,7 +742,7 @@ TEST(Vector2Test, Cross) {
     // Arrange
     Vector2 v1(1.0f, 2.0f);
     Vector2 v2(3.0f, 4.0f);
-    float expected = 1.0f * 4.0f - 2.0f * 3.0f; // 4 - 6 = -2
+    float expected = 1.0f * 4.0f - 2.0f * 3.0f;
 
     // Act
     float result = v1.cross(v2);
@@ -753,7 +753,7 @@ TEST(Vector2Test, Cross) {
 
 TEST(Vector2Test, Length) {
     // Arrange
-    Vector2 v1(3.0f, 4.0f); // Pythagorean triple
+    Vector2 v1(3.0f, 4.0f);
     float expected1 = 5.0f;
     Vector2 v2(0.0f, 0.0f);
     float expected2 = 0.0f;
@@ -774,7 +774,7 @@ TEST(Vector2Test, Length) {
 TEST(Vector2Test, LengthSquared) {
     // Arrange
     Vector2 v1(3.0f, 4.0f);
-    float expected1 = 3.0f * 3.0f + 4.0f * 4.0f; // 9 + 16 = 25
+    float expected1 = 3.0f * 3.0f + 4.0f * 4.0f; 
     Vector2 v2(0.0f, 0.0f);
     float expected2 = 0.0f;
 
@@ -790,10 +790,10 @@ TEST(Vector2Test, LengthSquared) {
 TEST(Vector2Test, Normalize) {
     // Arrange
     Vector2 v_to_normalize(3.0f, 4.0f);
-    Vector2 expected_normalized(3.0f / 5.0f, 4.0f / 5.0f); // Length is 5
+    Vector2 expected_normalized(3.0f / 5.0f, 4.0f / 5.0f);
 
     Vector2 v_zero(0.0f, 0.0f);
-    Vector2 expected_zero_normalized(0.0f, 0.0f); // Normalizing zero vector results in zero vector
+    Vector2 expected_zero_normalized(0.0f, 0.0f);
 
     float val_len_is_zero = 1e-7f; // 0.0000001f -> LESS than epsilon (1e-6f)
     Vector2 v_len_is_zero(val_len_is_zero, 0.0f); // Length is 1e-7f, considered to be zero approximately
@@ -840,7 +840,7 @@ TEST(Vector2Test, Normalized) {
     Vector2 expected_normalized(3.0f / 5.0f, 4.0f / 5.0f);
 
     Vector2 v_zero(0.0f, 0.0f);
-    Vector2 expected_zero_normalized(0.0f, 0.0f); // Normalizing zero vector results in zero vector
+    Vector2 expected_zero_normalized(0.0f, 0.0f);
 
     float val_len_is_zero = 1e-7f; // 0.0000001f -> LESS than epsilon (1e-6f)
     Vector2 v_len_is_zero(val_len_is_zero, 0.0f); // Length is 1e-7f, considered to be zero approximately
@@ -851,7 +851,7 @@ TEST(Vector2Test, Normalized) {
     Vector2 expected_len_is_not_zero_normalized(1.0f, 0.0f);
 
     // Act
-    Vector2 v_normalized_result = v_to_normalize.normalized(); // Renamed for clarity
+    Vector2 v_normalized_result = v_to_normalize.normalized();
     Vector2 v_zero_normalized_result = v_zero.normalized();
     Vector2 v_len_is_zero_normalized_result = v_len_is_zero.normalized();
     Vector2 v_len_is_not_zero_normalized_result = v_len_is_not_zero.normalized();
@@ -877,14 +877,13 @@ TEST(Vector2Test, Normalized) {
     ExpectVector2Near(expected_len_is_not_zero_normalized, v_len_is_not_zero_normalized_result);
     EXPECT_NEAR(v_len_is_not_zero_normalized_result.length(), 1.0f, penguin::math::epsilon);
     EXPECT_EQ(v_len_is_not_zero, Vector2(val_len_is_not_zero, 0.0f));
-
 }
 
 TEST(Vector2Test, DistanceTo) {
     // Arrange
     Vector2 v1(1.0f, 2.0f);
-    Vector2 v2(4.0f, 6.0f); // diff = (3, 4)
-    float expected_distance = 5.0f; // length of (3,4)
+    Vector2 v2(4.0f, 6.0f);
+    float expected_distance = 5.0f;
 
     // Act
     float distance = v1.distance_to(v2);
@@ -896,8 +895,8 @@ TEST(Vector2Test, DistanceTo) {
 TEST(Vector2Test, DistanceSquaredTo) {
     // Arrange
     Vector2 v1(1.0f, 2.0f);
-    Vector2 v2(4.0f, 6.0f); // diff = (3, 4)
-    float expected_distance_sq = 3.0f * 3.0f + 4.0f * 4.0f; // 9 + 16 = 25
+    Vector2 v2(4.0f, 6.0f);
+    float expected_distance_sq = 3.0f * 3.0f + 4.0f * 4.0f;
 
     // Act
     float distance_sq = v1.distance_squared_to(v2);

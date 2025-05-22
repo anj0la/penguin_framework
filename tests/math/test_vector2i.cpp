@@ -1,326 +1,712 @@
 #include <penguin_framework/core/math/vector2i.hpp>
+#include <penguin_framework/utils/string.hpp>
 #include <gtest/gtest.h>
 
-// Setting Up the Test Suite
+// Constructors
 
-class Vector2iTestFixutre : public ::testing::Test {
-protected:
-	Vector2i vector1, vector2, vector3;
+TEST(Vector2iTest, DefaultConstructor) {
+    // Arrange & Act
+    Vector2i v;
 
-	void SetUp() override {
-		vector1 = Vector2i(2, 3);
-		vector2 = Vector2i(1, 2);
-	};
-
-};
-
-// Constructor Tests
-
-TEST(Vector2iConstructorTest, DefaultConstructor) {
-	Vector2i vector;
-	EXPECT_EQ(vector.x, 0);
-	EXPECT_EQ(vector.y, 0);
+    // Assert
+    EXPECT_EQ(v.x, Vector2i::Origin);
+    EXPECT_EQ(v.y, Vector2i::Origin);
 }
 
-TEST(Vector2iConstructorTest, RegularConstructor) {
-	Vector2i vector(1, 1);
-	EXPECT_EQ(vector.x, 1);
-	EXPECT_EQ(vector.y, 1);
+TEST(Vector2iTest, XYConstructor) {
+    // Arrange
+    int x_val = 1;
+    int y_val = -2;
+
+    // Act
+    Vector2i v(x_val, y_val);
+
+    // Assert
+    EXPECT_EQ(v.x, x_val);
+    EXPECT_EQ(v.y, y_val);
 }
 
-TEST(Vector2iConstructorTest, RegularConstructorScalar) {
-	Vector2i vector(1);
-	EXPECT_EQ(vector.x, 1);
-	EXPECT_EQ(vector.y, 1);
+TEST(Vector2iTest, ScalarConstructor) {
+    // Arrange
+    int scalar_val = 5;
+
+    // Act
+    Vector2i v(scalar_val);
+
+    // Assert
+    EXPECT_EQ(v.x, scalar_val);
+    EXPECT_EQ(v.y, scalar_val);
 }
 
-// Binary Operator Tests
+TEST(Vector2iTest, CopyConstructor) {
+    // Arrange
+    Vector2i original(1, 2);
 
-TEST_F(Vector2iTestFixutre, AddVectors) {
-	Vector2i result = vector1 + vector2;
-	EXPECT_EQ(result.x, 3);
-	EXPECT_EQ(result.y, 5);
+    // Act
+    Vector2i copy(original);
+
+    // Assert
+    EXPECT_EQ(copy, original);
 }
 
-TEST_F(Vector2iTestFixutre, SubVectors) {
-	Vector2i result = vector1 - vector2;
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 1);
+TEST(Vector2iTest, MoveConstructor) {
+    // Arrange
+    Vector2i original(1, 2);
+    Vector2i reference_original = original;
+
+    // Act
+    Vector2i moved(std::move(original));
+
+    // Assert
+    EXPECT_EQ(moved, reference_original);
 }
 
-TEST_F(Vector2iTestFixutre, MultVectors) {
-	Vector2i result = vector1 * vector2;
-	EXPECT_EQ(result.x, 2);
-	EXPECT_EQ(result.y, 6);
+TEST(Vector2iTest, CopyAssignment) {
+    // Arrange
+    Vector2i original(3, 4);
+    Vector2i copy_assigned;
+    ASSERT_NE(copy_assigned, original); // Ensure different before assignment
+
+    // Act
+    copy_assigned = original;
+
+    // Assert
+    EXPECT_EQ(copy_assigned, original);
 }
 
-TEST_F(Vector2iTestFixutre, DivVectors) {
-	Vector2i result = vector1 / vector2;
-	EXPECT_EQ(result.x, 2);
-	EXPECT_EQ(result.y, 1);
+TEST(Vector2iTest, MoveAssignment) {
+    // Arrange
+    Vector2i original(5, 6);
+    Vector2i reference_original = original; // For comparison
+    Vector2i move_assigned;
+    ASSERT_NE(move_assigned, original); 
+
+    // Act
+    move_assigned = std::move(original);
+
+    // Assert
+    EXPECT_EQ(move_assigned, reference_original);
 }
 
-// Assignment Operator Tests
+// Binary Operators (Vector2i vs Vector2i)
 
-TEST_F(Vector2iTestFixutre, AddVectorsAssignment) {
-	vector1 += vector2;
-	EXPECT_EQ(vector1.x, 3);
-	EXPECT_EQ(vector1.y, 5);
+TEST(Vector2iTest, OperatorAddVector) {
+    // Arrange
+    Vector2i v1(2, 3);
+    Vector2i v2(1, 2);
+    Vector2i expected(3, 5);
+
+    // Act
+    Vector2i result = v1 + v2;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, SubVectorsAssignment) {
-	vector1 -= vector2;
-	EXPECT_EQ(vector1.x, 1);
-	EXPECT_EQ(vector1.y, 1);
+TEST(Vector2iTest, OperatorSubtractVector) {
+    // Arrange
+    Vector2i v1(2, 3);
+    Vector2i v2(1, 2);
+    Vector2i expected(1, 1);
+
+    // Act
+    Vector2i result = v1 - v2;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, MultVectorsAssignment) {
-	vector1 *= vector2;
-	EXPECT_EQ(vector1.x, 2);
-	EXPECT_EQ(vector1.y, 6);
+TEST(Vector2iTest, OperatorMultiplyVector) {
+    // Arrange
+    Vector2i v1(2, 3);
+    Vector2i v2(1, 2);
+    Vector2i expected(2, 6);
+
+    // Act
+    Vector2i result = v1 * v2;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, DivVectorsAssignment) {
-	vector1 /= vector2;
-	EXPECT_EQ(vector1.x, 2);
-	EXPECT_EQ(vector1.y, 1);
+TEST(Vector2iTest, OperatorDivideVector) {
+    // Arrange
+    Vector2i v1(10, 21);
+    Vector2i v2(2, 4);
+    Vector2i expected(5, 5); // Integer division truncates
+
+    // Act
+    Vector2i result = v1 / v2;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-// Scalar Operator Tests
+TEST(Vector2iTest, OperatorDivideVectorByZero) {
+    // Arrange
+    Vector2i v_num(10, 20);
+    Vector2i v_den_x_zero(0, 4);
+    Vector2i v_den_y_zero(2, 0);
+    Vector2i v_den_all_zero(0, 0);
+    const String expected_death_msg("Vector2i: Division by zero attempted.");
 
-TEST_F(Vector2iTestFixutre, AddVectorsScalar) {
-	Vector2i result = vector1 + 1;
-	EXPECT_EQ(result.x, 3);
-	EXPECT_EQ(result.y, 4);
+    // Act & Assert
+#ifndef NDEBUG
+    EXPECT_DEATH((void) (v_num / v_den_x_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void) (v_num / v_den_y_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void) (v_num / v_den_all_zero), expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
+#endif
 }
 
-TEST_F(Vector2iTestFixutre, SubVectorsScalar) {
-	Vector2i result = vector1 - 1;
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 2);
+TEST(Vector2iTest, OperatorModuloVector) {
+    // Arrange
+    Vector2i v1(7, 10);
+    Vector2i v2(3, 4);
+    Vector2i expected(1, 2); // 7%3 = 1, 10%4 = 2
+
+    // Act
+    Vector2i result = v1 % v2;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, MultVectorsScalar) {
-	Vector2i result = vector1 * 2;
-	EXPECT_EQ(result.x, 4);
-	EXPECT_EQ(result.y, 6);
+TEST(Vector2iTest, OperatorModuloVectorByZero) {
+    // Arrange
+    Vector2i v_num(7, 10);
+    Vector2i v_den_x_zero(0, 4);
+    Vector2i v_den_y_zero(3, 0);
+    Vector2i v_den_all_zero(0, 0);
+    const String expected_death_msg("Vector2i: Modulo by zero attempted in x or y component.");
+
+    // Act & Assert
+#ifndef NDEBUG
+    EXPECT_DEATH((void) (v_num % v_den_x_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void)(v_num % v_den_y_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void)(v_num % v_den_all_zero), expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
+#endif
 }
 
-TEST_F(Vector2iTestFixutre, DivVectorsScalar) {
-	Vector2i result = vector1 / 2;
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 1);
+// Assignment Operators (Vector2i vs Vector2i)
+
+TEST(Vector2iTest, OperatorAddAssignVector) {
+    // Arrange
+    Vector2i v(2, 3);
+    Vector2i v_add(1, 2);
+    Vector2i expected(3, 5);
+
+    // Act
+    v += v_add;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-// Assignment Operator Tests
+TEST(Vector2iTest, OperatorSubtractAssignVector) {
+    // Arrange
+    Vector2i v(2, 3);
+    Vector2i v_sub(1, 2);
+    Vector2i expected(1, 1);
 
-TEST_F(Vector2iTestFixutre, AddVectorsScalarAssignment) {
-	vector1 += 1;
-	EXPECT_EQ(vector1.x, 3);
-	EXPECT_EQ(vector1.y, 4);
+    // Act
+    v -= v_sub;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, SubVectorsScalarAssignment) {
-	vector1 -= 1;
-	EXPECT_EQ(vector1.x, 1);
-	EXPECT_EQ(vector1.y, 2);
+TEST(Vector2iTest, OperatorMultiplyAssignVector) {
+    // Arrange
+    Vector2i v(2, 3);
+    Vector2i v_mul(1, 2);
+    Vector2i expected(2, 6);
+
+    // Act
+    v *= v_mul;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, MultVectorsScalarAssignment) {
-	vector1 *= 2;
-	EXPECT_EQ(vector1.x, 4);
-	EXPECT_EQ(vector1.y, 6);
+TEST(Vector2iTest, OperatorDivideAssignVector) {
+    // Arrange
+    Vector2i v(10, 21);
+    Vector2i v_div(2, 4);
+    Vector2i expected(5, 5);
+
+    // Act
+    v /= v_div;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, DivVectorsScalarAssignment) {
-	vector1 /= 2;
-	EXPECT_EQ(vector1.x, 1);
-	EXPECT_EQ(vector1.y, 1);
+TEST(Vector2iTest, OperatorDivideAssignVectorByZero) {
+    // Arrange
+    Vector2i v_orig(10, 20);
+    Vector2i v_den_x_zero(0, 4);
+    Vector2i v_den_y_zero(2, 0);
+    Vector2i v_den_all_zero(0, 0);
+    const String expected_death_msg("Vector2i: Division by zero attempted in x or y component.");
+
+    // Act & Assert
+#ifndef NDEBUG
+    Vector2i v_test1 = v_orig;
+    EXPECT_DEATH({ v_test1 /= v_den_x_zero; }, expected_death_msg.c_str());
+
+    Vector2i v_test2 = v_orig;
+    EXPECT_DEATH({ v_test2 /= v_den_y_zero; }, expected_death_msg.c_str());
+
+    Vector2i v_test3 = v_orig;
+    EXPECT_DEATH({ v_test3 /= v_den_all_zero; }, expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
+#endif
 }
 
-// Comparison Operator Tests
+TEST(Vector2iTest, OperatorModuloAssignVector) {
+    // Arrange
+    Vector2i v(7, 10);
+    Vector2i v_mod(3, 4);
+    Vector2i expected(1, 2);
 
-TEST_F(Vector2iTestFixutre, EqualOperator) {
-	vector1 -= 1; // (1, 2), vector2 = (1, 2)
-	EXPECT_TRUE(vector1 == vector2);
+    // Act
+    v %= v_mod;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, EqualOperatorFalse) {
-	EXPECT_FALSE(vector1 == vector2);
+TEST(Vector2iTest, OperatorModuloAssignVectorByZero) {
+    // Arrange
+    Vector2i v_orig(7, 10);
+    Vector2i v_den_x_zero(0, 4);
+    Vector2i v_den_y_zero(3, 0);
+    Vector2i v_den_all_zero(0, 0);
+    const String expected_death_msg("Vector2i: Modulo by zero attempted in x or y component.");
+
+    // Act & Assert
+#ifndef NDEBUG
+    Vector2i v_test1 = v_orig;
+    EXPECT_DEATH({ v_test1 %= v_den_x_zero; }, expected_death_msg.c_str());
+
+    Vector2i v_test2 = v_orig;
+    EXPECT_DEATH({ v_test2 %= v_den_y_zero; }, expected_death_msg.c_str());
+
+    Vector2i v_test3 = v_orig;
+    EXPECT_DEATH({ v_test3 %= v_den_all_zero; }, expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
+#endif
 }
 
-TEST_F(Vector2iTestFixutre, NotEqualOperator) {
-	EXPECT_TRUE(vector1 != vector2);
+// Comparison Operators (Vector2i vs Vector2i)
+
+TEST(Vector2iTest, OperatorEqual) {
+    // Arrange
+    Vector2i v1(1, 2);
+    Vector2i v2(1, 2);
+    Vector2i v3(1, 3);
+    Vector2i v4(0, 2);
+
+    // Act & Assert
+    EXPECT_TRUE(v1 == v2);
+    EXPECT_FALSE(v1 == v3);
+    EXPECT_FALSE(v1 == v4);
 }
 
-TEST_F(Vector2iTestFixutre, NotEqualOperatorFalse) {
-	vector1 -= 1; // (1, 2), vector2 = (1, 2)
-	EXPECT_FALSE(vector1 != vector2);
+TEST(Vector2iTest, OperatorNotEqual) {
+    // Arrange
+    Vector2i v1(1, 2);
+    Vector2i v2(1, 2);
+    Vector2i v3(1, 3);
+    Vector2i v4(0, 2);
+
+    // Act & Assert
+    EXPECT_FALSE(v1 != v2);
+    EXPECT_TRUE(v1 != v3);
+    EXPECT_TRUE(v1 != v4);
 }
 
+TEST(Vector2iTest, OperatorThreeWayComparison) {
+    // Arrange
+    Vector2i v1(1, 2);
+    Vector2i v2(1, 3);
+    Vector2i v3(2, 1);
+    Vector2i v_equal(1, 2);
 
-TEST_F(Vector2iTestFixutre, LessThanOperator) {
-	EXPECT_TRUE(vector2 < vector1);
+    // Act & Assert
+    EXPECT_TRUE(v1 < v2);
+    EXPECT_TRUE(v1 < v3);
+    EXPECT_FALSE(v2 < v1);
+    EXPECT_FALSE(v3 < v1);
+
+    EXPECT_TRUE(v2 > v1);
+    EXPECT_TRUE(v3 > v1);
+
+    EXPECT_TRUE(v1 <= v2);
+    EXPECT_TRUE(v1 <= v_equal);
+    EXPECT_FALSE(v2 <= v1);
+
+    EXPECT_TRUE(v1 >= v_equal);
+    EXPECT_TRUE(v2 >= v1);
+    EXPECT_FALSE(v1 >= v2);
 }
 
-TEST_F(Vector2iTestFixutre, LessThanOperatorFalse) {
-	EXPECT_FALSE(vector1 < vector2);
+// Unary Operators
+
+TEST(Vector2iTest, OperatorUnaryMinus) {
+    // Arrange
+    Vector2i v(2, -3);
+    Vector2i expected(-2, 3);
+
+    // Act
+    Vector2i result = -v;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, GreaterThanOperator) {
-	EXPECT_TRUE(vector1 > vector2);
+// Scalar Operators
+
+TEST(Vector2iTest, OperatorAddScalar) {
+    // Arrange
+    Vector2i v(2, 3);
+    int scalar = 1;
+    Vector2i expected(3, 4);
+
+    // Act
+    Vector2i result = v + scalar;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, GreaterThanOperatorFalse) {
-	EXPECT_FALSE(vector2 > vector1);
+TEST(Vector2iTest, OperatorSubtractScalar) {
+    // Arrange
+    Vector2i v(2, 3);
+    int scalar = 1;
+    Vector2i expected(1, 2);
+
+    // Act
+    Vector2i result = v - scalar;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, LessThanEqualOperator) {
-	EXPECT_TRUE(vector2 <= vector1);
+TEST(Vector2iTest, OperatorMultiplyScalar) {
+    // Arrange
+    Vector2i v(2, 3);
+    int scalar = 2;
+    Vector2i expected(4, 6);
+
+    // Act
+    Vector2i result = v * scalar;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, LessThanEqualOperatorFalse) {
-	EXPECT_FALSE(vector1 <= vector2);
+TEST(Vector2iTest, OperatorDivideScalar) {
+    // Arrange
+    Vector2i v(7, 10);
+    int scalar = 2;
+    Vector2i expected(3, 5); // 7/2=3, 10/2=5
+
+    // Act
+    Vector2i result = v / scalar;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, GreaterThanEqualOperator) {
-	EXPECT_TRUE(vector1 >= vector2);
+TEST(Vector2iTest, OperatorDivideScalarByZero) {
+    // Arrange
+    Vector2i v(7, 10);
+    int scalar_zero = 0;
+    const String expected_death_msg("Vector2i: Division by zero attempted.");
+
+    // Act & Assert
+#ifndef NDEBUG
+    EXPECT_DEATH((void) (v / scalar_zero), expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
+#endif
 }
 
-TEST_F(Vector2iTestFixutre, GreaterThanEqualOperatorFalse) {
-	EXPECT_FALSE(vector2 >= vector1);
+TEST(Vector2iTest, OperatorModuloScalar) {
+    // Arrange
+    Vector2i v(7, 10);
+    int scalar = 3;
+    Vector2i expected(1, 1);
+
+    // Act
+    Vector2i result = v % scalar;
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-// Unary Operator Tests
+TEST(Vector2iTest, OperatorModuloScalarByZero) {
+    // Arrange
+    Vector2i v(7, 10);
+    int scalar_zero = 0;
+    const String expected_death_msg("Vector2i: Modulo by zero scalar attempted.");
 
-TEST_F(Vector2iTestFixutre, ModuloOperator) {
-	Vector2i result = vector1 % vector2;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 1);
+    // Act & Assert
+#ifndef NDEBUG
+    EXPECT_DEATH((void) (v % scalar_zero), expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
+#endif
 }
 
-TEST_F(Vector2iTestFixutre, ModuloScalarOperator) {
-	Vector2i result = vector1 % 2;
-	EXPECT_EQ(result.x, 0);
-	EXPECT_EQ(result.y, 1);
+// Scalar Assignment Operators
+
+TEST(Vector2iTest, OperatorAddAssignScalar) {
+    // Arrange
+    Vector2i v(2, 3);
+    int scalar = 1;
+    Vector2i expected(3, 4);
+
+    // Act
+    v += scalar;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, NegationOperator) {
-	Vector2i result = -vector1;
-	EXPECT_EQ(result.x, -2);
-	EXPECT_EQ(result.y, -3);
+TEST(Vector2iTest, OperatorSubtractAssignScalar) {
+    // Arrange
+    Vector2i v(2, 3);
+    int scalar = 1;
+    Vector2i expected(1, 2);
+
+    // Act
+    v -= scalar;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, NotOperator) {
-	EXPECT_TRUE(!vector1);
+TEST(Vector2iTest, OperatorMultiplyAssignScalar) {
+    // Arrange
+    Vector2i v(2, 3);
+    int scalar = 2;
+    Vector2i expected(4, 6);
+
+    // Act
+    v *= scalar;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-// Scalar Operator Tests
+TEST(Vector2iTest, OperatorDivideAssignScalar) {
+    // Arrange
+    Vector2i v(7, 10);
+    int scalar = 2;
+    Vector2i expected(3, 5);
 
-TEST_F(Vector2iTestFixutre, AddScalarOperator) {
-	Vector2i result = vector1 + 1;
-	EXPECT_EQ(result.x, 3);
-	EXPECT_EQ(result.y, 4);
+    // Act
+    v /= scalar;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, SubScalarOperator) {
-	Vector2i result = vector1 - 1;
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 2);
+TEST(Vector2iTest, OperatorDivideAssignScalarByZero) {
+    // Arrange
+    Vector2i v(7, 10); // Original value
+    int scalar_zero = 0;
+    const String expected_death_msg("Vector2i: Division by zero attempted.");
+
+    // Act & Assert
+#ifndef NDEBUG
+    EXPECT_DEATH({ v /= scalar_zero; }, expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
+#endif
 }
 
-TEST_F(Vector2iTestFixutre, MultScalarOperator) {
-	Vector2i result = vector1 * 2;
-	EXPECT_EQ(result.x, 4);
-	EXPECT_EQ(result.y, 6);
+TEST(Vector2iTest, OperatorModuloAssignScalar) {
+    // Arrange
+    Vector2i v(7, 10);
+    int scalar = 3;
+    Vector2i expected(1, 1);
+
+    // Act
+    v %= scalar;
+
+    // Assert
+    EXPECT_EQ(v, expected);
 }
 
-TEST_F(Vector2iTestFixutre, DivScalarOperator) {
-	Vector2i result = vector1 / 2;
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 1);
+TEST(Vector2iTest, OperatorModuloAssignScalarByZero) {
+    // Arrange
+    Vector2i v(7, 10); // Original value
+    int scalar_zero = 0;
+    const String expected_death_msg("Vector2i: Modulo by zero scalar attempted.");
+
+    // Act & Assert
+#ifndef NDEBUG
+    EXPECT_DEATH({ v %= scalar_zero; }, expected_death_msg.c_str());
+#else
+    GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
+#endif
 }
 
-// Scalar Assignment Operator Tests
+// Vector Operations
 
-TEST_F(Vector2iTestFixutre, AddScalarAssignmentOperator) {
-	vector1 += 1;
-	EXPECT_EQ(vector1.x, 3);
-	EXPECT_EQ(vector1.y, 4);
+TEST(Vector2iTest, Abs) {
+    // Arrange
+    Vector2i v1(2, -3);
+    Vector2i v2(-2, 3);
+    Vector2i v3(-2, -3);
+    Vector2i expected(2, 3);
+
+    // Act & Assert
+    EXPECT_EQ(v1.abs(), expected);
+    EXPECT_EQ(v2.abs(), expected);
+    EXPECT_EQ(v3.abs(), expected);
+    EXPECT_EQ(Vector2i(0, 0).abs(), Vector2i(0, 0));
 }
 
-TEST_F(Vector2iTestFixutre, SubScalarAssignmentOperator) {
-	vector1 -= 1;
-	EXPECT_EQ(vector1.x, 1);
-	EXPECT_EQ(vector1.y, 2);
+TEST(Vector2iTest, Min) {
+    // Arrange
+    Vector2i v1(2, 5);
+    Vector2i v2(4, 3);
+    Vector2i expected(2, 3);
+
+    // Act
+    Vector2i result = v1.min(v2);
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, MultScalarAssignmentOperator) {
-	vector1 *= 2;
-	EXPECT_EQ(vector1.x, 4);
-	EXPECT_EQ(vector1.y, 6);
+TEST(Vector2iTest, Max) {
+    // Arrange
+    Vector2i v1(2, 5);
+    Vector2i v2(4, 3);
+    Vector2i expected(4, 5);
+
+    // Act
+    Vector2i result = v1.max(v2);
+
+    // Assert
+    EXPECT_EQ(result, expected);
 }
 
-TEST_F(Vector2iTestFixutre, DivScalarAssignmentOperator) {
-	vector1 /= 2;
-	EXPECT_EQ(vector1.x, 1);
-	EXPECT_EQ(vector1.y, 1);
+TEST(Vector2iTest, Dot) {
+    // Arrange
+    Vector2i v1(2, 3);
+    Vector2i v2(1, 2);
+    int expected_dot = 2 * 1 + 3 * 2;
+
+    // Act
+    int result = v1.dot(v2);
+
+    // Assert
+    EXPECT_EQ(result, expected_dot);
 }
 
-TEST_F(Vector2iTestFixutre, ModuloScalarAssignmentOperator) {
-	vector1 %= 2;
-	EXPECT_EQ(vector1.x, 0);
-	EXPECT_EQ(vector1.y, 1);
+TEST(Vector2iTest, Cross) {
+    // Arrange
+    Vector2i v1(2, 3);
+    Vector2i v2(1, 2);
+    int expected_cross = 2 * 2 - 3 * 1;
+
+    // Act
+    int result = v1.cross(v2);
+
+    // Assert
+    EXPECT_EQ(result, expected_cross);
 }
 
-// Other Tests
+TEST(Vector2iTest, Length) {
+    // Arrange
+    Vector2i v_pythagorean(3, 4);
+    Vector2i v_general(2, 3);
+    Vector2i v_zero(0, 0);
 
-TEST_F(Vector2iTestFixutre, AbsFunction) {
-	Vector2i result = (-vector1).abs();
-	EXPECT_EQ(result.x, 2);
-	EXPECT_EQ(result.y, 3);
+    // Act
+    float result_pythagorean = v_pythagorean.length();
+    float result_general = v_general.length();
+    float result_zero = v_zero.length();
+
+    // Assert
+    EXPECT_FLOAT_EQ(result_pythagorean, 5.0f);
+    EXPECT_FLOAT_EQ(result_general, std::sqrt(static_cast<float>(2 * 2 + 3 * 3)));
+    EXPECT_FLOAT_EQ(result_zero, 0.0f);
 }
 
-TEST_F(Vector2iTestFixutre, MinFunction) {
-	Vector2i result = vector1.min(vector2);
-	EXPECT_EQ(result.x, 1);
-	EXPECT_EQ(result.y, 2);
+TEST(Vector2iTest, LengthSquared) {
+    // Arrange
+    Vector2i v(2, 3);
+    int expected_len_sq = 2 * 2 + 3 * 3;
+
+    // Act
+    int result = v.length_squared();
+
+    // Assert
+    EXPECT_EQ(result, expected_len_sq);
+    EXPECT_EQ(Vector2i(0, 0).length_squared(), 0);
 }
 
-TEST_F(Vector2iTestFixutre, MaxFunction) {
-	Vector2i result = vector1.max(vector2);
-	EXPECT_EQ(result.x, 2);
-	EXPECT_EQ(result.y, 3);
+TEST(Vector2iTest, DistanceTo) {
+    // Arrange
+    Vector2i v1(1, 1);
+    Vector2i v2(4, 5); 
+    float expected_distance = 5.0f;
+
+    // Act
+    float result = v1.distance_to(v2);
+
+    // Assert
+    EXPECT_FLOAT_EQ(result, expected_distance);
 }
 
-TEST_F(Vector2iTestFixutre, DotFunction) {
-	int result = vector1.dot(vector2);
-	EXPECT_EQ(result, 8);
+TEST(Vector2iTest, DistanceSquaredTo) {
+    // Arrange
+    Vector2i v1(1, 1);
+    Vector2i v2(4, 5); 
+    int expected_dist_sq = 3 * 3 + 4 * 4;
+
+    // Act
+    int result = v1.distance_squared_to(v2);
+
+    // Assert
+    EXPECT_EQ(result, expected_dist_sq);
 }
 
-TEST_F(Vector2iTestFixutre, CrossFunction) {
-	int result = vector1.cross(vector2);
-	EXPECT_EQ(result, 1);
+// Special Vectors
+
+TEST(Vector2iTest, SpecialVectorZero) {
+    // Arrange & Act (Static member)
+    // Assert
+    EXPECT_EQ(Vector2i::Zero, Vector2i(0, 0));
 }
 
-TEST_F(Vector2iTestFixutre, LengthFunction) {
-	float result = vector1.length();
-	EXPECT_FLOAT_EQ(result, 3.6055512f);
+TEST(Vector2iTest, SpecialVectorOne) {
+    // Arrange & Act (Static member)
+    // Assert
+    EXPECT_EQ(Vector2i::One, Vector2i(1, 1));
 }
 
-TEST_F(Vector2iTestFixutre, LengthSquaredFunction) {
-	int result = vector1.length_squared();
-	EXPECT_EQ(result, 13);
+TEST(Vector2iTest, SpecialVectorUnitX) {
+    // Arrange & Act (Static member)
+    // Assert
+    EXPECT_EQ(Vector2i::UnitX, Vector2i(1, 0));
 }
 
-TEST_F(Vector2iTestFixutre, DistanceToFunction) {
-	Vector2i vector(0, 0);
-	float result = vector1.distance_to(vector);
-	EXPECT_FLOAT_EQ(result, 3.6055512f);
-}
-
-TEST_F(Vector2iTestFixutre, DistanceSquaredToFunction) {
-	Vector2i vector(0, 0);
-	int result = vector1.distance_squared_to(vector);
-	EXPECT_EQ(result, 13);
+TEST(Vector2iTest, SpecialVectorUnitY) {
+    // Arrange & Act (Static member)
+    // Assert
+    EXPECT_EQ(Vector2i::UnitY, Vector2i(0, 1));
 }

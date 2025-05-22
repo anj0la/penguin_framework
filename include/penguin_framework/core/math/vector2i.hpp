@@ -37,6 +37,11 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 		return Vector2i(x / v.x, y / v.y); 
 	}
 
+	constexpr Vector2i operator%(const Vector2i& v) const {
+		assert(v.x != 0 && v.y != 0 && "Vector2i: Modulo by zero attempted in x or y component.");
+		return Vector2i(x % v.x, y % v.y);
+	}
+
 	// Assignment operators
 
 	constexpr Vector2i& operator+=(const Vector2i& v) { x += v.x; y += v.y; return *this; }
@@ -44,10 +49,17 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	constexpr Vector2i& operator*=(const Vector2i& v) { x *= v.x; y *= v.y; return *this; }
 
 	constexpr Vector2i& operator/=(const Vector2i& v) { 
-		assert(v.x != 0 && v.y != 0 && "Vector2i: Division by zero attempted.");
+		assert(v.x != 0 && v.y != 0 && "Vector2i: Division by zero attempted in x or y component.");
 		x /= v.x; 
 		y /= v.y; 
 		return *this; 
+	}
+
+	constexpr Vector2i& operator%=(const Vector2i& v) {
+		assert(v.x != 0 && v.y != 0 && "Vector2i: Modulo by zero attempted in x or y component.");
+		x %= v.x;
+		y %= v.y;
+		return *this;
 	}
 
 	// Comparison operators
@@ -57,10 +69,7 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 
 	// Unary operators
 
-	constexpr Vector2i operator%(const Vector2i& v) const { return Vector2i(x % v.x, y % v.y); }
-	constexpr Vector2i operator%(int scalar) const { return Vector2i(x % scalar, y % scalar); }
 	constexpr Vector2i operator-() const { return Vector2i(-x, -y); }
-	constexpr bool operator!() const { return x != Origin && y != Origin; }
 
 	// Scalar operators
 
@@ -71,6 +80,11 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	constexpr Vector2i operator/(int scalar) const { 
 		assert(scalar != 0 && "Vector2i: Division by zero attempted.");
 		return Vector2i(x / scalar, y / scalar); }
+
+	constexpr Vector2i operator%(int scalar) const {
+		assert(scalar != 0 && "Vector2i: Modulo by zero scalar attempted.");
+		return Vector2i(x % scalar, y % scalar); 
+	}
 
 	// Scalar assignment operators
 
@@ -83,12 +97,10 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 		x /= scalar; y /= scalar; return *this; 
 	}
 
-	constexpr Vector2i& operator%=(int scalar) { x %= scalar; y %= scalar; return *this; }
-
-	// Scalar comparison operators
-
-	constexpr bool operator==(int scalar) const { return x == scalar && y == scalar; }
-	constexpr bool operator!=(int scalar) const { return x != scalar || y != scalar; }
+	constexpr Vector2i& operator%=(int scalar) { 
+		assert(scalar != 0 && "Vector2i: Modulo by zero scalar attempted.");
+		x %= scalar; y %= scalar; return *this; 
+	}
 
 	// Other comparsion operators
 
@@ -106,7 +118,7 @@ struct PENGUIN_API [[nodiscard]] Vector2i {
 	float distance_to(const Vector2i& v) const;
 	int distance_squared_to(const Vector2i& v) const;
 
-	// Special Vectors
+	// Special vectors
 
 	static const Vector2i Zero;
 	static const Vector2i One;
