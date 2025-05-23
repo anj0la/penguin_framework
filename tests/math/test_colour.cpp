@@ -71,7 +71,7 @@ TEST(ColourTest, RGBConstructor_Nominal) {
     EXPECT_FLOAT_EQ(c.r, r);
     EXPECT_FLOAT_EQ(c.g, g);
     EXPECT_FLOAT_EQ(c.b, b);
-    EXPECT_FLOAT_EQ(c.a, 1.0f); // Default alpha
+    EXPECT_FLOAT_EQ(c.a, 1.0f);
 }
 
 TEST(ColourTest, RGBConstructor_Clamping) {
@@ -248,7 +248,6 @@ TEST(ColourTest, OperatorDivideColour) {
     ExpectColourNear(result, expected);
 }
 
-// TEST FAILS, NEED TO REVIST WHAT HAPPENS WHEN DIVIDING BY 0
 TEST(ColourTest, OperatorDivideColourByZeroComponent) {
     // Arrange
     Colour c1(0.5f, 0.5f, 0.5f, 0.5f);
@@ -357,7 +356,6 @@ TEST(ColourTest, OperatorDivideAssignColour) {
     ExpectColourNear(c, expected);
 }
 
-// TEST FAILS, NEED TO REVIST WHAT HAPPENS WHEN DIVIDING BY 0
 TEST(ColourTest, OperatorDivideAssignColourByZeroComponent) {
     // Arrange
     Colour c1(0.5f, 0.5f, 0.5f, 0.5f);
@@ -499,7 +497,6 @@ TEST(ColourTest, OperatorDivideScalar_Clamping) {
     ExpectColourNear(result, expected);
 }
 
-// TEST FAILS, NEED TO REVIST WHAT HAPPENS WHEN DIVIDING BY 0
 TEST(ColourTest, OperatorDivideScalarByZero) {
     // Arrange
     Colour c_pos(0.5f, 0.5f, 0.5f, 0.5f);
@@ -622,7 +619,6 @@ TEST(ColourTest, OperatorDivideAssignScalar_Clamping) {
     ExpectColourNear(c, expected);
 }
 
-// TEST FAILS, NEED TO REVIST WHAT HAPPENS WHEN DIVIDING BY 0
 TEST(ColourTest, OperatorDivideAssignScalarByZero) {
     // Arrange
     Colour c_pos(0.5f, 0.5f, 0.5f, 0.5f);
