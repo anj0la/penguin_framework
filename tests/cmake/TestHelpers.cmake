@@ -29,3 +29,12 @@ function(copy_dll_files target_name)
     endif() 
 
 endfunction()
+
+function(add_macro target_name macro_name macro_value)
+    message(STATUS "Adding macro for ${target_name}...")
+
+    target_compile_definitions(${target_name}
+        PRIVATE ${macro_name}="${macro_value}"
+)
+
+endfunction()

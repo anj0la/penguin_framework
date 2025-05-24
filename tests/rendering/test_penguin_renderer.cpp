@@ -1,3 +1,4 @@
+#include <penguin_framework/core/window/penguin_window.hpp>
 #include <penguin_framework/core/rendering/penguin_renderer.hpp>
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
@@ -65,7 +66,6 @@ TEST_F(RendererTestFixture, DrawPixel_WithValidParameters_ReturnsSuccess) {
     // Assert
     EXPECT_TRUE(success);
 }
-
 
 TEST_F(RendererTestFixture, DrawLine_WithValidParameters_ReturnsSuccess) {
     // Arrange (done in SetUp)
