@@ -29,10 +29,10 @@ protected:
         ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
-        ASSERT_TRUE(window_ptr->is_open()) << "Window is open after creation.";
+        ASSERT_TRUE(window_ptr->is_open());
 
         renderer_ptr = std::make_unique<Renderer>(window_ptr.get()->get_native_ptr(), "software");
-        ASSERT_NE(renderer_ptr->get_native_ptr().as<SDL_Renderer>(), nullptr) << "Native renderer is null.";
+        ASSERT_NE(renderer_ptr->get_native_ptr().as<SDL_Renderer>(), nullptr);
     }
 
     void TearDown() override {

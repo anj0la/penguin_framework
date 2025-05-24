@@ -45,7 +45,8 @@ protected:
 TEST_F(TextureTestFixture, ConstructorCreatesTexture) {
     // Arrange
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name.c_str())).string();
-    std::unique_ptr<Texture> texture_obj; // Use a smart pointer for RAII
+    std::unique_ptr<Texture> texture_obj;
+    Vector2i expected_size(362, 362);
 
     // Act & Assert (Construction)
     ASSERT_NO_THROW({
@@ -60,6 +61,8 @@ TEST_F(TextureTestFixture, ConstructorCreatesTexture) {
     Vector2i texture_size = texture_obj->get_size();
     ASSERT_GT(texture_size.x, 0);
     ASSERT_GT(texture_size.y, 0);
+    EXPECT_EQ(texture_size.x, expected_size.x);
+    EXPECT_EQ(texture_size.y, expected_size.y);
 }
  
 // Note: This will not happen in practice as the path will be validated with the AssetManager, so it is guaranteed
