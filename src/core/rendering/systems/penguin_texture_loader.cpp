@@ -7,6 +7,7 @@ using penguin::core::rendering::systems::TextureLoader;
 using penguin::core::rendering::systems::TextureLoaderImpl;
 using penguin::core::rendering::primitives::Texture;
 
+// WORKS ONLY ON SINGLE THREAD
 std::shared_ptr<Texture> TextureLoaderImpl::load(NativeRendererPtr renderer, const char* path) {
     std::string_view path_str(path);
     // String path_str(path);
