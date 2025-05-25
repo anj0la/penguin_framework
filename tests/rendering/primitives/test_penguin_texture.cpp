@@ -42,23 +42,23 @@ protected:
     }
 };
 
-TEST_F(TextureTestFixture, ConstructorCreatesTexture) {
+TEST_F(TextureTestFixture, Constructor_ValidPath_CreatesTexture) {
     // Arrange
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name.c_str())).string();
-    std::unique_ptr<Texture> texture_obj;
+    std::unique_ptr<Texture> texture_ptr;
     Vector2i expected_size(362, 362);
 
     // Act & Assert (Construction)
     ASSERT_NO_THROW({
-        texture_obj = std::make_unique<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
+        texture_ptr = std::make_unique<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
         });
 
     // Assert - Validate that object was created
-    ASSERT_NE(texture_obj, nullptr);
-    ASSERT_NE(texture_obj->get_native_ptr().ptr, nullptr);
+    ASSERT_NE(texture_ptr, nullptr);
+    ASSERT_NE(texture_ptr->get_native_ptr().ptr, nullptr);
 
     // Assert - Validate the width and height are greater than 0
-    Vector2i texture_size = texture_obj->get_size();
+    Vector2i texture_size = texture_ptr->get_size();
     ASSERT_GT(texture_size.x, 0);
     ASSERT_GT(texture_size.y, 0);
     EXPECT_EQ(texture_size.x, expected_size.x);
@@ -67,7 +67,7 @@ TEST_F(TextureTestFixture, ConstructorCreatesTexture) {
  
 // Note: This will not happen in practice as the path will be validated with the AssetManager, so it is guaranteed
 // that the Texture will receive a valid path. This is to ensure that an exception is actually being thrown.
-TEST_F(TextureTestFixture, ConstructorInvalidPathThrowsException) {
+TEST_F(TextureTestFixture, Constructor_InvalidPath_ThrowsException) {
     // Arrange
     std::string invalid_path = "path/to/nonexistent/texture.png";
 
