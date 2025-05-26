@@ -22,7 +22,7 @@ std::filesystem::path get_test_asset_path(const char* name) {
 
 // Setting Up the Test Suite
 
-class TextureLoaderTestFixture : public ::testing::Test {
+class AssetManagerTestFixture : public ::testing::Test {
 protected:
     std::unique_ptr<Window> window_ptr;
     std::unique_ptr<Renderer> renderer_ptr;
@@ -51,31 +51,26 @@ protected:
     }
 };
 
-// Note: The TextureLoader class is guaranteed to receive an absolute path from the AssetManager.
-// If an invalid path is given, then the texture will not be created and an exception will be thrown.
-// To avoid these errors by the user, the AssetManager attempts to validate the path.
-// If there is no path, the Texture WILL be a nullptr, meaning that the path was invalid.
-// This means that exceptions that are thrown are SDL errors, not user errors.
-//
-//TEST_F(TextureLoaderTestFixture, LoadFunction_Returns_Valid_Texture) {
-//    // Arrange & Act
-//    texture_ptr = loader_ptr->load(renderer_ptr->get_native_ptr(), abs_path.c_str());
-//
-//    // Assert - texture is not null
-//    EXPECT_NE(texture_ptr, nullptr);
-//
-//    // Assert - texture size is greater than 0
-//    Vector2i texture_size = texture_ptr->get_size();
-//    EXPECT_GT(texture_size.x, 0);
-//    EXPECT_GT(texture_size.y, 0);
-//}
-//
-//TEST_F(TextureLoaderTestFixture, LoadFunction_ThrowsException) {
-//    // Arrange
-//    const char* invalid_path = "cute_img.png";
-//
-//    // Act & Assert
-//    ASSERT_THROW({
-//            texture_ptr = loader_ptr->load(renderer_ptr->get_native_ptr(), invalid_path);
-//        }, std::exception);
-//}
+TEST_F(AssetManagerTestFixture, LoadFunction_Returns_Valid_Texture) {
+    // Arrange & Act
+    texture_ptr = content_ptr->load(abs_path.c_str());
+
+    // Assert - texture is not null
+    EXPECT_NE(texture_ptr, nullptr);
+
+    // Assert - texture size is greater than 0
+    Vector2i texture_size = texture_ptr->get_size();
+    EXPECT_GT(texture_size.x, 0);
+    EXPECT_GT(texture_size.y, 0);
+}
+
+TEST_F(AssetManagerTestFixture, LoadFunction_Returns_NullPointer) {
+    // Arrange
+    const char* invalid_path = "cute_img.png";
+
+    // Act
+    texture_ptr = content_ptr->load(invalid_path);
+
+    // Assert - texture is null
+    EXPECT_EQ(texture_ptr, nullptr);
+}

@@ -49,24 +49,24 @@ namespace penguin::core::rendering {
 
 		// Drawing functions for Sprites
 
-		bool draw_sprite(primitives::Sprite spr);
-		bool draw_sprite_from(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_to(primitives::Sprite spr, Rect2 dest_override);
-		bool draw_sprite_from_to(primitives::Sprite spr, Rect2 source, Rect2 dest_override);
+		bool draw_sprite(const primitives::Sprite& spr);
+		bool draw_sprite_from(const primitives::Sprite& spr, Rect2 source);
+		bool draw_sprite_to(const primitives::Sprite& spr, Rect2 dest_override);
+		bool draw_sprite_from_to(const primitives::Sprite& spr, Rect2 source, Rect2 dest_override);
 
-		bool draw_sprite_transformed(primitives::Sprite spr);
-		bool draw_sprite_transformed_ex(primitives::Sprite spr, Vector2 anchor_point);
-		bool draw_sprite_from_transformed(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_from_transformed_ex(primitives::Sprite spr, Rect2 source, Vector2 anchor_point);
-		bool draw_sprite_to_transformed(primitives::Sprite spr, Rect2 dest_override);
-		bool draw_sprite_to_transformed_ex(primitives::Sprite spr, Rect2 dest_override, Vector2 anchor_point);
-		bool draw_sprite_from_to_transformed(primitives::Sprite spr, Rect2 source, Rect2 dest_override);
-		bool draw_sprite_from_to_transformed_ex(primitives::Sprite spr, Rect2 source, Rect2 dest_override, Vector2 anchor_point);
+		bool draw_sprite_transformed(const primitives::Sprite& spr);
+		bool draw_sprite_transformed_ex(const primitives::Sprite& spr, Vector2 anchor_point);
+		bool draw_sprite_from_transformed(const primitives::Sprite& spr, Rect2 source);
+		bool draw_sprite_from_transformed_ex(const primitives::Sprite& spr, Rect2 source, Vector2 anchor_point);
+		bool draw_sprite_to_transformed(const primitives::Sprite& spr, Rect2 dest_override);
+		bool draw_sprite_to_transformed_ex(const primitives::Sprite& spr, Rect2 dest_override, Vector2 anchor_point);
+		bool draw_sprite_from_to_transformed(const primitives::Sprite& spr, Rect2 source, Rect2 dest_override);
+		bool draw_sprite_from_to_transformed_ex(const primitives::Sprite& spr, Rect2 source, Rect2 dest_override, Vector2 anchor_point);
 
-		bool draw_sprite_global_scaled(primitives::Sprite spr);
-		bool draw_sprite_from_scaled(primitives::Sprite spr, Rect2 source);
-		bool draw_sprite_to_scaled(primitives::Sprite spr, Rect2 dest_override);
-		bool draw_sprite_from_to_scaled(primitives::Sprite spr, Rect2 source, Rect2 dest_override);
+		bool draw_sprite_global_scaled(const primitives::Sprite& spr);
+		bool draw_sprite_from_scaled(const primitives::Sprite& spr, Rect2 source);
+		bool draw_sprite_to_scaled(const primitives::Sprite& spr, Rect2 dest_override);
+		bool draw_sprite_from_to_scaled(const primitives::Sprite& spr, Rect2 source, Rect2 dest_override);
 
 		NativeRendererPtr get_native_ptr() const;
 

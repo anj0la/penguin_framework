@@ -555,7 +555,7 @@ bool Renderer::draw_filled_ellipse(Vector2 center, int radius_x, int radius_y, C
 
 // Drawing functions for Sprites
 
-bool Renderer::draw_sprite(Sprite spr) { 
+bool Renderer::draw_sprite(const Sprite& spr) { 
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -565,7 +565,7 @@ bool Renderer::draw_sprite(Sprite spr) {
 	return pimpl_->draw_sprite(spr.get_native_ptr(), &tint);
 }
 
-bool Renderer::draw_sprite_from(Sprite spr, Rect2 source) { 
+bool Renderer::draw_sprite_from(const Sprite& spr, Rect2 source) { 
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -575,7 +575,7 @@ bool Renderer::draw_sprite_from(Sprite spr, Rect2 source) {
 	return pimpl_->draw_sprite_from(spr.get_native_ptr(), &source, &tint);
 }
 
-bool Renderer::draw_sprite_to(Sprite spr, Rect2 dest_override) { 
+bool Renderer::draw_sprite_to(const Sprite& spr, Rect2 dest_override) { 
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -585,7 +585,7 @@ bool Renderer::draw_sprite_to(Sprite spr, Rect2 dest_override) {
 	return pimpl_->draw_sprite_to(spr.get_native_ptr(), &dest_override, &tint);
 }
 
-bool Renderer::draw_sprite_from_to(Sprite spr, Rect2 source, Rect2 dest_override) { 
+bool Renderer::draw_sprite_from_to(const Sprite& spr, Rect2 source, Rect2 dest_override) { 
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -595,7 +595,7 @@ bool Renderer::draw_sprite_from_to(Sprite spr, Rect2 source, Rect2 dest_override
 	return pimpl_->draw_sprite_from_to(spr.get_native_ptr(), &source, &dest_override, &tint);
 }
 
-bool Renderer::draw_sprite_transformed(Sprite spr) { 
+bool Renderer::draw_sprite_transformed(const Sprite& spr) { 
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -605,7 +605,7 @@ bool Renderer::draw_sprite_transformed(Sprite spr) {
 	return pimpl_->draw_sprite_transformed(spr.get_native_ptr(), spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_transformed_ex(Sprite spr, Vector2 anchor_point) {
+bool Renderer::draw_sprite_transformed_ex(const Sprite& spr, Vector2 anchor_point) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -615,7 +615,7 @@ bool Renderer::draw_sprite_transformed_ex(Sprite spr, Vector2 anchor_point) {
 	return pimpl_->draw_sprite_transformed(spr.get_native_ptr(), spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_from_transformed(Sprite spr, Rect2 source) {
+bool Renderer::draw_sprite_from_transformed(const Sprite& spr, Rect2 source) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -625,7 +625,7 @@ bool Renderer::draw_sprite_from_transformed(Sprite spr, Rect2 source) {
 	return pimpl_->draw_sprite_from_transformed(spr.get_native_ptr(), &source, spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_from_transformed_ex(Sprite spr, Rect2 source, Vector2 anchor_point) {
+bool Renderer::draw_sprite_from_transformed_ex(const Sprite& spr, Rect2 source, Vector2 anchor_point) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -635,7 +635,7 @@ bool Renderer::draw_sprite_from_transformed_ex(Sprite spr, Rect2 source, Vector2
 	return pimpl_->draw_sprite_from_transformed(spr.get_native_ptr(), &source, spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_to_transformed(Sprite spr, Rect2 dest_override) {
+bool Renderer::draw_sprite_to_transformed(const Sprite& spr, Rect2 dest_override) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -645,7 +645,7 @@ bool Renderer::draw_sprite_to_transformed(Sprite spr, Rect2 dest_override) {
 	return pimpl_->draw_sprite_to_transformed(spr.get_native_ptr(), &dest_override, spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_to_transformed_ex(Sprite spr, Rect2 dest_override, Vector2 anchor_point) {
+bool Renderer::draw_sprite_to_transformed_ex(const Sprite& spr, Rect2 dest_override, Vector2 anchor_point) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -655,7 +655,7 @@ bool Renderer::draw_sprite_to_transformed_ex(Sprite spr, Rect2 dest_override, Ve
 	return pimpl_->draw_sprite_to_transformed(spr.get_native_ptr(), &dest_override, spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_from_to_transformed(Sprite spr, Rect2 source, Rect2 dest_override) {
+bool Renderer::draw_sprite_from_to_transformed(const Sprite& spr, Rect2 source, Rect2 dest_override) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -665,7 +665,7 @@ bool Renderer::draw_sprite_from_to_transformed(Sprite spr, Rect2 source, Rect2 d
 	return pimpl_->draw_sprite_from_to_transformed(spr.get_native_ptr(), &source, &dest_override, spr.get_angle(), nullptr, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_from_to_transformed_ex(Sprite spr, Rect2 source, Rect2 dest_override, Vector2 anchor_point) {
+bool Renderer::draw_sprite_from_to_transformed_ex(const Sprite& spr, Rect2 source, Rect2 dest_override, Vector2 anchor_point) {
 	Colour tint = spr.get_colour_tint();
 
 	if (tint == Colours::NoTint) {
@@ -675,7 +675,7 @@ bool Renderer::draw_sprite_from_to_transformed_ex(Sprite spr, Rect2 source, Rect
 	return pimpl_->draw_sprite_from_to_transformed(spr.get_native_ptr(), &source, &dest_override, spr.get_angle(), &anchor_point, spr.get_flip_mode(), &tint);
 }
 
-bool Renderer::draw_sprite_global_scaled(Sprite spr) {
+bool Renderer::draw_sprite_global_scaled(const Sprite& spr) {
 	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
 
@@ -686,7 +686,7 @@ bool Renderer::draw_sprite_global_scaled(Sprite spr) {
 	return pimpl_->draw_sprite_global_scaled(spr.get_native_ptr(), &scale_val, &tint);
 }
 
-bool Renderer::draw_sprite_from_scaled(Sprite spr, Rect2 source) {
+bool Renderer::draw_sprite_from_scaled(const Sprite& spr, Rect2 source) {
 	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
 
@@ -697,7 +697,7 @@ bool Renderer::draw_sprite_from_scaled(Sprite spr, Rect2 source) {
 	return pimpl_->draw_sprite_from_scaled(spr.get_native_ptr(), &source, &scale_val, &tint);
 }
 
-bool Renderer::draw_sprite_to_scaled(Sprite spr, Rect2 dest_override) {
+bool Renderer::draw_sprite_to_scaled(const Sprite& spr, Rect2 dest_override) {
 	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
 
@@ -708,7 +708,7 @@ bool Renderer::draw_sprite_to_scaled(Sprite spr, Rect2 dest_override) {
 	return pimpl_->draw_sprite_to_scaled(spr.get_native_ptr(), &dest_override, &scale_val, &tint);
 }
 
-bool Renderer::draw_sprite_from_to_scaled(Sprite spr, Rect2 source, Rect2 dest_override) {
+bool Renderer::draw_sprite_from_to_scaled(const Sprite& spr, Rect2 source, Rect2 dest_override) {
 	Colour tint = spr.get_colour_tint();
 	Vector2 scale_val = spr.get_scale();
 
