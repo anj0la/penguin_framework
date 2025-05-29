@@ -205,9 +205,49 @@ TEST_F(RendererTestFixture, DrawSpriteFrom_WithValidParameters_ReturnsSuccess) {
     EXPECT_TRUE(success);
 }
 
-//bool draw_sprite_to(primitives::Sprite spr, Rect2 dest_override);
-//bool draw_sprite_from_to(primitives::Sprite spr, Rect2 source, Rect2 dest_override);
-//
+TEST_F(RendererTestFixture, DrawSpriteTo_WithValidParameters_ReturnsSuccess) {
+    // Arrange
+    Rect2 dest_override{ 100.0f, 100.0f, 100.0f, 100.0f };
+
+    // Act
+    bool success = renderer_ptr->draw_sprite_to(*sprite_ptr.get(), dest_override); // deferencing the Sprite
+
+    // Assert
+    EXPECT_TRUE(success);
+}
+
+TEST_F(RendererTestFixture, DrawSpriteFromTo_WithValidParameters_ReturnsSuccess) {
+    // Arrange
+    Rect2 source{ 100.0f, 100.0f, 100.0f, 100.0f };
+    Rect2 dest_override{ 200.0f, 200.0f, 200.0f, 200.0f };
+
+    // Act
+    bool success = renderer_ptr->draw_sprite_from_to(*sprite_ptr.get(), source, dest_override); // deferencing the Sprite
+
+    // Assert
+    EXPECT_TRUE(success);
+}
+
+TEST_F(RendererTestFixture, DrawSpriteTransformed_WithValidParameters_ReturnsSuccess) {
+    // Arrange (done in SetUp)
+    // Act
+    bool success = renderer_ptr->draw_sprite_transformed(*sprite_ptr.get()); // deferencing the Sprite
+
+    // Assert
+    EXPECT_TRUE(success);
+}
+
+TEST_F(RendererTestFixture, DrawSpriteTransformedEx_WithValidParameters_ReturnsSuccess) {
+    // Arrange
+    Vector2 anchor_point(0.25f, 0.25f);
+    // Act
+    bool success = renderer_ptr->draw_sprite_transformed_ex(*sprite_ptr.get(), anchor_point); // deferencing the Sprite
+
+    // Assert
+    EXPECT_TRUE(success);
+}
+
+
 //bool draw_sprite_transformed(primitives::Sprite spr);
 //bool draw_sprite_transformed_ex(primitives::Sprite spr, Vector2 anchor_point);
 //bool draw_sprite_from_transformed(primitives::Sprite spr, Rect2 source);

@@ -21,17 +21,18 @@ namespace penguin::core::rendering::primitives {
 		std::shared_ptr<Texture> texture;
 		Vector2 position;
 		Vector2i size;
-		Vector2 scale; // A Vector between (0.0, 0.0) and (1.0, 1.0) -> normalized
+		Rect2 texture_region;
+		Rect2 screen_placement;
+		Vector2 scale_factor;
 		double angle;
-		Vector2 anchor_point;
+		Vector2 anchor;
 		bool visible;
 		FlipMode mode;
 		Colour tint;
 		Rect2 bounding_box; // to handle collisions between two sprites (NOTE: Update to BoundingShape struct to store other types of shapes, like Circle2, Polygon2, etc., after adding intersection functions)
 
 		// Constructor
-		SpriteImpl(std::shared_ptr<Texture> p_texture, Vector2 p_position = Vector2(0.0f,0.0f), Vector2 p_scale = Vector2(1.0f, 1.0f),
-			double p_angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool p_visible = true, FlipMode p_mode = FlipMode::None, Colour p_modulate = Colours::NoTint);
+		SpriteImpl(std::shared_ptr<Texture> p_texture);
 
 		// Copy and move constructors
 
@@ -43,11 +44,14 @@ namespace penguin::core::rendering::primitives {
 		// Getters
 
 		NativeTexturePtr get_native_ptr() const;
+
 		Vector2 get_position() const;
 		Vector2i get_size() const;
+		Rect2 get_texture_region() const;
+		Rect2 get_screen_placement() const;
 		Vector2 get_scale() const;
 		double get_angle() const;
-		Vector2 get_anchor_point() const;
+		Vector2 get_anchor() const;
 		bool is_hidden() const;
 		FlipMode get_flip_mode() const;
 		Colour get_colour_tint() const;
@@ -56,14 +60,29 @@ namespace penguin::core::rendering::primitives {
 		// Setters
 
 		void set_texture(std::shared_ptr<Texture> new_texture);
-		void set_position(Vector2 new_position);
-		void set_scale(Vector2 new_scale);
+		void set_position(const Vector2& new_position);
+		void set_texture_region(const Rect2& new_region);
+		void set_screen_placement(const Rect2& new_placement);
+		void set_scale(const Vector2& new_scale_factor);
 		void set_angle(double new_angle);
-		void set_anchor_point(Vector2 new_center);
+		void set_anchor(const Vector2& new_anchor);
+		void normalize_anchor_point();
+		void clear_anchor_point();
 		void show();
 		void hide();
-		void set_flip_mode(FlipMode new_mode);
-		void set_colour_tint(Colour new_tint);
-		void set_bounding_box(Rect2 new_bounding_box);
+		void set_flip_mode(const FlipMode& new_mode);
+		void set_colour_tint(const Colour& new_tint);
+		void set_bounding_box(const Rect2& new_bounding_box);
+
+		// Other functions
+
+		void clear_texture();
+		bool has_texture();
+		void use_full_region();
+		void use_default_screen_placement();
+
+		void update_screen_placement();
+
+
 	};
 }

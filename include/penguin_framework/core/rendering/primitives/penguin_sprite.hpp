@@ -20,7 +20,7 @@ namespace penguin::core::rendering::primitives {
 	class PENGUIN_API Sprite {
 	public:
 		Sprite(std::shared_ptr<Texture> tex, Vector2 position = Vector2(0.0f, 0.0f), Vector2 scale = Vector2(1.0f, 1.0f),
-			double angle = 0.0, Vector2 p_anchor_point = Vector2(0.5f, 0.5f), bool visible = true, FlipMode mode = FlipMode::None, Colour modulate = Colours::NoTint);
+			double angle = 0.0, Vector2 p_anchor_point = Vector2(-1.0f, -1.0f), bool visible = true, FlipMode mode = FlipMode::None, Colour modulate = Colours::NoTint);
 		~Sprite();
 
 		Sprite(Sprite&&) noexcept;
@@ -49,7 +49,12 @@ namespace penguin::core::rendering::primitives {
 		void hide();
 		void set_flip_mode(FlipMode new_mode);
 		void set_colour_tint(Colour new_tint);
-		void set_bounding_box(Rect2 new_bounding_bix);
+		void set_bounding_box(Rect2 new_bounding_box);
+
+
+	
+		bool is_anchor_point_set() const;
+		bool clear_anchor_point() const;
 
 		bool intersects(const Sprite& other) const;
 
