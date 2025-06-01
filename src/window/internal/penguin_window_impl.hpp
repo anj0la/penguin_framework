@@ -1,22 +1,26 @@
 #pragma once
 
-#include <penguin_framework/core/window/penguin_windowflags.hpp>
-#include <penguin_framework/utils/exception.hpp>
-#include <penguin_framework/core/math/vector2i.hpp>
+#include <penguin_framework/window/penguin_windowflags.hpp>
+#include <error/internal/internal_error.hpp>
+#include <penguin_framework/math/Vector2i.hpp>
 #include <penguin_framework/utils/string.hpp>
 
 #include <SDL3/SDL_video.h>
+
 #include <memory>
+#include <string>
+#include <stdexcept>
 
-namespace penguin::core::window {
 
-	struct WindowImpl {
-		// Window variables
+namespace penguin::internal::window {
+
+	class WindowImpl {
+	public:
 		std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window;
-		String title;
-		Vector2i size;
-		Vector2i min_size;
-		Vector2i max_size;
+		std::string title;
+		penguin::math::Vector2i size;
+		penguin::math::Vector2i min_size;
+		penguin::math::Vector2i max_size;
 
 		// Flags
 		bool resizable;
@@ -28,10 +32,10 @@ namespace penguin::core::window {
 		bool mouse_grabbed;
 		bool always_on_top;
 		bool focused;
-		bool open = true;
+		bool open = false;
 
 		// Constructors
-		WindowImpl(const char* p_title, Vector2i p_size, WindowFlags p_flags);
+		WindowImpl(const char* p_title, penguin::math::Vector2i p_size, penguin::window::WindowFlags p_flags);
 
 		// Move constructor & assignment destructors
 
@@ -43,14 +47,16 @@ namespace penguin::core::window {
 		// Functions to change window title / sizes
 
 		bool set_title(const char* new_title);
-		bool set_max_size(Vector2i p_max_size);
-		bool set_min_size(Vector2i p_min_size);
-		bool resize(Vector2i new_size);
+		bool set_max_size(penguin::math::Vector2i p_max_size);
+		bool set_min_size(penguin::math::Vector2i p_min_size);
+		bool resize(penguin::math::Vector2i new_size);
 
 		bool show();
 		bool hide();
 		bool minimize();
+		bool minimize_async();
 		bool maximize();
+		bool maximize_async();
 		bool restore(); // used to restore a minimized / maximized window. Has no effect on a fullscreen window.
 		bool restore_async();
 
@@ -74,7 +80,8 @@ namespace penguin::core::window {
 		bool gain_focus();
 		bool lose_foucs();
 
-		void set_flags(WindowFlags& flags);
+	private:
+		void set_flags(penguin::window::WindowFlags& flags);
 	};
 }
 

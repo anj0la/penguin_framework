@@ -34,8 +34,7 @@ endif()
 #----------------------------------------------------------------------------------------------------------------------
 
 add_subdirectory(math) 
-add_subdirectory(utils)
 add_subdirectory(window)
-add_subdirectory(rendering)
-add_subdirectory(rendering/primitives)
-add_subdirectory(rendering/systems)
+#add_subdirectory(rendering)
+#add_subdirectory(rendering/primitives)
+#add_subdirectory(rendering/systems)

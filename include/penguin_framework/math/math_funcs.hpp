@@ -1,7 +1,7 @@
 #pragma once
 
-#include <penguin_framework/core/math/math_types.hpp>
-#include <penguin_framework/core/math/math_compat.hpp>
+#include <penguin_framework/math/math_types.hpp>
+#include <penguin_framework/math/math_compat.hpp>
 #include <cmath>
 #include <algorithm>
 #include <cfloat>

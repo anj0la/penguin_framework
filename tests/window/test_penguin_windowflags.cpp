@@ -1,8 +1,8 @@
-#include <penguin_framework/core/window/penguin_windowflags.hpp>
+#include <penguin_framework/window/penguin_windowflags.hpp>
 #include <gtest/gtest.h>
 
-using penguin::core::window::WindowFlags;
-using penguin::core::window::has_flag;
+using penguin::window::WindowFlags;
+using penguin::window::has_flag;
 
 // Simple tests to ensure that the flag operators work correctly
 // Since the flags map to SDL flags, they are essentially the same values as their SDL counterparts

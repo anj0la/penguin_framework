@@ -90,19 +90,22 @@ message(STATUS "SDL3 available. Linking against target: SDL3::SLD3")
 message(STATUS "Adding penguin_framework library...")
 
 add_library(penguin_framework
-        "src/core/math/vector2.cpp"
-        "src/core/math/vector2i.cpp"
+        "src/math/vector2.cpp"
+        "src/math/vector2i.cpp"
         "src/utils/string.cpp"
-        "src/core/math/circle2.cpp" 
-        "src/core/math/rect2.cpp" 
-        "src/core/math/rect2i.cpp" 
-        "src/core/math/colour.cpp"
-        "src/core/window/penguin_window.cpp"
-        "src/core/rendering/penguin_renderer.cpp"
-        "src/core/rendering/primitives/penguin_texture.cpp" 
-        "src/core/rendering/primitives/penguin_sprite.cpp" 
-        "src/core/rendering/systems/penguin_texture_loader.cpp" 
-        "src/core/rendering/systems/penguin_asset_manager.cpp")
+        "src/math/circle2.cpp" 
+        "src/math/rect2.cpp" 
+        "src/math/rect2i.cpp" 
+        "src/math/colour.cpp"
+        "src/window/penguin_window.cpp"
+        "src/rendering/penguin_renderer.cpp"
+        "src/rendering/primitives/penguin_texture.cpp" 
+        "src/rendering/primitives/penguin_sprite.cpp" 
+        "src/rendering/systems/penguin_texture_loader.cpp" 
+        "src/rendering/systems/penguin_asset_manager.cpp"
+        "src/window/internal/penguin_window_impl.cpp" 
+        "src/logger/internal/logger_impl.cpp" 
+        "src/logger/logger.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 

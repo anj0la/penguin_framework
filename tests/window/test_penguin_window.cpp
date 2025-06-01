@@ -1,9 +1,9 @@
-#include <penguin_framework/core/window/penguin_window.hpp>
+#include <penguin_framework/window/penguin_window.hpp>
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
 
-using penguin::core::window::Window;
-using penguin::core::window::WindowFlags;
+using penguin::window::Window;
+using penguin::window::WindowFlags;
 
 // Setting Up the Test Suite
 

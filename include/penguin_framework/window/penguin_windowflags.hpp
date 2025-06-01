@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace penguin::core::window {
+namespace penguin::window {
 
 	enum class WindowFlags : uint64_t {
 		None = 0,
