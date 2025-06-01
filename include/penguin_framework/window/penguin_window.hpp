@@ -5,7 +5,6 @@
 #include <penguin_framework/common/native_types.hpp>
 #include <penguin_framework/window/penguin_windowflags.hpp>
 #include <penguin_framework/math/Vector2i.hpp>
-#include <penguin_framework/utils/string.hpp>
 
 #include <memory>
 

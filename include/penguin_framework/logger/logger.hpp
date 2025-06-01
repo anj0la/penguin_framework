@@ -50,7 +50,7 @@ namespace penguin::log {
 
 }
 
-#define LOG_DEBUG(msg) penguin::log::Logger::get_instance().debug(msg)
-#define LOG_INFO(msg) penguin::log::Logger::get_instance().info(msg)
-#define LOG_WARNING(msg) penguin::log::Logger::get_instance().warning(msg)
-#define LOG_ERROR(msg) penguin::log::Logger::get_instance().error(msg)
+#define PF_LOG_DEBUG(msg) penguin::log::Logger::get_instance().debug(msg)
+#define PF_LOG_INFO(msg) penguin::log::Logger::get_instance().info(msg)
+#define PF_LOG_WARNING(msg) penguin::log::Logger::get_instance().warning(msg)
+#define PF_LOG_ERROR(msg) penguin::log::Logger::get_instance().error(msg)

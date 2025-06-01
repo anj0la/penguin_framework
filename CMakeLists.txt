@@ -105,7 +105,7 @@ add_library(penguin_framework
         "src/rendering/systems/penguin_asset_manager.cpp"
         "src/window/internal/penguin_window_impl.cpp" 
         "src/logger/internal/logger_impl.cpp" 
-        "src/logger/logger.cpp")
+        "src/logger/logger.cpp" "src/rendering/primitives/internal/penguin_texture_impl.cpp" "src/rendering/primitives/internal/penguin_sprite_impl.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 

@@ -14,6 +14,8 @@ namespace penguin::internal::error {
         Window_Creation_Failed,
         Window_Function_Failed,
         Renderer_Creation_Failed,
+        Texture_Creation_Failed,
+        Sprite_Creation_Failed,
         Asset_Manager_Creation_Failed,
         Texture_Loader_Creation_Failed,
         Resource_Load_Failed,
@@ -39,6 +41,10 @@ namespace penguin::internal::error {
                 return "Window_Function_Failed";
             case ErrorCode::Renderer_Creation_Failed:
                 return "Renderer_Creation_Failed";
+            case ErrorCode::Texture_Creation_Failed:
+                return "Texture_Creation_Failed";
+            case Sprite_Creation_Failed:
+                return "Sprite_Creation_Failed";
             case ErrorCode::Asset_Manager_Creation_Failed:
                 return "Asset_Manager_Creation_Failed";
             case ErrorCode::Texture_Loader_Creation_Failed:
@@ -50,7 +56,6 @@ namespace penguin::internal::error {
             case ErrorCode::Invalid_Parameter:
                 return "Invalid_Parameter";
             }
-        // This should never be reached, but just in case
         return "Unknown";
     }
 
