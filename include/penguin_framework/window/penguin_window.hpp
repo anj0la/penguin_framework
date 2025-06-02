@@ -71,12 +71,12 @@ namespace penguin::window {
 		// Functions to get window title / size
 
 		const char* get_title();
-		penguin::math::Vector2i get_window_size() const;
-		penguin::math::Vector2i get_max_window_size() const;
-		penguin::math::Vector2i get_min_window_size() const;
+		penguin::math::Vector2i get_size() const;
+		penguin::math::Vector2i get_max_size() const;
+		penguin::math::Vector2i get_min_size() const;
 
-		int get_window_width() const;
-		int get_window_height() const;
+		int get_width() const;
+		int get_height() const;
 
 		// Function to close window
 

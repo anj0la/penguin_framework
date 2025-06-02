@@ -27,40 +27,47 @@ namespace penguin::rendering::primitives {
 		[[nodiscard]] bool is_valid() const noexcept;
 		[[nodiscard]] explicit operator bool() const noexcept;
 
-		NativeTexturePtr get_native_ptr() const;
 		penguin::math::Vector2 get_position() const;
 		penguin::math::Vector2i get_size() const;
-		penguin::math::Vector2 get_scale() const;
+		int get_width() const;
+		int get_height() const;
+		penguin::math::Rect2 get_texture_region() const;
+		penguin::math::Rect2 get_screen_placement() const;
+		penguin::math::Vector2 get_scale_factor() const;
 		double get_angle() const;
-		penguin::math::Vector2 get_anchor_point() const;
+		penguin::math::Vector2 get_anchor() const;
 		bool is_hidden() const;
 		FlipMode get_flip_mode() const;
 		penguin::math::Colour get_colour_tint() const;
 		penguin::math::Rect2 get_bounding_box() const;
 
-		void set_texture(std::shared_ptr<Texture> texture);
+		void set_texture(std::shared_ptr<Texture> new_texture);
 		void set_position(const penguin::math::Vector2& new_position);
 		void set_position(float x, float y);
-		void set_scale(penguin::math::Vector2 new_scale);
-		void set_scale(float x, float y);
+		void set_texture_region(const penguin::math::Rect2& new_region);
+		void set_screen_placement(const penguin::math::Rect2& new_placement);
+		void set_scale_factor(const penguin::math::Vector2& new_scale_factor);
+		void set_scale_factor(float x, float y);
 		void set_angle(double new_angle);
-		void set_anchor_point(const penguin::math::Vector2& new_center);
-		void set_anchor_point(float x, float y);
+		void set_anchor(const penguin::math::Vector2& new_anchor);
+		void set_anchor(float x, float y);
 		void show();
 		void hide();
 		void set_flip_mode(FlipMode new_mode);
 		void set_colour_tint(const penguin::math::Colour& new_tint);
 		void set_bounding_box(const penguin::math::Rect2& new_bounding_box);
-	
-		bool is_anchor_point_set() const;
-		bool clear_anchor_point() const;
 
 		bool intersects(const Sprite& other) const;
+		void clear_texture();
+		bool has_texture();
+		void use_full_region();
+		void use_default_screen_placement();
+
+		NativeTexturePtr get_native_ptr() const;
 
 	private:
 		std::unique_ptr<penguin::internal::rendering::primitives::SpriteImpl> pimpl_;
 		bool valid_state_;
-
 	};
 
 

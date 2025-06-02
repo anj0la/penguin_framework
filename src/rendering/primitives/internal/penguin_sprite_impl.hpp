@@ -18,7 +18,7 @@
 namespace penguin::internal::rendering::primitives {
 
 	class SpriteImpl {
-
+	public:
 		std::shared_ptr<penguin::rendering::primitives::Texture> texture;
 		penguin::math::Vector2 position;
 		penguin::math::Vector2i size;
@@ -47,11 +47,6 @@ namespace penguin::internal::rendering::primitives {
 		NativeTexturePtr get_native_ptr() const;
 
 		// Other functions
-
-		void clear_texture();
-		bool has_texture();
-		void use_full_region();
-		void use_default_screen_placement();
 
 		bool update_screen_placement();
 	};

@@ -8,12 +8,12 @@ namespace penguin::rendering::primitives {
 		: pimpl_(nullptr), valid_state_(false) {
 
 		// Log attempt to create a sprite
-		std::string message = "Attempting to create sprite...";
-		PF_LOG_INFO(message.c_str());
+		PF_LOG_INFO("Attempting to create sprite...");
 
 		try {
 			pimpl_ = std::make_unique<penguin::internal::rendering::primitives::SpriteImpl>(p_texture);
 			valid_state_ = true;
+			PF_LOG_INFO("Success: Sprite created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
 			// Get the error code and message
@@ -52,105 +52,304 @@ namespace penguin::rendering::primitives {
 
 	// Getters
 
-	NativeTexturePtr Sprite::get_native_ptr() const {
-		return pimpl_->get_native_ptr();
-	}
-
 	penguin::math::Vector2 Sprite::get_position() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_position() called on an uninitialized or destroyed sprite.");
+		}
+
 		return pimpl_->position;
 	}
 
-	Vector2i Sprite::get_size() const {
-		return pimpl_->get_size();
+	penguin::math::Vector2i Sprite::get_size() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_size() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->size;
 	}
 
-	Vector2 Sprite::get_scale() const {
-		return pimpl_->get_scale();
+	int Sprite::get_width() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_width() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->size.x;
+	}
+
+	int Sprite::get_height() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_height() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->size.y;
+	}
+
+	penguin::math::Rect2 Sprite::get_texture_region() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_texture_region() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->texture_region;
+	}
+
+	penguin::math::Rect2 Sprite::get_screen_placement() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_screen_placement() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->screen_placement;
+	}
+
+	penguin::math::Vector2 Sprite::get_scale_factor() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_scale_factor() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->scale_factor;;
 	}
 
 	double Sprite::get_angle() const {
-		return pimpl_->get_angle();
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_angle() called on an uninitialized or destroyed sprite.");
+		} 
+
+		return pimpl_->angle;
 	}
 
-	Vector2 Sprite::get_anchor_point() const {
-		return pimpl_->get_anchor_point();
+	penguin::math::Vector2 Sprite::get_anchor() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_anchor() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->anchor;
 	}
 
 	bool Sprite::is_hidden() const {
-		return pimpl_->is_hidden();
+		if (!is_valid()) {
+			PF_LOG_WARNING("is_hidden() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->visible;
 	}
 
 	FlipMode Sprite::get_flip_mode() const {
-		return pimpl_->get_flip_mode();
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_flip_mode() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->mode;
 	}
 
-	Colour Sprite::get_colour_tint() const {
-		return pimpl_->get_colour_tint();
+	penguin::math::Colour Sprite::get_colour_tint() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_colour_tint() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->tint;
 	}
 
-	Rect2 Sprite::get_bounding_box() const {
-		return pimpl_->get_bounding_box();
+	penguin::math::Rect2 Sprite::get_bounding_box() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_bounding_box() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->bounding_box;
 	}
 
 	// Setters
 
-	void Sprite::set_texture(std::shared_ptr<Texture> texture) {
-		pimpl_->set_texture(texture);
+	void Sprite::set_texture(std::shared_ptr<Texture> new_texture) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_texture() called on an uninitialized or destroyed sprite.");
+		}
+
+		if (!new_texture) {
+			PF_LOG_WARNING("Null_Argument: texture is null."); // allow the user to still make the texture null, but warn them
+		}
+
+		pimpl_->texture = std::move(new_texture);
+		pimpl_->size = new_texture.get()->get_size();
 	}
 
-	void Sprite::set_position(Vector2 new_position) {
-		pimpl_->set_position(new_position);
+	void Sprite::set_position(const penguin::math::Vector2& new_position) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_position() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->position = new_position;
 	}
 
 	void Sprite::set_position(float x, float y) {
-		pimpl_->set_position(Vector2(x, y));
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_position() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->position = penguin::math::Vector2(x, y);
 	}
 
-	void Sprite::set_scale(Vector2 new_scale_factor) {
-		pimpl_->set_scale(new_scale_factor);
+	void Sprite::set_texture_region(const penguin::math::Rect2& new_region) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_texture_region() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->texture_region = new_region; // We don't update the screen placement
 	}
-	void Sprite::set_scale(float x, float y) {
-		pimpl_->set_scale(Vector2(x, y));
+
+	void Sprite::set_screen_placement(const penguin::math::Rect2& new_placement) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_screen_placement() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->screen_placement = new_placement;
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
+	}
+
+	void Sprite::set_scale_factor(const penguin::math::Vector2& new_scale_factor) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_scale_factor() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->scale_factor = new_scale_factor;
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
+	}
+	void Sprite::set_scale_factor(float x, float y) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_scale_factor() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->scale_factor = penguin::math::Vector2(x, y);
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
 	}
 
 	void Sprite::set_angle(double new_angle) {
-		pimpl_->set_angle(new_angle);
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_angle() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->angle = new_angle;
 	}
 
-	void Sprite::set_anchor_point(Vector2 new_center) {
-		pimpl_->set_anchor_point(new_center);
+	void Sprite::set_anchor(const penguin::math::Vector2& new_anchor) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_anchor() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->anchor = std::clamp(new_anchor, penguin::math::Vector2::Zero, penguin::math::Vector2::One);
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
 	}
 
-	void Sprite::set_anchor_point(float x, float y) {
-		pimpl_->set_anchor_point(Vector2(x, y));
+	void Sprite::set_anchor(float x, float y) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_anchor() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->anchor = std::clamp(penguin::math::Vector2(x, y), penguin::math::Vector2::Zero, penguin::math::Vector2::One);
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
 	}
 
 	void Sprite::show() {
-		pimpl_->show();
+		if (!is_valid()) {
+			PF_LOG_WARNING("show() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->visible = true;
 	}
 
 	void Sprite::hide() {
-		pimpl_->hide();
+		if (!is_valid()) {
+			PF_LOG_WARNING("hide() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->visible = false;
 	}
 
 	void Sprite::set_flip_mode(FlipMode new_mode) {
-		pimpl_->set_flip_mode(new_mode);
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_flip_mode() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->mode = new_mode;
 	}
 
-	void Sprite::set_colour_tint(Colour new_modulate) {
-		pimpl_->set_colour_tint(new_modulate);
+	void Sprite::set_colour_tint(const penguin::math::Colour& new_tint) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_colour_tint() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->tint = new_tint;
 	}
 
-	void Sprite::set_bounding_box(Rect2 new_bounding_box) {
-		pimpl_->set_bounding_box(new_bounding_box);
+	void Sprite::set_bounding_box(const penguin::math::Rect2 &new_bounding_box) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_bounding_box() called on an uninitialized or destroyed sprite.");
+		}
+
+		pimpl_->bounding_box = new_bounding_box;
 	}
 
 	// Collision detection
 
 	bool Sprite::intersects(const Sprite& other) const {
-		return pimpl_->get_bounding_box().intersects(other.get_bounding_box());
+		if (!is_valid()) {
+			PF_LOG_WARNING("intersects() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->bounding_box.intersects(other.get_bounding_box());
 	}
 
+	// Other functions
+
+	void Sprite::clear_texture() {
+		pimpl_->texture.reset(); // makes texture null
+		PF_LOG_INFO("Texture is now null.");
+		pimpl_->size = penguin::math::Vector2i::Zero;
+	}
+
+	bool Sprite::has_texture() {
+		return pimpl_->texture != nullptr;
+	}
+
+	void Sprite::use_full_region() {
+		pimpl_->texture_region = penguin::math::Rect2{ 0.0f, 0.0f, static_cast<float>(pimpl_->size.x), static_cast<float>(pimpl_->size.y) };
+	}
+
+	void Sprite::use_default_screen_placement() {
+		pimpl_->screen_placement = penguin::math::Rect2{ 0.0f, 0.0f, static_cast<float>(pimpl_->size.x), static_cast<float>(pimpl_->size.y) };
+	}
+
+	NativeTexturePtr Sprite::get_native_ptr() const {
+		return pimpl_->get_native_ptr();
+	}
 }
 
 

@@ -12,6 +12,8 @@ namespace penguin::window {
 		try {
 			pimpl_ = std::make_unique<penguin::internal::window::WindowImpl>(p_title, p_size, p_flags);
 			valid_state_ = true;
+			PF_LOG_INFO("Success: Window created successfully.");
+
 		} catch (const penguin::internal::error::InternalError& e) {
 			// Get the error code and message
 			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
@@ -24,7 +26,7 @@ namespace penguin::window {
 		} catch (const std::exception& e) { // Other specific C++ errors
 			// Get error message
 			std::string last_error_message = e.what();
-			std::string error_message = "Unknown: " + error_message;
+			std::string error_message = "Unknown_Error: " + error_message;
 
 			// Log the error
 			PF_LOG_ERROR(error_message.c_str());
@@ -49,9 +51,10 @@ namespace penguin::window {
 		}
 
 		bool res = pimpl_->set_title(new_title);
+
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to set window title.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to set window title.");
 			return;
 		}
 	}
@@ -61,10 +64,16 @@ namespace penguin::window {
 			return;
 		}
 
+		if (p_max_size <= penguin::math::Vector2i::Zero) {
+			PF_LOG_WARNING("Argument_Out_Of_Range: New size must be greater than (0, 0).");
+			return; // Don't set the max size
+		}
+
 		bool res = pimpl_->set_max_size(p_max_size); 
+
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to set window max size.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to set window max size.");
 			return;
 		}
 	}
@@ -74,10 +83,16 @@ namespace penguin::window {
 			return;
 		}
 
+		if (p_min_size <= penguin::math::Vector2i::Zero) {
+			PF_LOG_WARNING("Argument_Out_Of_Range: New size must be greater than (0, 0).");
+			return; // Don't set the min size
+		}
+
 		bool res = pimpl_->set_min_size(p_min_size);
+
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to set window min size.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to set window min size.");
 			return;
 		} 
 	}
@@ -87,10 +102,16 @@ namespace penguin::window {
 			return;
 		}
 
+		if (new_size <= penguin::math::Vector2i::Zero) {
+			PF_LOG_WARNING("Argument_Out_Of_Range: New size must be greater than (0, 0).");
+			return; // Don't set the min size
+		}
+
 		bool res = pimpl_->resize(new_size); 
+
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to resize window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to resize window.");
 		}
 	}
 
@@ -98,12 +119,17 @@ namespace penguin::window {
 		if (!is_valid()) {
 			return;
 		}
+
+		if (!pimpl_->hidden) {
+			PF_LOG_DEBUG("Called show() on a visible window; skipping.");
+			return;
+		}
 		
 		bool res = pimpl_->show(); 
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to show window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to show window.");
 		}
 	}
 
@@ -112,11 +138,16 @@ namespace penguin::window {
 			return;
 		}
 
+		if (pimpl_->hidden) {
+			PF_LOG_DEBUG("Called hide() on a hidden window; skipping.");
+			return;
+		}
+
 		bool res = pimpl_->hide(); 
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to hide window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to hide window.");
 		}
 	}
 
@@ -125,11 +156,21 @@ namespace penguin::window {
 			return;
 		}
 
+		if (!pimpl_->resizable) {
+			PF_LOG_DEBUG("Called minimize() on a fixed window; skipping.");
+			return;
+		}
+
+		if (pimpl_->resizable && pimpl_->minimized) {
+			PF_LOG_DEBUG("Called minimize() on a minimized window; skipping.");
+			return;
+		}
+
 		bool res = pimpl_->minimize();
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to minimize window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to minimize window.");
 		}
 	}
 
@@ -138,11 +179,21 @@ namespace penguin::window {
 			return;
 		}
 
+		if (!pimpl_->resizable) {
+			PF_LOG_DEBUG("Called minimize() on a fixed window; skipping.");
+			return;
+		}
+
+		if (pimpl_->resizable && pimpl_->minimized) {
+			PF_LOG_DEBUG("Called minimize_async() on a minimized window; skipping.");
+			return;
+		}
+
 		bool res = pimpl_->minimize_async();
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to minimize window asynchronously.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to minimize window asynchronously.");
 		}
 	}
 
@@ -151,11 +202,21 @@ namespace penguin::window {
 			return;
 		}
 
+		if (!pimpl_->resizable) {
+			PF_LOG_DEBUG("Called minimize() on a fixed window; skipping.");
+			return;
+		}
+
+		if (pimpl_->resizable && pimpl_->maximized) {
+			PF_LOG_DEBUG("Called minimize() on a maximized window; skipping.");
+			return;
+		}
+
 		bool res =  pimpl_->maximize(); 
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to maximize window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to maximize window.");
 		}
 	}
 
@@ -164,11 +225,21 @@ namespace penguin::window {
 			return;
 		}
 
+		if (!pimpl_->resizable) {
+			PF_LOG_DEBUG("Called minimize() on a fixed window; skipping.");
+			return;
+		}
+
+		if (pimpl_->resizable && pimpl_->maximized) {
+			PF_LOG_DEBUG("Called minimize_async() on a maximized window; skipping.");
+			return;
+		}
+
 		bool res = pimpl_->maximize_async();
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to maximize window asynchronously.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to maximize window asynchronously.");
 		}
 	}
 	
@@ -177,11 +248,16 @@ namespace penguin::window {
 			return;
 		}
 
+		if (!pimpl_->resizable) {
+			PF_LOG_DEBUG("Called restore() on a fixed window; skipping.");
+			return;
+		}
+
 		bool res = pimpl_->restore();
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to restore window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to restore window.");
 		}
 	}
 	
@@ -189,12 +265,17 @@ namespace penguin::window {
 		if (!is_valid()) {
 			return;
 		}
-		
+
+		if (!pimpl_->resizable) {
+			PF_LOG_DEBUG("Called restore_async() on a fixed window; skipping.");
+			return;
+		}
+
 		bool res = pimpl_->restore_async(); 
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to restore window asynchronously.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to restore window asynchronously.");
 		}
 	}
 
@@ -206,7 +287,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to enable window resizing.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to enable window resizing.");
 		}
 	}
 
@@ -219,7 +300,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to disable window resizing.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to disable window resizing.");
 		}
 	}
 
@@ -232,7 +313,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to enable window borders.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to enable window borders.");
 		}
 	}
 
@@ -245,7 +326,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to disable window borders.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to disable window borders.");
 		}
 	}
 
@@ -258,7 +339,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to enter fullscreen mode.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to enter fullscreen mode.");
 		}
 	}
 
@@ -271,7 +352,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to exit fullscreen mode.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to exit fullscreen mode.");
 		}
 	}
 
@@ -284,7 +365,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to grab mouse.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to grab mouse.");
 		}
 	}
 
@@ -297,7 +378,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to release mouse.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to release mouse.");
 		}
 	}
 
@@ -310,7 +391,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to add always on top flag to window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to add always on top flag to window.");
 		}
 	}
 
@@ -323,7 +404,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to remove always on top flag from window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to remove always on top flag from window.");
 		}
 	}
 
@@ -336,7 +417,7 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to add focus flag to window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to add focus flag to window.");
 		}
 	}
 
@@ -349,37 +430,64 @@ namespace penguin::window {
 
 		if (!res) {
 			// Log the error
-			PF_LOG_ERROR("Window_Function_Failed: Failed to remove focus flag to window.");
+			PF_LOG_ERROR("Internal_System_Error: Failed to remove focus flag to window.");
 		}
 	}
 
 	const char* Window::get_title() { 
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_title() called on an uninitialized or destroyed window.");
+		}
+
 		return pimpl_->title.c_str(); 
 	}
 
-	penguin::math::Vector2i Window::get_window_size() const {
+	penguin::math::Vector2i Window::get_size() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_size() called on an uninitialized or destroyed window.");
+		}
+
 		return pimpl_->size; 
 	}
 
-	penguin::math::Vector2i Window::get_max_window_size() const { 
+	penguin::math::Vector2i Window::get_max_size() const { 
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_max_size() called on an uninitialized or destroyed window.");
+		}
+
 		return pimpl_->max_size; 
 	}
 
-	penguin::math::Vector2i Window::get_min_window_size() const { 
+	penguin::math::Vector2i Window::get_min_size() const { 
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_min_size() called on an uninitialized or destroyed window.");
+		}
+
 		return pimpl_->min_size; 
 	}
 
-	int Window::get_window_width() const { 
+	int Window::get_width() const { 
+
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_width() called on an uninitialized or destroyed window.");
+		}
+
 		return pimpl_->size.x; 
 	}
 
-	int Window::get_window_height() const { 
+	int Window::get_height() const { 
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_height() called on an uninitialized or destroyed window.");
+		}
+
 		return pimpl_->size.y; 
 	}
 
 	void Window::close() { 
 		pimpl_->open = false; 
 		valid_state_ = false; // the window still exists at this point, but all window operations should not be available anymore
+
+		PF_LOG_DEBUG("Window is now in an INVALID state. Any window operations will fail to run.");
 	}
 
 	// Checking for window states
@@ -424,12 +532,7 @@ namespace penguin::window {
 		return valid_state_ && pimpl_->open; 
 	}
 
-	// Implicit SDL_Window* -> void* conversion; no need for static_cast<NativeWindowPtr>.
 	NativeWindowPtr Window::get_native_ptr() const { 
-		if (!is_valid()) {
-			return;
-		}
-
 		return NativeWindowPtr{ pimpl_->window.get() }; 
 	}
 }

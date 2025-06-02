@@ -31,23 +31,6 @@ namespace penguin::internal::rendering::primitives {
 
 	// Other functions
 
-	void SpriteImpl::clear_texture() {
-		texture.reset(); // makes texture null
-		size = penguin::math::Vector2i::Zero;
-	}
-
-	bool SpriteImpl::has_texture() {
-		return texture != nullptr;
-	}
-
-	void SpriteImpl::use_full_region() {
-		texture_region = penguin::math::Rect2{ 0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y) };
-	}
-
-	void SpriteImpl::use_default_screen_placement() {
-		screen_placement = penguin::math::Rect2{ 0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y) };
-	}
-
 	bool SpriteImpl::update_screen_placement() {
 		// Texture is invalid, nothing should be rendered onto the screen
 		if (!texture) {
@@ -59,7 +42,7 @@ namespace penguin::internal::rendering::primitives {
 		penguin::math::Vector2 base_size{ texture_region.size.x, texture_region.size.y };
 
 		// Texture is valid, but the source portion defines a zero-area
-		if (base_size.x <= 0 || base_size.y <= 0) {
+		if (base_size.x <= 0 || base_size.y <= 0) { // same as base_size <= Vector2::Zero, but more readable
 			screen_placement = penguin::math::Rect2{ penguin::math::Vector2::Zero, penguin::math::Vector2::Zero };
 			return false;
 		}

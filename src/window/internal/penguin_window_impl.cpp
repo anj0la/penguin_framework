@@ -27,17 +27,14 @@ namespace penguin::internal::window {
 	}
 
 	bool WindowImpl::set_max_size(penguin::math::Vector2i p_max_size) {
-		if (p_max_size.x <= 0 || p_max_size.y <= 0) return false; // the vector's x and y coordinates must be a positive integer
 		max_size = p_max_size;
 		return SDL_SetWindowMaximumSize(window.get(), max_size.x, max_size.y);
 	}
 	bool WindowImpl::set_min_size(penguin::math::Vector2i p_min_size) {
-		if (p_min_size.x <= 0 || p_min_size.y <= 0) return false; // the vector's x and y coordinates must be a positive integer
 		min_size = p_min_size;
 		return SDL_SetWindowMinimumSize(window.get(), min_size.x, min_size.y);
 	}
 	bool WindowImpl::resize(penguin::math::Vector2i new_size) {
-		if (new_size.x <= 0 || new_size.y <= 0) return false; // the vector's x and y coordinates must be greater than 0
 		size = new_size;
 		return SDL_SetWindowSize(window.get(), size.x, size.y);
 	}
