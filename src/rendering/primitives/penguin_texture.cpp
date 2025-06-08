@@ -26,7 +26,7 @@ namespace penguin::rendering::primitives {
 		catch (const std::exception& e) { // Other specific C++ errors
 			// Get error message
 			std::string last_error_message = e.what();
-			std::string error_message = "Unknown: " + error_message;
+			std::string error_message = "Unknown_Error: " + error_message;
 
 			// Log the error
 			PF_LOG_ERROR(error_message.c_str());
@@ -42,7 +42,11 @@ namespace penguin::rendering::primitives {
 	// Validity checking
 
 	bool Texture::is_valid() const noexcept {
-		return valid_state_;
+		if (!pimpl_) {
+			return false;
+		}
+
+		return pimpl_->texture.get(); // the internal texture may be invalid
 	}
 	explicit Texture::operator bool() const noexcept {
 		return is_valid();

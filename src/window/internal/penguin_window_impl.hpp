@@ -1,8 +1,8 @@
 #pragma once
 
 #include <penguin_framework/window/penguin_windowflags.hpp>
-#include <error/internal/internal_error.hpp>
 #include <penguin_framework/math/Vector2i.hpp>
+#include <error/internal/internal_error.hpp>
 
 #include <SDL3/SDL_video.h>
 

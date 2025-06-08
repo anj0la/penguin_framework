@@ -28,7 +28,7 @@ namespace penguin::rendering::primitives {
 		catch (const std::exception& e) { // Other specific C++ errors
 			// Get error message
 			std::string last_error_message = e.what();
-			std::string error_message = "Unknown: " + error_message;
+			std::string error_message = "Unknown_Error: " + error_message;
 
 			// Log the error
 			PF_LOG_ERROR(error_message.c_str());

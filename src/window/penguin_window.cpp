@@ -4,14 +4,13 @@
 
 namespace penguin::window {
 
-	Window::Window(const char* p_title, penguin::math::Vector2i p_size, WindowFlags p_flags) : pimpl_(nullptr), valid_state_(false) {
+	Window::Window(const char* p_title, penguin::math::Vector2i p_size, WindowFlags p_flags) : pimpl_(nullptr) {
 		// Log attempt to create a window
 		std::string message = "Attempting to create window with dimensions: (" + std::to_string(p_size.x) + "," + std::to_string(p_size.y) + ")...";
 		PF_LOG_INFO(message.c_str());
 		
 		try {
 			pimpl_ = std::make_unique<penguin::internal::window::WindowImpl>(p_title, p_size, p_flags);
-			valid_state_ = true;
 			PF_LOG_INFO("Success: Window created successfully.");
 
 		} catch (const penguin::internal::error::InternalError& e) {
@@ -38,7 +37,11 @@ namespace penguin::window {
 	// Validity checking
 
 	bool Window::is_valid() const noexcept {
-		return valid_state_;
+		if (!pimpl_) {
+			return false;
+		}
+
+		return pimpl_->window.get() != nullptr && pimpl_->open; // pimpl_ is valid, but internal states might not be
 	}
 	
 	explicit Window::operator bool() const noexcept {
@@ -484,8 +487,7 @@ namespace penguin::window {
 	}
 
 	void Window::close() { 
-		pimpl_->open = false; 
-		valid_state_ = false; // the window still exists at this point, but all window operations should not be available anymore
+		pimpl_->open = false; // the window still exists at this point, but all window operations should not be available anymore
 
 		PF_LOG_DEBUG("Window is now in an INVALID state. Any window operations will fail to run.");
 	}
@@ -493,43 +495,43 @@ namespace penguin::window {
 	// Checking for window states
 
 	bool Window::is_resizable() const { 
-		return valid_state_ && pimpl_->resizable;
+		return is_valid() && pimpl_->resizable;
 	}
 
 	bool Window::is_hidden() const { 
-		return valid_state_ && pimpl_->hidden;
+		return is_valid() && pimpl_->hidden;
 	}
 
 	bool Window::is_minimized() const { 
-		return valid_state_ && pimpl_->minimized;
+		return is_valid() && pimpl_->minimized;
 	}
 
 	bool Window::is_maximized() const { 
-		return valid_state_ && pimpl_->maximized;
+		return is_valid() && pimpl_->maximized;
 	}
 
 	bool Window::is_bordered() const { 
-		return valid_state_ && pimpl_->bordered;
+		return is_valid() && pimpl_->bordered;
 	}
 
 	bool Window::is_fullscreen() const { 
-		return valid_state_ && pimpl_->fullscreen;
+		return is_valid() && pimpl_->fullscreen;
 	}
 
 	bool Window::is_mouse_grabbed() const { 
-		return valid_state_ && pimpl_->mouse_grabbed;
+		return is_valid() && pimpl_->mouse_grabbed;
 	}
 
 	bool Window::is_always_on_top() const { 
-		return valid_state_ && pimpl_->always_on_top;
+		return is_valid() && pimpl_->always_on_top;
 	}
 
 	bool Window::is_focused() const { 
-		return valid_state_ && pimpl_->focused;
+		return is_valid() && pimpl_->focused;
 	}
 
 	bool Window::is_open() const { 
-		return valid_state_ && pimpl_->open; 
+		return is_valid(); // always checks that the window is open
 	}
 
 	NativeWindowPtr Window::get_native_ptr() const { 

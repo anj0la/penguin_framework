@@ -45,7 +45,7 @@ namespace penguin::window {
 		void minimize_async();
 		void maximize();
 		void maximize_async();
-		void restore(); // used to restore a minimized / maximized window. Has no effect on a fullscreen window.
+		void restore();
 		void restore_async();
 
 		// Functions to toggle window states
@@ -100,9 +100,5 @@ namespace penguin::window {
 
 	private:
 		std::unique_ptr<penguin::internal::window::WindowImpl> pimpl_;
-		bool valid_state_;
-
-		// Private constructor
-		explicit Window(std::unique_ptr<penguin::internal::window::WindowImpl> impl) noexcept;
 	};
 }
