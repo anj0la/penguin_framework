@@ -2,14 +2,16 @@
 
 #include <penguin_framework/penguin_api.hpp>
 
-#include <penguin_framework/core/rendering/primitives/penguin_texture.hpp>
+#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
 
 #include <memory>
 
-namespace penguin::core::rendering::systems {
-
+namespace penguin::internal::rendering::systems {
 	// Forward declaration
 	struct AssetManagerImpl;
+}
+
+namespace penguin::rendering::systems {
 
 	class PENGUIN_API AssetManager {
 	public:
@@ -25,6 +27,6 @@ namespace penguin::core::rendering::systems {
 		std::shared_ptr<primitives::Texture> load(const char* path);
 
 	private:
-		std::unique_ptr<AssetManagerImpl> pimpl_;
+		std::unique_ptr<penguin::internal::rendering::systems::AssetManagerImpl> pimpl_;
 	};
 }
