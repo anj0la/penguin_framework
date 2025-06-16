@@ -38,7 +38,6 @@ namespace penguin::rendering::primitives {
 		penguin::math::Vector2 get_anchor() const;
 		bool is_hidden() const;
 		FlipMode get_flip_mode() const;
-		penguin::math::Colour get_colour_tint() const;
 		penguin::math::Rect2 get_bounding_box() const;
 
 		void set_texture(std::shared_ptr<Texture> new_texture);
@@ -59,7 +58,8 @@ namespace penguin::rendering::primitives {
 
 		bool intersects(const Sprite& other) const;
 		void clear_texture();
-		bool has_texture();
+		void clear_colour_tint();
+		bool has_texture() const;
 		void use_full_region();
 		void use_default_screen_placement();
 

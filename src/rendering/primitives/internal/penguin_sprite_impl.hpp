@@ -11,9 +11,9 @@
 
 #include <error/internal/internal_error.hpp>
 
+#include <SDL3/SDL_render.h>
+
 #include <memory>
-#include <vector>
-#include <algorithm>
 
 namespace penguin::internal::rendering::primitives {
 
@@ -49,5 +49,8 @@ namespace penguin::internal::rendering::primitives {
 		// Other functions
 
 		bool update_screen_placement();
+		bool set_colour_tint(const penguin::math::Colour& new_tint);
+		bool clear_colour_tint();
+
 	};
 }

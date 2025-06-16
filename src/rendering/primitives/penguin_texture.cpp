@@ -55,7 +55,12 @@ namespace penguin::rendering::primitives {
 	// Getters
 
 	NativeTexturePtr Texture::get_native_ptr() const { 
-		return NativeTexturePtr{ pimpl_->texture.get() }; // if null, then functions needing this will fail
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed texture.");
+			return NativeTexturePtr{ nullptr }; // indicates that the underlying native pointer cannot be accessed
+		}
+
+		return NativeTexturePtr{ pimpl_->texture.get() };
 	}
 
 	penguin::math::Vector2i Texture::get_size() const { 

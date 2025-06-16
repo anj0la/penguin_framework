@@ -140,14 +140,6 @@ namespace penguin::rendering::primitives {
 		return pimpl_->mode;
 	}
 
-	penguin::math::Colour Sprite::get_colour_tint() const {
-		if (!is_valid()) {
-			PF_LOG_WARNING("get_colour_tint() called on an uninitialized or destroyed sprite.");
-		}
-
-		return pimpl_->tint;
-	}
-
 	penguin::math::Rect2 Sprite::get_bounding_box() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_bounding_box() called on an uninitialized or destroyed sprite.");
@@ -164,7 +156,7 @@ namespace penguin::rendering::primitives {
 		}
 
 		if (!new_texture) {
-			PF_LOG_WARNING("Null_Argument: texture is null."); // allow the user to still make the texture null, but warn them
+			PF_LOG_WARNING("Null_Argument: Texture is null."); // allow the user to still make the texture null, but warn them
 		}
 
 		pimpl_->texture = std::move(new_texture);
@@ -306,7 +298,11 @@ namespace penguin::rendering::primitives {
 			PF_LOG_WARNING("set_colour_tint() called on an uninitialized or destroyed sprite.");
 		}
 
-		pimpl_->tint = new_tint;
+		bool res = pimpl_->set_colour_tint(new_tint);
+
+		if (!res) {
+			PF_LOG_WARNING("Internal_System_Error: Failed to set colour tint on sprite.");
+		}
 	}
 
 	void Sprite::set_bounding_box(const penguin::math::Rect2 &new_bounding_box) {
@@ -330,24 +326,62 @@ namespace penguin::rendering::primitives {
 	// Other functions
 
 	void Sprite::clear_texture() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("clear_texture() called on an uninitialized or destroyed sprite.");
+			return; // can't access a function with a NULL pointer
+		}
+
 		pimpl_->texture.reset(); // makes texture null
 		PF_LOG_INFO("Texture is now null.");
 		pimpl_->size = penguin::math::Vector2i::Zero;
 	}
 
-	bool Sprite::has_texture() {
+	void Sprite::clear_colour_tint() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("clear_colour_tint() called on an uninitialized or destroyed sprite.");
+			return; // can't access a function with a NULL pointer
+		}
+
+		bool res = pimpl_->clear_colour_tint();
+
+		if (!res) {
+			PF_LOG_WARNING("Internal_System_Error: Failed to clear colour tint on sprite.");
+		}
+	}
+
+	bool Sprite::has_texture() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("has_texture() called on an uninitialized or destroyed sprite.");
+			return false;
+		}
+
 		return pimpl_->texture != nullptr;
 	}
 
 	void Sprite::use_full_region() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("clear_texture() called on an uninitialized or destroyed sprite.");
+			return; // can't access a function with a NULL pointer
+		}
+
 		pimpl_->texture_region = penguin::math::Rect2{ 0.0f, 0.0f, static_cast<float>(pimpl_->size.x), static_cast<float>(pimpl_->size.y) };
 	}
 
 	void Sprite::use_default_screen_placement() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("clear_texture() called on an uninitialized or destroyed sprite.");
+			return; // can't access a function with a NULL pointer
+		}
+
 		pimpl_->screen_placement = penguin::math::Rect2{ 0.0f, 0.0f, static_cast<float>(pimpl_->size.x), static_cast<float>(pimpl_->size.y) };
 	}
 
 	NativeTexturePtr Sprite::get_native_ptr() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed texture.");
+			return NativeTexturePtr{ nullptr }; // indicates that the underlying native pointer cannot be accessed
+		}
+
 		return pimpl_->get_native_ptr();
 	}
 }

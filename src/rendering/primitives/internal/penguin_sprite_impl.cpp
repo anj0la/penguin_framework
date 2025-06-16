@@ -48,12 +48,26 @@ namespace penguin::internal::rendering::primitives {
 		}
 
 		// Texture is valid, and the source portion defines a valid non-zero area
-		penguin::math::Vector2 scaled_size{ base_size.x * scale_factor.x, base_size.y * scale_factor.y };
-		screen_placement = penguin::math::Rect2{ position, scaled_size };
+		penguin::math::Vector2 final_size = base_size * scale_factor;
+		penguin::math::Vector2 pixel_anchor = anchor * final_size;
+		penguin::math::Vector2 final_position = position - pixel_anchor;
 
-		// Update the anchor point
-		anchor = anchor * scaled_size; // anchor.x * scaled_size.x and anchor.y * scaled_size.y
+		screen_placement = penguin::math::Rect2{ final_position, final_size };
 
 		return true; // successfuly updated screen placement
+	}
+
+	bool SpriteImpl::set_colour_tint(const penguin::math::Colour& new_tint) {
+		tint = new_tint;
+		SDL_Texture* texture = get_native_ptr().as<SDL_Texture>();
+
+		return SDL_SetTextureColorModFloat(texture, tint.r, tint.g, tint.b) && SDL_SetTextureAlphaModFloat(texture, tint.a);
+	}
+
+	bool SpriteImpl::clear_colour_tint() {
+		tint = Colours::NoTint;
+		SDL_Texture* texture = get_native_ptr().as<SDL_Texture>();
+
+		return SDL_SetTextureColorModFloat(texture, tint.r, tint.g, tint.b) && SDL_SetTextureAlphaModFloat(texture, tint.a);
 	}
 }

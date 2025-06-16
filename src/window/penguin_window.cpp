@@ -45,11 +45,12 @@ namespace penguin::window {
 	}
 	
 	explicit Window::operator bool() const noexcept {
-		is_valid();
+		return is_valid();
 	}
 
 	void Window::set_title(const char* new_title) { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("set_title() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -64,6 +65,7 @@ namespace penguin::window {
 
 	void Window::set_max_size(penguin::math::Vector2i p_max_size) { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("set_max_size() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -83,6 +85,7 @@ namespace penguin::window {
 
 	void Window::set_min_size(penguin::math::Vector2i p_min_size) { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("set_min_size() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -102,6 +105,7 @@ namespace penguin::window {
 
 	void Window::resize(penguin::math::Vector2i new_size) { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("resize() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -120,6 +124,7 @@ namespace penguin::window {
 
 	void Window::show() {
 		if (!is_valid()) {
+			PF_LOG_WARNING("show() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -138,6 +143,7 @@ namespace penguin::window {
 
 	void Window::hide() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("hide() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -156,6 +162,7 @@ namespace penguin::window {
 
 	void Window::minimize() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("minimize() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -179,6 +186,7 @@ namespace penguin::window {
 
 	void Window::minimize_async() {
 		if (!is_valid()) {
+			PF_LOG_WARNING("minimize_async() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -202,6 +210,7 @@ namespace penguin::window {
 
 	void Window::maximize() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("maximize() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -225,6 +234,7 @@ namespace penguin::window {
 
 	void Window::maximize_async() {
 		if (!is_valid()) {
+			PF_LOG_WARNING("maximize_async() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -248,6 +258,7 @@ namespace penguin::window {
 	
 	void Window::restore() {
 		if (!is_valid()) {
+			PF_LOG_WARNING("restore() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -266,6 +277,7 @@ namespace penguin::window {
 	
 	void Window::restore_async() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("restore_async() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -284,6 +296,7 @@ namespace penguin::window {
 
 	void Window::enable_resizing() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("enable_resizing() called on an uninitialized or destroyed window.");
 			return;
 		}
 		bool res = pimpl_->enable_resizing(); 
@@ -296,6 +309,7 @@ namespace penguin::window {
 
 	void Window::disable_resizing() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("disable_resizing() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -309,6 +323,7 @@ namespace penguin::window {
 
 	void Window::enable_borders() {
 		if (!is_valid()) {
+			PF_LOG_WARNING("enable_borders() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -322,6 +337,7 @@ namespace penguin::window {
 
 	void Window::disable_borders() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("disable_borders() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -335,6 +351,7 @@ namespace penguin::window {
 
 	void Window::enter_fullscreen() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("enter_fullscreen() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -348,6 +365,7 @@ namespace penguin::window {
 
 	void Window::exit_fullscreen() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("exit_fullscreen() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -361,6 +379,7 @@ namespace penguin::window {
 
 	void Window::grab_mouse() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("grab_mouse() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -374,6 +393,7 @@ namespace penguin::window {
 
 	void Window::release_mouse() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("release_mouse() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -387,6 +407,7 @@ namespace penguin::window {
 
 	void Window::add_always_on_top() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("add_always_on_top() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -400,6 +421,7 @@ namespace penguin::window {
 
 	void Window::remove_always_on_top() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("remove_always_on_top() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -413,6 +435,7 @@ namespace penguin::window {
 
 	void Window::gain_focus() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("gain_focus() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -426,6 +449,7 @@ namespace penguin::window {
 
 	void Window::lose_foucs() { 
 		if (!is_valid()) {
+			PF_LOG_WARNING("lose_foucs() called on an uninitialized or destroyed window.");
 			return;
 		}
 
@@ -487,6 +511,10 @@ namespace penguin::window {
 	}
 
 	void Window::close() { 
+		if (!is_valid()) {
+			PF_LOG_WARNING("close() called on an uninitialized or destroyed window.");
+		}
+
 		pimpl_->open = false; // the window still exists at this point, but all window operations should not be available anymore
 
 		PF_LOG_DEBUG("Window is now in an INVALID state. Any window operations will fail to run.");
@@ -535,6 +563,11 @@ namespace penguin::window {
 	}
 
 	NativeWindowPtr Window::get_native_ptr() const { 
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed window.");
+			return NativeWindowPtr{ nullptr }; // indicates that the underlying native pointer cannot be accessed
+		}
+
 		return NativeWindowPtr{ pimpl_->window.get() }; 
 	}
 }
