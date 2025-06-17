@@ -1,6 +1,8 @@
-#include <penguin_framework/core/math/vector2.hpp>
-#include <penguin_framework/core/math/math_types.hpp>
+#include <penguin_framework/math/vector2.hpp>
+#include <penguin_framework/math/math_types.hpp>
 #include <gtest/gtest.h>
+
+using penguin::math::Vector2;
 
 // Helper Functions
 

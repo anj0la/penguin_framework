@@ -8,6 +8,8 @@
 #include <penguin_framework/math/colours.hpp>
 #include <penguin_framework/math/vector2i.hpp>
 
+#include <error/internal/internal_error.hpp>
+
 #include <memory>
 #include <filesystem>
 

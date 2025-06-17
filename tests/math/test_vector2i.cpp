@@ -1,6 +1,7 @@
-#include <penguin_framework/core/math/vector2i.hpp>
-#include <penguin_framework/utils/string.hpp>
+#include <penguin_framework/math/vector2i.hpp>
 #include <gtest/gtest.h>
+
+using penguin::math::Vector2i;
 
 // Constructors
 
@@ -148,13 +149,13 @@ TEST(Vector2iTest, OperatorDivideVectorByZero) {
     Vector2i v_den_x_zero(0, 4);
     Vector2i v_den_y_zero(2, 0);
     Vector2i v_den_all_zero(0, 0);
-    const String expected_death_msg("Vector2i: Division by zero attempted.");
+    const char* expected_death_msg = "Vector2i: Division by zero attempted.";
 
     // Act & Assert
 #ifndef NDEBUG
-    EXPECT_DEATH((void) (v_num / v_den_x_zero), expected_death_msg.c_str());
-    EXPECT_DEATH((void) (v_num / v_den_y_zero), expected_death_msg.c_str());
-    EXPECT_DEATH((void) (v_num / v_den_all_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void) (v_num / v_den_x_zero), expected_death_msg);
+    EXPECT_DEATH((void) (v_num / v_den_y_zero), expected_death_msg);
+    EXPECT_DEATH((void) (v_num / v_den_all_zero), expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
 #endif
@@ -179,13 +180,13 @@ TEST(Vector2iTest, OperatorModuloVectorByZero) {
     Vector2i v_den_x_zero(0, 4);
     Vector2i v_den_y_zero(3, 0);
     Vector2i v_den_all_zero(0, 0);
-    const String expected_death_msg("Vector2i: Modulo by zero attempted in x or y component.");
+    const char* expected_death_msg = "Vector2i: Modulo by zero attempted in x or y component.";
 
     // Act & Assert
 #ifndef NDEBUG
-    EXPECT_DEATH((void) (v_num % v_den_x_zero), expected_death_msg.c_str());
-    EXPECT_DEATH((void)(v_num % v_den_y_zero), expected_death_msg.c_str());
-    EXPECT_DEATH((void)(v_num % v_den_all_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void) (v_num % v_den_x_zero), expected_death_msg);
+    EXPECT_DEATH((void)(v_num % v_den_y_zero), expected_death_msg);
+    EXPECT_DEATH((void)(v_num % v_den_all_zero), expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
 #endif
@@ -251,18 +252,18 @@ TEST(Vector2iTest, OperatorDivideAssignVectorByZero) {
     Vector2i v_den_x_zero(0, 4);
     Vector2i v_den_y_zero(2, 0);
     Vector2i v_den_all_zero(0, 0);
-    const String expected_death_msg("Vector2i: Division by zero attempted in x or y component.");
+    const char* expected_death_msg = "Vector2i: Division by zero attempted in x or y component.";
 
     // Act & Assert
 #ifndef NDEBUG
     Vector2i v_test1 = v_orig;
-    EXPECT_DEATH({ v_test1 /= v_den_x_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v_test1 /= v_den_x_zero; }, expected_death_msg);
 
     Vector2i v_test2 = v_orig;
-    EXPECT_DEATH({ v_test2 /= v_den_y_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v_test2 /= v_den_y_zero; }, expected_death_msg);
 
     Vector2i v_test3 = v_orig;
-    EXPECT_DEATH({ v_test3 /= v_den_all_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v_test3 /= v_den_all_zero; }, expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
 #endif
@@ -287,18 +288,18 @@ TEST(Vector2iTest, OperatorModuloAssignVectorByZero) {
     Vector2i v_den_x_zero(0, 4);
     Vector2i v_den_y_zero(3, 0);
     Vector2i v_den_all_zero(0, 0);
-    const String expected_death_msg("Vector2i: Modulo by zero attempted in x or y component.");
+    const char* expected_death_msg = "Vector2i: Modulo by zero attempted in x or y component.";
 
     // Act & Assert
 #ifndef NDEBUG
     Vector2i v_test1 = v_orig;
-    EXPECT_DEATH({ v_test1 %= v_den_x_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v_test1 %= v_den_x_zero; }, expected_death_msg);
 
     Vector2i v_test2 = v_orig;
-    EXPECT_DEATH({ v_test2 %= v_den_y_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v_test2 %= v_den_y_zero; }, expected_death_msg);
 
     Vector2i v_test3 = v_orig;
-    EXPECT_DEATH({ v_test3 %= v_den_all_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v_test3 %= v_den_all_zero; }, expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
 #endif
@@ -429,11 +430,11 @@ TEST(Vector2iTest, OperatorDivideScalarByZero) {
     // Arrange
     Vector2i v(7, 10);
     int scalar_zero = 0;
-    const String expected_death_msg("Vector2i: Division by zero attempted.");
+    const char* expected_death_msg = "Vector2i: Division by zero attempted.";
 
     // Act & Assert
 #ifndef NDEBUG
-    EXPECT_DEATH((void) (v / scalar_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void) (v / scalar_zero), expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
 #endif
@@ -456,11 +457,11 @@ TEST(Vector2iTest, OperatorModuloScalarByZero) {
     // Arrange
     Vector2i v(7, 10);
     int scalar_zero = 0;
-    const String expected_death_msg("Vector2i: Modulo by zero scalar attempted.");
+    const char* expected_death_msg = "Vector2i: Modulo by zero scalar attempted.";
 
     // Act & Assert
 #ifndef NDEBUG
-    EXPECT_DEATH((void) (v % scalar_zero), expected_death_msg.c_str());
+    EXPECT_DEATH((void) (v % scalar_zero), expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
 #endif
@@ -524,11 +525,11 @@ TEST(Vector2iTest, OperatorDivideAssignScalarByZero) {
     // Arrange
     Vector2i v(7, 10); // Original value
     int scalar_zero = 0;
-    const String expected_death_msg("Vector2i: Division by zero attempted.");
+    const char* expected_death_msg = "Vector2i: Division by zero attempted.";
 
     // Act & Assert
 #ifndef NDEBUG
-    EXPECT_DEATH({ v /= scalar_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v /= scalar_zero; }, expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for division by zero in release build (NDEBUG defined).";
 #endif
@@ -551,11 +552,11 @@ TEST(Vector2iTest, OperatorModuloAssignScalarByZero) {
     // Arrange
     Vector2i v(7, 10); // Original value
     int scalar_zero = 0;
-    const String expected_death_msg("Vector2i: Modulo by zero scalar attempted.");
+    const char* expected_death_msg = "Vector2i: Modulo by zero scalar attempted.";
 
     // Act & Assert
 #ifndef NDEBUG
-    EXPECT_DEATH({ v %= scalar_zero; }, expected_death_msg.c_str());
+    EXPECT_DEATH({ v %= scalar_zero; }, expected_death_msg);
 #else
     GTEST_SKIP() << "Skipping death tests for modulo by zero in release build (NDEBUG defined).";
 #endif

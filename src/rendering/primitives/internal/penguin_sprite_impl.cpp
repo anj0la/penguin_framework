@@ -12,15 +12,15 @@ namespace penguin::internal::rendering::primitives {
 
 		position = penguin::math::Vector2::Zero; // the top-left corner represents the position of the Sprite
 		size = p_texture.get()->get_size();
-		texture_region = penguin::math::Rect2{ position.x, position.y, size.x, size.y }; // position -> (0,0), size -> (texture_width, texture_height) for the full texture
-		screen_placement = penguin::math::Rect2{ position.x, position.y, size.x, size.y };
+		texture_region = penguin::math::Rect2{ position.x, position.y, static_cast<float>(size.x), static_cast<float>(size.y) }; // position -> (0,0), size -> (texture_width, texture_height) for the full texture
+		screen_placement = penguin::math::Rect2{ position.x, position.y, static_cast<float>(size.x), static_cast<float>(size.y) };
 		scale_factor = penguin::math::Vector2::One;
 		angle = 0.0;
 		anchor = penguin::math::Vector2{ 0.5f, 0.5f }; // center
 		visible = true;
 		mode = penguin::rendering::primitives::FlipMode::None;
 		tint = Colours::NoTint;
-		bounding_box = penguin::math::Rect2{ position.x, position.y, size.x, size.y }; // initally the size of the texture
+		bounding_box = penguin::math::Rect2{ position.x, position.y, static_cast<float>(size.x), static_cast<float>(size.y) }; // initally the size of the texture
 	}
 
 	// Getters

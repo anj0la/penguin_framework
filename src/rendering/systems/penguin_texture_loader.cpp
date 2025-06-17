@@ -4,21 +4,19 @@
 
 namespace penguin::rendering::systems {
 
-	TextureLoader::TextureLoader() : pimpl_(nullptr), valid_state_(false) {
+	TextureLoader::TextureLoader() : pimpl_(nullptr) {
 
-		// Log attempt to create a sprite
+		// Log attempt to create a texture loader
 		PF_LOG_INFO("Attempting to create texture loader...");
 
 		try {
 			pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextureLoaderImpl>();
-			valid_state_ = true;
 			PF_LOG_INFO("Success: TextureLoader created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
 			// Get the error code and message
 			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = e.what();
-			std::string error_message = error_code_str + ": " + error_message;
+			std::string error_message = error_code_str + ": " + e.what();
 
 			// Log the error
 			PF_LOG_ERROR(error_message.c_str());
@@ -38,8 +36,16 @@ namespace penguin::rendering::systems {
 
 	// Validity checking
 
-	bool TextureLoader::is_valid() const noexcept { return valid_state_; }
-	TextureLoader::operator bool() const noexcept { return is_valid(); }
+	bool TextureLoader::is_valid() const noexcept { 
+		if (!pimpl_) {
+			return false;
+		}
+		return true;
+	}
+
+	TextureLoader::operator bool() const noexcept { 
+		return is_valid(); 
+	}
 
 	std::shared_ptr<penguin::rendering::primitives::Texture> TextureLoader::load(NativeRendererPtr renderer, const char* path) {
 		if (!is_valid()) {

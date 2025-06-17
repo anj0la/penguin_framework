@@ -1,5 +1,8 @@
-#include <penguin_framework/core/math/rect2i.hpp>
+#include <penguin_framework/math/rect2i.hpp>
 #include <gtest/gtest.h>
+
+using penguin::math::Rect2i;
+using penguin::math::Vector2i;
 
 // Setting Up the Test Suite
 

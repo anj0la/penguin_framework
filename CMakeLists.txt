@@ -92,7 +92,6 @@ message(STATUS "Adding penguin_framework library...")
 add_library(penguin_framework
         "src/math/vector2.cpp"
         "src/math/vector2i.cpp"
-        "src/utils/string.cpp"
         "src/math/circle2.cpp" 
         "src/math/rect2.cpp" 
         "src/math/rect2i.cpp" 
@@ -109,7 +108,8 @@ add_library(penguin_framework
         "src/rendering/primitives/internal/penguin_texture_impl.cpp" 
         "src/rendering/primitives/internal/penguin_sprite_impl.cpp" 
         "src/rendering/systems/internal/penguin_texture_loader_impl.cpp" 
-        "src/rendering/systems/internal/penguin_asset_manager_impl.cpp" "src/rendering/internal/penguin_renderer_impl.cpp")
+        "src/rendering/systems/internal/penguin_asset_manager_impl.cpp" 
+        "src/rendering/internal/penguin_renderer_impl.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 

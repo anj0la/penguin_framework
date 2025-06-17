@@ -19,10 +19,10 @@ namespace penguin::rendering::systems {
 		TextureLoader();
 		~TextureLoader();
 
-		// Deleting move semantics
+		// Move semantics
 
-		TextureLoader(const TextureLoader&) = delete;
-		TextureLoader& operator=(const TextureLoader&) = delete;
+		TextureLoader(const TextureLoader&) = default;
+		TextureLoader& operator=(const TextureLoader&) = default;
 
 		// Validity checking
 
@@ -34,6 +34,5 @@ namespace penguin::rendering::systems {
 
 	private:
 		std::unique_ptr<penguin::internal::rendering::systems::TextureLoaderImpl> pimpl_;
-		bool valid_state_;
 	};
 }

@@ -66,7 +66,7 @@ namespace penguin::window {
 		void remove_always_on_top();
 
 		void gain_focus();
-		void lose_foucs();
+		void lose_focus();
 
 		// Functions to get window title / size
 

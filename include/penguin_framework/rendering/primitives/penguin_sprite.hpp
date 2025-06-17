@@ -67,7 +67,6 @@ namespace penguin::rendering::primitives {
 
 	private:
 		std::unique_ptr<penguin::internal::rendering::primitives::SpriteImpl> pimpl_;
-		bool valid_state_;
 	};
 
 

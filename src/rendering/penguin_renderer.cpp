@@ -4,7 +4,7 @@
 
 namespace penguin::rendering {
 
-	Renderer::Renderer(NativeWindowPtr window_ptr, const char* driver_name) : pimpl_(std::make_unique<penguin::internal::rendering::RendererImpl>(nullptr)) {
+	Renderer::Renderer(NativeWindowPtr window_ptr, const char* driver_name) : pimpl_(nullptr) {
 		std::string message = "Attempting to create renderer with driver: (" + std::string(driver_name) +  ")...";
 		PF_LOG_INFO(message.c_str());
 
@@ -15,8 +15,7 @@ namespace penguin::rendering {
 		} catch (const penguin::internal::error::InternalError& e) {
 				// Get the error code and message
 				std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-				std::string error_message = e.what();
-				std::string error_message = error_code_str + ": " + error_message;
+				std::string error_message = error_code_str + ": " + e.what();
 
 				// Log the error
 				PF_LOG_ERROR(error_message.c_str());
@@ -41,7 +40,7 @@ namespace penguin::rendering {
 		return pimpl_->renderer.get() != nullptr;
 	}
 
-	explicit Renderer::operator bool() const noexcept {
+	Renderer::operator bool() const noexcept {
 		return is_valid();
 	}
 
@@ -121,7 +120,7 @@ namespace penguin::rendering {
 			return;
 		}
 
-		bool res = pimpl_->draw_rect(rect, fill);
+		bool res = pimpl_->draw_filled_rect(rect, fill);
 
 		if (!res) {
 			PF_LOG_WARNING("Internal_System_Error: Failed to draw filled rect to renderer.");

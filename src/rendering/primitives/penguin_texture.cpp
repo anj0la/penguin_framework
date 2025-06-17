@@ -16,8 +16,7 @@ namespace penguin::rendering::primitives {
 		catch (const penguin::internal::error::InternalError& e) {
 			// Get the error code and message
 			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = e.what();
-			std::string error_message = error_code_str + ": " + error_message;
+			std::string error_message = error_code_str + ": " + e.what();
 
 			// Log the error
 			PF_LOG_ERROR(error_message.c_str());
@@ -48,7 +47,8 @@ namespace penguin::rendering::primitives {
 
 		return pimpl_->texture.get(); // the internal texture may be invalid
 	}
-	explicit Texture::operator bool() const noexcept {
+
+	Texture::operator bool() const noexcept {
 		return is_valid();
 	}
 

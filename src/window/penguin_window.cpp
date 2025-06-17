@@ -16,8 +16,7 @@ namespace penguin::window {
 		} catch (const penguin::internal::error::InternalError& e) {
 			// Get the error code and message
 			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = e.what();
-			std::string error_message = error_code_str + ": " + error_message;
+			std::string error_message = error_code_str + ": " + e.what();;
 
 			// Log the error
 			PF_LOG_ERROR(error_message.c_str());
@@ -44,7 +43,7 @@ namespace penguin::window {
 		return pimpl_->window.get() != nullptr && pimpl_->open; // pimpl_ is valid, but internal states might not be
 	}
 	
-	explicit Window::operator bool() const noexcept {
+	Window::operator bool() const noexcept {
 		return is_valid();
 	}
 
@@ -447,7 +446,7 @@ namespace penguin::window {
 		}
 	}
 
-	void Window::lose_foucs() { 
+	void Window::lose_focus() {
 		if (!is_valid()) {
 			PF_LOG_WARNING("lose_foucs() called on an uninitialized or destroyed window.");
 			return;

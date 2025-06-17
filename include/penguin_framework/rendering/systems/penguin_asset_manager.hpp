@@ -18,10 +18,15 @@ namespace penguin::rendering::systems {
 		AssetManager(NativeRendererPtr renderer_ptr); // add text_renderer later
 		~AssetManager();
 
-		// Deleting move semantics
+		// Move semantics
 
-		AssetManager(const AssetManager&) = delete;
-		AssetManager& operator=(const AssetManager&) = delete;
+		AssetManager(const AssetManager&) = default;
+		AssetManager& operator=(const AssetManager&) = default;
+
+		// Validity checking
+
+		[[nodiscard]] bool is_valid() const noexcept;
+		[[nodiscard]] explicit operator bool() const noexcept;
 
 		// Various load functions
 		std::shared_ptr<primitives::Texture> load(const char* path);

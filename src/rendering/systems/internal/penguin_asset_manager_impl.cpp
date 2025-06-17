@@ -9,6 +9,8 @@ namespace penguin::internal::rendering::systems {
 			return nullptr; // Return nullptr as path doesn't exist
 		}
 
+		// Check if file extension ends with the supported images: PNG, JPEG, BMP, etc. (impl later)
+
 		return texture_loader.load(renderer_ptr, path); // valid path, get the Texture
 	}
 }

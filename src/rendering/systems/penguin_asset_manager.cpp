@@ -1,12 +1,59 @@
 #include <penguin_framework/rendering/systems/penguin_asset_manager.hpp>
 #include <rendering/systems/internal/penguin_asset_manager_impl.hpp>
+#include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::rendering::systems {
+
 	// Assumes that NativeRendererPtr contains a valid renderer_ptr
-	AssetManager::AssetManager(NativeRendererPtr renderer_ptr) : pimpl_(std::make_unique<penguin::internal::rendering::systems::AssetManagerImpl>(renderer_ptr)) {}
+	AssetManager::AssetManager(NativeRendererPtr renderer_ptr) : pimpl_(nullptr) {
+		// Log attempt to create a texture loader
+		PF_LOG_INFO("Attempting to create asset manager...");
+
+		try {
+			pimpl_ = std::make_unique<penguin::internal::rendering::systems::AssetManagerImpl>(renderer_ptr);
+			PF_LOG_INFO("Success: AssetManager created successfully.");
+		}
+		catch (const penguin::internal::error::InternalError& e) {
+			// Get the error code and message
+			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
+			std::string error_message = error_code_str + ": " + e.what();
+
+			// Log the error
+			PF_LOG_ERROR(error_message.c_str());
+
+		}
+		catch (const std::exception& e) { // Other specific C++ errors
+			// Get error message
+			std::string last_error_message = e.what();
+			std::string error_message = "Unknown_Error: " + error_message;
+
+			// Log the error
+			PF_LOG_ERROR(error_message.c_str());
+		}
+	}
+		
 	AssetManager::~AssetManager() = default;
 
+	// Validity checking
+
+	bool AssetManager::is_valid() const noexcept {
+		if (!pimpl_) {
+			return false;
+		}
+
+		return pimpl_->texture_loader.is_valid(); // checks that the textureloader itself is also valid
+	}
+
+	AssetManager::operator bool() const noexcept {
+		return is_valid();
+	}
+
 	std::shared_ptr<primitives::Texture> AssetManager::load(const char* path) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("load() called on an uninitialized or destroyed asset manager.");
+			return nullptr;
+		}
+
 		return pimpl_->load(path);
 	}
 }

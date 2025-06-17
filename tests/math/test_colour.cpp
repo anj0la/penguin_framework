@@ -1,7 +1,9 @@
-#include <penguin_framework/core/math/colour.hpp>
-#include <penguin_framework/core/math/math_types.hpp>
+#include <penguin_framework/math/colour.hpp>
+#include <penguin_framework/math/math_types.hpp>
 #include <cmath>
 #include <gtest/gtest.h>
+
+using penguin::math::Colour;
 
 // Helper Functions
 

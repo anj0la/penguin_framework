@@ -1,5 +1,8 @@
-#include <penguin_framework/core/math/circle2.hpp>
+#include <penguin_framework/math/circle2.hpp>
 #include <gtest/gtest.h>
+
+using penguin::math::Circle2;
+using penguin::math::Vector2;
 
 // Setting Up the Test Suite
 
