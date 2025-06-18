@@ -92,10 +92,8 @@ TEST_F(WindowTestFixture, SetTitle_Updates_Title) {
     window.set_title(expected_title);
 
     // Assert
-    if (window) { // uses the bool() operator which calls is_valid internally
-        EXPECT_STREQ(window.get_title(), expected_title);
-    }
-
+    EXPECT_TRUE(window); 
+    EXPECT_STREQ(window.get_title(), expected_title);
 }
 
 TEST_F(WindowTestFixture, SetMaxSize_Restricts_Size) {
@@ -107,11 +105,10 @@ TEST_F(WindowTestFixture, SetMaxSize_Restricts_Size) {
     window.set_max_size(max_size);
 
     // Assert
-    if (window) {
-        Vector2i actual_max_size = window.get_max_size();
-        EXPECT_EQ(actual_max_size.x, max_size.x);
-        EXPECT_EQ(actual_max_size.y, max_size.y);
-    }
+    EXPECT_TRUE(window);
+    Vector2i actual_max_size = window.get_max_size();
+    EXPECT_EQ(actual_max_size.x, max_size.x);
+    EXPECT_EQ(actual_max_size.y, max_size.y);
 }
 
 TEST_F(WindowTestFixture, SetMaxSize_Keeps_Size) {
@@ -123,11 +120,10 @@ TEST_F(WindowTestFixture, SetMaxSize_Keeps_Size) {
     window.set_max_size(max_size);
 
     // Assert
-    if (window) {
-        Vector2i actual_max_size = window.get_max_size();
-        EXPECT_EQ(actual_max_size.x, window.get_width()); // the max size should be the window size if it has not been set by default
-        EXPECT_EQ(actual_max_size.y, window.get_height());
-    }
+    EXPECT_TRUE(window);
+    Vector2i actual_max_size = window.get_max_size();
+    EXPECT_EQ(actual_max_size.x, window.get_width()); // the max size should be the window size if it has not been set by default
+    EXPECT_EQ(actual_max_size.y, window.get_height());
 }
 
 TEST_F(WindowTestFixture, SetMinSize_Restricts_Size) {
@@ -139,11 +135,10 @@ TEST_F(WindowTestFixture, SetMinSize_Restricts_Size) {
     window.set_min_size(min_size);
 
     // Assert
-    if (window) {
-        Vector2i actual_min_size = window.get_min_size();
-        EXPECT_EQ(actual_min_size.x, min_size.x);
-        EXPECT_EQ(actual_min_size.y, min_size.y);
-    }
+    EXPECT_TRUE(window);
+    Vector2i actual_min_size = window.get_min_size();
+    EXPECT_EQ(actual_min_size.x, min_size.x);
+    EXPECT_EQ(actual_min_size.y, min_size.y);  
 }
 
 TEST_F(WindowTestFixture, SetMinSize_Keeps_Size) {
@@ -155,11 +150,11 @@ TEST_F(WindowTestFixture, SetMinSize_Keeps_Size) {
     window.set_min_size(min_size);
 
     // Assert
-    if (window) {
-        Vector2i actual_min_size = window.get_min_size();
-        EXPECT_EQ(actual_min_size.x, window.get_width()); // the min size should be the window size if it has not been set by default
-        EXPECT_EQ(actual_min_size.y, window.get_height());
-    }
+    EXPECT_TRUE(window);
+    Vector2i actual_min_size = window.get_min_size();
+    EXPECT_EQ(actual_min_size.x, window.get_width()); // the min size should be the window size if it has not been set by default
+    EXPECT_EQ(actual_min_size.y, window.get_height());
+    
 }
 
 TEST_F(WindowTestFixture, Resize_Changes_Size) {
@@ -173,10 +168,10 @@ TEST_F(WindowTestFixture, Resize_Changes_Size) {
     window.resize(new_size);
 
     // Assert
-    if (window) {
-        EXPECT_EQ(window.get_width(), new_size.x);
-        EXPECT_EQ(window.get_height(), new_size.y);
-    }
+    EXPECT_TRUE(window);
+    EXPECT_EQ(window.get_width(), new_size.x);
+    EXPECT_EQ(window.get_height(), new_size.y);
+    
 }
 
 TEST_F(WindowTestFixture, Resize_Keeps_Size) {
@@ -191,10 +186,9 @@ TEST_F(WindowTestFixture, Resize_Keeps_Size) {
     window.resize(new_size);
 
     // Assert
-    if (window) {
-        EXPECT_EQ(window.get_width(), expected_size.x);
-        EXPECT_EQ(window.get_height(), expected_size.y);
-    }
+    EXPECT_TRUE(window);
+    EXPECT_EQ(window.get_width(), expected_size.x);
+    EXPECT_EQ(window.get_height(), expected_size.y);  
 }
 
 TEST_F(WindowTestFixture, Show_Makes_HiddenWindow_Visible) {
@@ -206,9 +200,8 @@ TEST_F(WindowTestFixture, Show_Makes_HiddenWindow_Visible) {
     window.show();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_hidden());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_hidden());
 }
 
 TEST_F(WindowTestFixture, Hide_Makes_VisibleWindow_Hidden) {
@@ -220,9 +213,8 @@ TEST_F(WindowTestFixture, Hide_Makes_VisibleWindow_Hidden) {
     window.hide();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_hidden());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_hidden());
 }
 
 TEST_F(WindowTestFixture, Minimize_Reduces_ResizableWindow) {
@@ -237,10 +229,9 @@ TEST_F(WindowTestFixture, Minimize_Reduces_ResizableWindow) {
     // Assert
     // NOTE: The dummy video driver cannot actually minimize a window.
     // This test only ensures that our intent to minimize is recorded internally.
-    if (window) {
-        EXPECT_TRUE(window.is_minimized());
-        EXPECT_FALSE(window.is_maximized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized());
 }
 
 TEST_F(WindowTestFixture, MinimizeAsync_Reduces_ResizableWindow) {
@@ -255,10 +246,9 @@ TEST_F(WindowTestFixture, MinimizeAsync_Reduces_ResizableWindow) {
     // Assert
     // NOTE: The dummy video driver cannot actually minimize a window.
     // This test only ensures that our intent to minimize is recorded internally.
-    if (window) {
-        EXPECT_TRUE(window.is_minimized());
-        EXPECT_FALSE(window.is_maximized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized());
 }
 
 TEST_F(WindowTestFixture, Maximize_Enlarges_ResizableWindow) {
@@ -274,10 +264,9 @@ TEST_F(WindowTestFixture, Maximize_Enlarges_ResizableWindow) {
     // NOTE: Dummy video driver cannot actually maximize a window.
     // This test only ensures that our intent to maximize is recorded internally.
     // Real window state change must be tested at the integration level.
-    if (window) {
-        EXPECT_TRUE(window.is_maximized());
-        EXPECT_FALSE(window.is_minimized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_maximized());
+    EXPECT_FALSE(window.is_minimized());   
 }
 
 TEST_F(WindowTestFixture, MaximizeAsync_Enlarges_ResizableWindow) {
@@ -293,10 +282,9 @@ TEST_F(WindowTestFixture, MaximizeAsync_Enlarges_ResizableWindow) {
     // NOTE: Dummy video driver cannot actually maximize a window.
     // This test only ensures that our intent to maximize is recorded internally.
     // Real window state change must be tested at the integration level.
-    if (window) {
-        EXPECT_TRUE(window.is_maximized());
-        EXPECT_FALSE(window.is_minimized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_maximized());    
+    EXPECT_FALSE(window.is_minimized()); 
 }
 
 TEST_F(WindowTestFixture, Minimize_DoesNothing_On_NonResizableWindow) {
@@ -309,9 +297,9 @@ TEST_F(WindowTestFixture, Minimize_DoesNothing_On_NonResizableWindow) {
     window.minimize();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_minimized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_minimized());
+   
 }
 
 TEST_F(WindowTestFixture, Maximize_DoesNothing_On_NonResizableWindow) {
@@ -324,9 +312,8 @@ TEST_F(WindowTestFixture, Maximize_DoesNothing_On_NonResizableWindow) {
     window.maximize();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_maximized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_maximized());   
 }
 
 TEST_F(WindowTestFixture, Restore_Returns_MinimizedWindow_ToNormal) {
@@ -342,10 +329,9 @@ TEST_F(WindowTestFixture, Restore_Returns_MinimizedWindow_ToNormal) {
     // NOTE: The dummy video driver cannot actually restore a minimized window.
     // This test only ensures that our intent to restore is recorded internally.
     // Real window state change must be tested at the integration level.
-    if (window) {
-        EXPECT_FALSE(window.is_minimized());
-        EXPECT_FALSE(window.is_maximized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_minimized());
+    EXPECT_FALSE(window.is_maximized()); 
 }
 
 TEST_F(WindowTestFixture, Restore_Returns_MaximizedWindow_ToNormal) {
@@ -361,10 +347,9 @@ TEST_F(WindowTestFixture, Restore_Returns_MaximizedWindow_ToNormal) {
     // NOTE: The dummy video driver cannot actually restore a maximized window.
     // This test only ensures that our intent to restore is recorded internally.
     // Real window state change must be tested at the integration level.
-    if (window) {
-        EXPECT_FALSE(window.is_maximized());
-        EXPECT_FALSE(window.is_minimized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_maximized());
+    EXPECT_FALSE(window.is_minimized());  
 }
 
 TEST_F(WindowTestFixture, RestoreAsync_Call_Succeeds) {
@@ -380,10 +365,9 @@ TEST_F(WindowTestFixture, RestoreAsync_Call_Succeeds) {
     // NOTE: The dummy video driver cannot actually maximize a window.
     // This test only ensures that our intent to restore is recorded internally.
     // Real window state change must be tested at the integration level.
-    if (window) {
-        EXPECT_FALSE(window.is_maximized());
-        EXPECT_FALSE(window.is_minimized());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_maximized());
+    EXPECT_FALSE(window.is_minimized());
 }
 
 TEST_F(WindowTestFixture, EnableResizing_Makes_Window_Resizable) {
@@ -395,9 +379,8 @@ TEST_F(WindowTestFixture, EnableResizing_Makes_Window_Resizable) {
     window.enable_resizing();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_resizable());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_resizable());   
 }
 
 TEST_F(WindowTestFixture, DisableResizing_Makes_Window_Fixed) {
@@ -409,9 +392,8 @@ TEST_F(WindowTestFixture, DisableResizing_Makes_Window_Fixed) {
     window.disable_resizing();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_resizable());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_resizable());
 }
 
 TEST_F(WindowTestFixture, DisableBorders_Removes_Border) {
@@ -423,9 +405,8 @@ TEST_F(WindowTestFixture, DisableBorders_Removes_Border) {
     window.disable_borders();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_bordered());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_bordered());
 }
 
 TEST_F(WindowTestFixture, EnableBorders_Adds_Border) {
@@ -437,10 +418,8 @@ TEST_F(WindowTestFixture, EnableBorders_Adds_Border) {
     window.enable_borders();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_bordered());
-    }
-    
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_bordered());
 }
 
 TEST_F(WindowTestFixture, EnterFullscreen_Makes_Window_Fullscreen) {
@@ -452,9 +431,8 @@ TEST_F(WindowTestFixture, EnterFullscreen_Makes_Window_Fullscreen) {
     window.enter_fullscreen();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_fullscreen());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_fullscreen());
 }
 
 TEST_F(WindowTestFixture, ExitFullscreen_Makes_Window_Windowed) {
@@ -467,9 +445,8 @@ TEST_F(WindowTestFixture, ExitFullscreen_Makes_Window_Windowed) {
     window.exit_fullscreen();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_fullscreen());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_fullscreen());
 }
 
 TEST_F(WindowTestFixture, GrabMouse_Confines_Mouse) {
@@ -481,9 +458,8 @@ TEST_F(WindowTestFixture, GrabMouse_Confines_Mouse) {
     window.grab_mouse();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_mouse_grabbed());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_mouse_grabbed());
 }
 
 TEST_F(WindowTestFixture, ReleaseMouse_Frees_Mouse) {
@@ -496,9 +472,8 @@ TEST_F(WindowTestFixture, ReleaseMouse_Frees_Mouse) {
     window.release_mouse();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_mouse_grabbed());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_mouse_grabbed());
 }
 
 TEST_F(WindowTestFixture, EnableAlwaysOnTop_Keeps_Window_OnTop) {
@@ -510,9 +485,8 @@ TEST_F(WindowTestFixture, EnableAlwaysOnTop_Keeps_Window_OnTop) {
     window.add_always_on_top();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_always_on_top());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_always_on_top());
 }
 
 TEST_F(WindowTestFixture, DisableAlwaysOnTop_Allows_Window_ToBeObscured) {
@@ -525,9 +499,8 @@ TEST_F(WindowTestFixture, DisableAlwaysOnTop_Allows_Window_ToBeObscured) {
     window.remove_always_on_top();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_always_on_top());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_always_on_top());
 }
 
 TEST_F(WindowTestFixture, GainFocus_Requests_Focus) {
@@ -539,9 +512,8 @@ TEST_F(WindowTestFixture, GainFocus_Requests_Focus) {
     window.gain_focus();
 
     // Assert
-    if (window) {
-        EXPECT_TRUE(window.is_focused());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_TRUE(window.is_focused());
 }
 
 TEST_F(WindowTestFixture, LoseFocus_Releases_Focus) {
@@ -553,7 +525,6 @@ TEST_F(WindowTestFixture, LoseFocus_Releases_Focus) {
     window.lose_focus();
 
     // Assert
-    if (window) {
-        EXPECT_FALSE(window.is_focused());
-    }
+    EXPECT_TRUE(window);
+    EXPECT_FALSE(window.is_focused());
 }

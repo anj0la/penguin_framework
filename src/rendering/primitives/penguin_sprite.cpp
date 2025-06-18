@@ -133,6 +133,14 @@ namespace penguin::rendering::primitives {
 		return pimpl_->visible;
 	}
 
+	penguin::math::Colour Sprite::get_colour_tint() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("get_colour_tint() called on an uninitialized or destroyed sprite.");
+		}
+
+		return pimpl_->tint;
+	}
+
 	FlipMode Sprite::get_flip_mode() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_flip_mode() called on an uninitialized or destroyed sprite.");

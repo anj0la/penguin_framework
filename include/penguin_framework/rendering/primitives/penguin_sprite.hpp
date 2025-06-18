@@ -37,6 +37,7 @@ namespace penguin::rendering::primitives {
 		double get_angle() const;
 		penguin::math::Vector2 get_anchor() const;
 		bool is_hidden() const;
+		penguin::math::Colour get_colour_tint() const;
 		FlipMode get_flip_mode() const;
 		penguin::math::Rect2 get_bounding_box() const;
 

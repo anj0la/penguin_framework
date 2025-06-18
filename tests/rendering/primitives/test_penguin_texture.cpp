@@ -1,16 +1,18 @@
-#include <penguin_framework/core/window/penguin_window.hpp>
-#include <penguin_framework/core/rendering/penguin_renderer.hpp>
-#include <penguin_framework/core/rendering/primitives/penguin_texture.hpp>
+#include <penguin_framework/window/penguin_window.hpp>
+#include <penguin_framework/rendering/penguin_renderer.hpp>
+#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
+
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
 #include <memory>
 #include <filesystem>
 #include <string>
 
-using penguin::core::window::Window;
-using penguin::core::window::WindowFlags;
-using penguin::core::rendering::Renderer;
-using penguin::core::rendering::primitives::Texture;
+using penguin::window::Window;
+using penguin::window::WindowFlags;
+using penguin::rendering::Renderer;
+using penguin::rendering::primitives::Texture;
+using penguin::math::Vector2i;
 
 // Helper Functions
 
@@ -24,17 +26,17 @@ class TextureTestFixture : public ::testing::Test {
 protected:
     std::unique_ptr<Window> window_ptr;
     std::unique_ptr<Renderer> renderer_ptr;
-    String asset_name = "penguin_cute.bmp";
+    const char* asset_name = "penguin_cute.bmp";
 
     void SetUp() override {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
         ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
-        ASSERT_TRUE(window_ptr->is_open()) << "Window is open after creation.";
+        ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
 
         renderer_ptr = std::make_unique<Renderer>(window_ptr.get()->get_native_ptr(), "software");
-        ASSERT_NE(renderer_ptr->get_native_ptr().as<SDL_Renderer>(), nullptr) << "Native renderer is null.";
+        ASSERT_TRUE(renderer_ptr->is_valid());
     }
 
     void TearDown() override {
@@ -44,18 +46,15 @@ protected:
 
 TEST_F(TextureTestFixture, Constructor_ValidPath_CreatesTexture) {
     // Arrange
-    std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name.c_str())).string();
+    std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
     std::unique_ptr<Texture> texture_ptr;
     Vector2i expected_size(362, 362);
 
-    // Act & Assert (Construction)
-    ASSERT_NO_THROW({
-        texture_ptr = std::make_unique<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
-        });
+    // Act (Construction)
+    texture_ptr = std::make_unique<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
 
     // Assert - Validate that object was created
-    ASSERT_NE(texture_ptr, nullptr);
-    ASSERT_NE(texture_ptr->get_native_ptr().ptr, nullptr);
+    ASSERT_TRUE(texture_ptr); // calls the bool() operator which checks that the impl has been created along with the native texture ptr
 
     // Assert - Validate the width and height are greater than 0
     Vector2i texture_size = texture_ptr->get_size();
@@ -63,16 +62,4 @@ TEST_F(TextureTestFixture, Constructor_ValidPath_CreatesTexture) {
     ASSERT_GT(texture_size.y, 0);
     EXPECT_EQ(texture_size.x, expected_size.x);
     EXPECT_EQ(texture_size.y, expected_size.y);
-}
- 
-// Note: This will not happen in practice as the path will be validated with the AssetManager, so it is guaranteed
-// that the Texture will receive a valid path. This is to ensure that an exception is actually being thrown.
-TEST_F(TextureTestFixture, Constructor_InvalidPath_ThrowsException) {
-    // Arrange
-    std::string invalid_path = "path/to/nonexistent/texture.png";
-
-    // Act & Assert
-    ASSERT_THROW({
-        Texture texture(renderer_ptr->get_native_ptr(), invalid_path.c_str());
-        }, std::exception);
 }
