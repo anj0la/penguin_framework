@@ -1,4 +1,4 @@
-#include <rendering/systems/internal/penguin_asset_manager_impl.hpp>
+#include <rendering/systems/internal/asset_manager_impl.hpp>
 
 namespace penguin::internal::rendering::systems {
 

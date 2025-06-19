@@ -1,4 +1,4 @@
-#include <window/internal/penguin_window_impl.hpp>
+#include <window/internal/window_impl.hpp>
 
 namespace penguin::internal::window {
 

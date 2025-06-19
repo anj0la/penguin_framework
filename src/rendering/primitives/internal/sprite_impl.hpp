@@ -1,7 +1,7 @@
 #pragma once
 
 #include <penguin_framework/common/native_types.hpp>
-#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
+#include <penguin_framework/rendering/primitives/texture.hpp>
 #include <penguin_framework/rendering/primitives/flip_modes.hpp>
 
 #include <penguin_framework/math/rect2.hpp>

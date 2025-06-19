@@ -1,5 +1,5 @@
-#include <penguin_framework/rendering/systems/penguin_asset_manager.hpp>
-#include <rendering/systems/internal/penguin_asset_manager_impl.hpp>
+#include <penguin_framework/rendering/systems/asset_manager.hpp>
+#include <rendering/systems/internal/asset_manager_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::rendering::systems {

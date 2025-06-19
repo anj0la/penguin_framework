@@ -3,8 +3,8 @@
 #include <penguin_framework/penguin_api.hpp>
 
 #include <penguin_framework/common/native_types.hpp>
-#include <penguin_framework/window/penguin_window.hpp>
-#include <penguin_framework/rendering/primitives/penguin_sprite.hpp>
+#include <penguin_framework/window/window.hpp>
+#include <penguin_framework/rendering/primitives/sprite.hpp>
 #include <penguin_framework/math/rect2.hpp>
 #include <penguin_framework/math/vector2.hpp>
 #include <penguin_framework/math/circle2.hpp>

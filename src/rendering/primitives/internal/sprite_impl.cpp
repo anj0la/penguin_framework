@@ -1,4 +1,4 @@
-#include <rendering/primitives/internal/penguin_sprite_impl.hpp>
+#include <rendering/primitives/internal/sprite_impl.hpp>
 
 namespace penguin::internal::rendering::primitives {
 

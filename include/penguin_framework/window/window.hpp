@@ -3,7 +3,7 @@
 #include <penguin_framework/penguin_api.hpp>
 
 #include <penguin_framework/common/native_types.hpp>
-#include <penguin_framework/window/penguin_windowflags.hpp>
+#include <penguin_framework/window/windowflags.hpp>
 #include <penguin_framework/math/Vector2i.hpp>
 
 #include <memory>

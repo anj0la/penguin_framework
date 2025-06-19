@@ -1,6 +1,6 @@
 #pragma once
 
-#include <penguin_framework/window/penguin_windowflags.hpp>
+#include <penguin_framework/window/windowflags.hpp>
 #include <penguin_framework/math/Vector2i.hpp>
 #include <error/internal/internal_error.hpp>
 

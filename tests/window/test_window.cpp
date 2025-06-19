@@ -1,4 +1,4 @@
-#include <penguin_framework/window/penguin_window.hpp>
+#include <penguin_framework/window/window.hpp>
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
 

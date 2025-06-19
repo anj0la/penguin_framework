@@ -1,9 +1,9 @@
 #pragma once
 
-struct NativeWindowPtr {
+struct NativePtr {
     void* ptr;
 
-    explicit NativeWindowPtr(void* p) : ptr(p) {}
+    explicit NativePtr(void* p) : ptr(p) {}
 
     template <typename T>
     T* as() const {
@@ -11,24 +11,9 @@ struct NativeWindowPtr {
     }
 };
 
-struct NativeRendererPtr {
-    void* ptr;
-
-    explicit NativeRendererPtr(void* p) : ptr(p) {}
-
-    template <typename T>
-    T* as() const {
-        return static_cast<T*>(ptr);
-    }
-};
-
-struct NativeTexturePtr {
-    void* ptr;
-
-    explicit NativeTexturePtr(void* p) : ptr(p) {}
-
-    template <typename T>
-    T* as() const {
-        return static_cast<T*>(ptr);
-    }
-};
+using NativeWindowPtr = NativePtr;
+using NativeRendererPtr = NativePtr;
+using NativeTexturePtr = NativePtr;
+using NativeTextRendererPtr = NativePtr;
+using NativeTextPtr = NativePtr;
+using NativeFontPtr = NativePtr;

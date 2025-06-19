@@ -1,4 +1,4 @@
-#include <penguin_framework/window/penguin_windowflags.hpp>
+#include <penguin_framework/window/windowflags.hpp>
 #include <gtest/gtest.h>
 
 using penguin::window::WindowFlags;

@@ -1,5 +1,5 @@
-#include <penguin_framework/rendering/primitives/penguin_sprite.hpp>
-#include <rendering/primitives/internal/penguin_sprite_impl.hpp>
+#include <penguin_framework/rendering/primitives/sprite.hpp>
+#include <rendering/primitives/internal/sprite_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::rendering::primitives {

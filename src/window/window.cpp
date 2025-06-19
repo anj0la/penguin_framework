@@ -1,5 +1,5 @@
-#include <penguin_framework/window/penguin_window.hpp>
-#include <window/internal/penguin_window_impl.hpp>
+#include <penguin_framework/window/window.hpp>
+#include <window/internal/window_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::window {

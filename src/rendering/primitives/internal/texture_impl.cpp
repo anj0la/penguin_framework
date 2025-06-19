@@ -1,4 +1,4 @@
-#include <rendering/primitives/internal/penguin_texture_impl.hpp>
+#include <rendering/primitives/internal/texture_impl.hpp>
 
 namespace penguin::internal::rendering::primitives {
 

@@ -1,7 +1,7 @@
-#include <penguin_framework/window/penguin_window.hpp>
-#include <penguin_framework/rendering/penguin_renderer.hpp>
-#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
-#include <penguin_framework/rendering/systems/penguin_texture_loader.hpp>
+#include <penguin_framework/window/window.hpp>
+#include <penguin_framework/rendering/renderer.hpp>
+#include <penguin_framework/rendering/primitives/texture.hpp>
+#include <penguin_framework/rendering/systems/texture_loader.hpp>
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
 #include <memory>

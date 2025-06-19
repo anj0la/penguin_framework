@@ -1,5 +1,5 @@
-#include <penguin_framework/rendering/penguin_renderer.hpp>
-#include <rendering/internal/penguin_renderer_impl.hpp>
+#include <penguin_framework/rendering/renderer.hpp>
+#include <rendering/internal/renderer_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::rendering {

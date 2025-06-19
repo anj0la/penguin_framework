@@ -1,6 +1,6 @@
-#include <penguin_framework/window/penguin_window.hpp>
-#include <penguin_framework/rendering/penguin_renderer.hpp>
-#include <penguin_framework/rendering/primitives/penguin_sprite.hpp>
+#include <penguin_framework/window/window.hpp>
+#include <penguin_framework/rendering/renderer.hpp>
+#include <penguin_framework/rendering/primitives/sprite.hpp>
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
 #include <memory>

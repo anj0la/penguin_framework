@@ -96,20 +96,20 @@ add_library(penguin_framework
         "src/math/rect2.cpp" 
         "src/math/rect2i.cpp" 
         "src/math/colour.cpp"
-        "src/window/penguin_window.cpp"
-        "src/rendering/penguin_renderer.cpp"
-        "src/rendering/primitives/penguin_texture.cpp" 
-        "src/rendering/primitives/penguin_sprite.cpp" 
-        "src/rendering/systems/penguin_texture_loader.cpp" 
-        "src/rendering/systems/penguin_asset_manager.cpp"
-        "src/window/internal/penguin_window_impl.cpp" 
+        "src/window/window.cpp"
+        "src/rendering/renderer.cpp"
+        "src/rendering/primitives/texture.cpp" 
+        "src/rendering/primitives/sprite.cpp" 
+        "src/rendering/systems/texture_loader.cpp" 
+        "src/rendering/systems/asset_manager.cpp"
+        "src/window/internal/window_impl.cpp" 
         "src/logger/internal/logger_impl.cpp" 
         "src/logger/logger.cpp" 
-        "src/rendering/primitives/internal/penguin_texture_impl.cpp" 
-        "src/rendering/primitives/internal/penguin_sprite_impl.cpp" 
-        "src/rendering/systems/internal/penguin_texture_loader_impl.cpp" 
-        "src/rendering/systems/internal/penguin_asset_manager_impl.cpp" 
-        "src/rendering/internal/penguin_renderer_impl.cpp")
+        "src/rendering/primitives/internal/texture_impl.cpp" 
+        "src/rendering/primitives/internal/sprite_impl.cpp" 
+        "src/rendering/systems/internal/texture_loader_impl.cpp" 
+        "src/rendering/systems/internal/asset_manager_impl.cpp" 
+        "src/rendering/internal/renderer_impl.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 

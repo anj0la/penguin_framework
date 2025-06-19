@@ -1,4 +1,4 @@
-#include <rendering/internal/penguin_renderer_impl.hpp>
+#include <rendering/internal/renderer_impl.hpp>
 
 namespace penguin::internal::rendering {
 

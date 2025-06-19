@@ -1,5 +1,5 @@
-#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
-#include <rendering/primitives/internal/penguin_texture_impl.hpp>
+#include <penguin_framework/rendering/primitives/texture.hpp>
+#include <rendering/primitives/internal/texture_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::rendering::primitives {

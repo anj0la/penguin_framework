@@ -3,7 +3,7 @@
 #include <penguin_framework/penguin_api.hpp>
 
 #include <penguin_framework/common/native_types.hpp>
-#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
+#include <penguin_framework/rendering/primitives/texture.hpp>
 
 #include <memory>
 

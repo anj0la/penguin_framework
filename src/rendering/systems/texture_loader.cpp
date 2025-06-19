@@ -1,5 +1,5 @@
-#include <penguin_framework/rendering/systems/penguin_texture_loader.hpp>
-#include <rendering/systems/internal/penguin_texture_loader_impl.hpp>
+#include <penguin_framework/rendering/systems/texture_loader.hpp>
+#include <rendering/systems/internal/texture_loader_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
 namespace penguin::rendering::systems {

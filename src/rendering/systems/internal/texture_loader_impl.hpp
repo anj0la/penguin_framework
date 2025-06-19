@@ -2,7 +2,7 @@
 
 #include <penguin_framework/common/native_types.hpp>
 
-#include <penguin_framework/rendering/primitives/penguin_texture.hpp>
+#include <penguin_framework/rendering/primitives/texture.hpp>
 #include <error/internal/internal_error.hpp>
 
 #include <SDL3/SDL_render.h>

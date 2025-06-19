@@ -1,4 +1,4 @@
-#include <rendering/systems/internal/penguin_texture_loader_impl.hpp>
+#include <rendering/systems/internal/texture_loader_impl.hpp>
 
 namespace penguin::internal::rendering::systems {
 
