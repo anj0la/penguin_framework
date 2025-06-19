@@ -23,10 +23,7 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" IS_TOP_
 # Build Options
 #----------------------------------------------------------------------------------------------------------------------
 
-# NOTE: The main library is built as a SHARED library instead of a STATIC library.
-
-# In future updates, a static library may be provided, but as the API is currently unstable, a dynamic build
-# would make the development process easier.
+# NOTE: The main library is currently built as a SHARED library instead of a STATIC library.
 
 set(PF_BUILD_SHARED ON) 
 set(BUILD_SHARED_LIBS ${PF_BUILD_SHARED})
@@ -52,7 +49,6 @@ if(NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-# Add -fvisibility=hidden to command line arguments of GCC and clang
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
@@ -60,28 +56,75 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 # Dependencies
 #----------------------------------------------------------------------------------------------------------------------
 
-set(SDL3_BUILD_SHARED ON CACHE BOOL "Build SDL as Shared Library")
-set(SDL3_BUILD_STATIC OFF CACHE BOOL "Don't build SDL as Static Library" FORCE)
-set(SDL_TESTS OFF CACHE BOOL "Disable SDL Tests" FORCE)
-set(SDL_EXAMPLES OFF CACHE BOOL "Disable SDL Examples" FORCE)
-set(SDL_INSTALL ON CACHE BOOL "Enable SDL Install Targets" FORCE)
+message(STATUS "Installing dependencies for penguin_framework...")
 
 FetchContent_Declare(
     sdl3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git 
     GIT_TAG        release-3.2.10
     CMAKE_ARGS
-        -DSDL_SHARED=${SDL3_BUILD_SHARED}
-        -DSDL_STATIC=${SDL3_BUILD_STATIC}
-        -DSDL_TESTS=${SDL_TESTS}
-        -DSDL_EXAMPLES=${SDL_EXAMPLES}
-        -DSDL_INSTALL=${SDL_INSTALL}
-    SYSTEM # Suppress warnings during build
+        -DSDL_SHARED=ON 
+        -DSDL_STATIC=OFF # Disable static build for now
+        -DSDL_TESTS=OFF 
+        -DSDL_EXAMPLES=OFF 
+        -DSDL_INSTALL=ON
+    SYSTEM
 )
 
-message(STATUS "Fetching and configuring SDL3...")
+FetchContent_Declare(
+    sdl3_ttf
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+    GIT_TAG        release-3.2.2
+    CMAKE_ARGS
+        -DSDLTTF_SHARED=ON
+        -DSDLTTF_STATIC=OFF # Disable static build for now
+        -DSDLTTF_VENDORED=ON
+        -DSDLTTF_SAMPLES=OFF
+        -DSDLTTF_INSTALL=ON
+    SYSTEM
+)
+
+FetchContent_Declare(
+    sdl3_image
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+    GIT_TAG        release-3.2.4
+    CMAKE_ARGS
+        -DSDLIMAGE_SHARED=ON
+        -DSDLIMAGE_STATIC=OFF
+        -DSDLIMAGE_TESTS=OFF 
+        -DSDLIMAGE_VENDORED=OFF
+        -DSDLIMAGE_INSTALL=ON
+
+        # Disabled formats
+        -DSDLIMAGE_AVIF=OFF
+        -DSDLIMAGE_JXL=OFF
+        -DSDLIMAGE_TIF=OFF
+        -DSDLIMAGE_WEBP=OFF
+        -DSDLIMAGE_LBM=OFF
+        -DSDLIMAGE_PCX=OFF
+        -DSDLIMAGE_PNM=OFF
+        -DSDLIMAGE_QOI=OFF
+        -DSDLIMAGE_TGA=OFF
+        -DSDLIMAGE_XCF=OFF
+        -DSDLIMAGE_XPM=OFF
+        -DSDLIMAGE_XV=OFF
+        
+        # Enabled formats
+        -DSDLIMAGE_JPG=ON
+        -DSDLIMAGE_PNG=ON
+        -DSDLIMAGE_GIF=ON
+        -DSDLIMAGE_BMP=ON 
+        -DSDLIMAGE_SVG=ON
+)
+
+message(STATUS "Populating dependencies...")
+
 FetchContent_MakeAvailable(sdl3)
-message(STATUS "SDL3 available. Linking against target: SDL3::SLD3")
+FetchContent_MakeAvailable(sdl3_ttf)
+FetchContent_MakeAvailable(sdl3_image)
+
+message(STATUS "SDL3, SDL3_ttf and SDL_image are available.")
+message(STATUS "Finished installing dependencies for penguin_framework.")
 
 #----------------------------------------------------------------------------------------------------------------------
 # Library Definition
@@ -142,11 +185,20 @@ target_include_directories(penguin_framework
 )
 
 if(NOT TARGET SDL3::SDL3)
-    message(FATAL_ERROR "Target SDL3::SDL3 not found. SDL3 FetchContent might have failed or SDL_INSTALL was OFF.")
+    message(FATAL_ERROR "Target SDL3::SDL3 not found. Check FetchContent.")
 endif()
+if(NOT TARGET SDL3_ttf::SDL3_ttf)
+    message(FATAL_ERROR "Target SDL3_ttf::SDL3_ttf not found. Check FetchContent.")
+endif()
+if(NOT TARGET SDL3_image::SDL3_image)
+    message(FATAL_ERROR "Target SDL3_image::SDL3_image not found. Check FetchContent.")
+endif()
+
 target_link_libraries(penguin_framework
      PRIVATE
          SDL3::SDL3
+         SDL3_ttf::SDL3_ttf
+         SDL3_image::SDL3_image
 )
 
 target_compile_features(penguin_framework PUBLIC cxx_std_20)
@@ -178,18 +230,19 @@ if(PF_BUILD_SHARED)
     endif()
     message(STATUS "SDL3 copy destination directory: ${SDL3_COPY_DEST_DIR}")
 
-
     add_custom_command(
         TARGET penguin_framework POST_BUILD 
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:SDL3::SDL3>
-            ${SDL3_COPY_DEST_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3::SDL3> $<TARGET_FILE_DIR:penguin_framework>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3_ttf::SDL3_ttf> $<TARGET_FILE_DIR:penguin_framework>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3_image::SDL3_image> $<TARGET_FILE_DIR:penguin_framework>
 
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "$<TARGET_FILE_DIR:SDL3::SDL3>/$<TARGET_FILE_BASE_NAME:SDL3::SDL3>.pdb"
-            ${SDL3_COPY_DEST_DIR}
-
-        COMMENT "Copying SDL3 runtime artifacts to ${SDL3_COPY_DEST_DIR}..."
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        "$<TARGET_FILE_DIR:SDL3::SDL3>/$<TARGET_FILE_BASE_NAME:SDL3::SDL3>.pdb" $<TARGET_FILE_DIR:penguin_framework>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        "$<TARGET_FILE_DIR:SDL3_ttf::SDL3_ttf>/$<TARGET_FILE_BASE_NAME:SDL3_ttf::SDL3_ttf>.pdb" $<TARGET_FILE_DIR:penguin_framework>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        "$<TARGET_FILE_DIR:SDL3_image::SDL3_image>/$<TARGET_FILE_BASE_NAME:SDL3_image::SDL3_image>.pdb" $<TARGET_FILE_DIR:penguin_framework>
+        COMMENT "Copying SDL runtime artifacts for local build..."
         VERBATIM
     )
 endif()
@@ -248,50 +301,31 @@ if(PF_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
             COMPONENT Development
     )
 
-    install(FILES $<TARGET_FILE:SDL3::SDL3>
-            DESTINATION ${CMAKE_INSTALL_BINDIR} # Install SDL3.dll/.so to bin/
+    install(FILES
+            $<TARGET_FILE:SDL3::SDL3>
+            $<TARGET_FILE:SDL3_ttf::SDL3_ttf>
+            $<TARGET_FILE:SDL3_image::SDL3_image>
+            DESTINATION ${CMAKE_INSTALL_BINDIR} # Install DLLs to bin/
             COMPONENT Runtime
-            )
+    )
 
     if(MSVC)
         message(STATUS "Configuring PDB installation for MSVC...")
-
-        set(PF_PDB_FILE "")
-        set(PF_PDB_DESTINATION "")
-        set(PF_PDB_COMPONENT Development)
-
-        if(PF_BUILD_SHARED)
-            set(PF_PDB_FILE "$<TARGET_PDB_FILE:penguin_framework>")
-            set(PF_PDB_DESTINATION "${CMAKE_INSTALL_BINDIR}") # PDB goes with DLL
-        endif()
-       
-        if(NOT PF_PDB_FILE STREQUAL "")
-            install(FILES ${PF_PDB_FILE}
-                    COMPONENT ${PF_PDB_COMPONENT}
-                    CONFIGURATIONS Debug RelWithDebInfo 
-                    DESTINATION ${PF_PDB_DESTINATION}
-                    OPTIONAL # Don't fail if PDB doesn't exist
-            )
-
-            message(STATUS "    Installed PDB rule for penguin_framework.")
-        else()
-            message(WARNING "    Could not determine PDB path for penguin_framework.")
-        endif()
-
-
-        string(REPLACE ".dll" ".pdb" SDL3_PDB_FILE "$<TARGET_FILE:SDL3::SDL3>")
-        install(FILES "${SDL3_PDB_FILE}"
-              COMPONENT ${PF_PDB_COMPONENT}
-              CONFIGURATIONS Debug RelWithDebInfo 
-              DESTINATION ${CMAKE_INSTALL_BINDIR}
-              OPTIONAL # Don't fail if PDB doesn't exist
-             )
-
+        
+        install(FILES
+            "$<TARGET_FILE_DIR:SDL3::SDL3>/$<TARGET_FILE_BASE_NAME:SDL3::SDL3>.pdb"
+            "$<TARGET_FILE_DIR:SDL3_ttf::SDL3_ttf>/$<TARGET_FILE_BASE_NAME:SDL3_ttf::SDL3_ttf>.pdb"
+            "$<TARGET_FILE_DIR:SDL3_image::SDL3_image>/$<TARGET_FILE_BASE_NAME:SDL3_image::SDL3_image>.pdb"
+            DESTINATION ${CMAKE_INSTALL_BINDIR}
+            COMPONENT Development
+            CONFIGURATIONS Debug RelWithDebInfo
+            OPTIONAL
+        )
     endif()
 
     include(CPack)
 
-    message(STATUS "Finished installation for penguin_framework.")
+    message(STATUS "Finished installing penguin_framework.")
 
 endif() 
 

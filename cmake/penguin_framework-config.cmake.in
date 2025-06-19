@@ -7,30 +7,11 @@
 #
 #   penguin::penguin
 #
-# This target is configured based on how penguin_framework was built (static or shared).
 # Users should link against penguin::penguin.
-#
-# It also sets:
-#   penguin_framework_VERSION - The version of the package found.
-#   penguin_framework_INCLUDE_DIRS - Hint for include directories (though linking the target is preferred).
-#   penguin_framework_LIBRARIES - Hint for libraries (though linking the target is preferred).
 
 @PACKAGE_INIT@
-
-set_and_check(penguin_framework_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-set_and_check(penguin_framework_LIBRARIES    "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
 
 if(NOT TARGET penguin::penguin)
     include("${CMAKE_CURRENT_LIST_DIR}/penguin_framework-targets.cmake")
 endif()
 
-# get_target_property(penguin_framework_LIBRARY penguin::penguin LOCATION)
-
-check_required_components(penguin_framework)
-
-message(STATUS "Found penguin_framework ${penguin_framework_VERSION} (include: ${penguin_framework_INCLUDE_DIRS}, library path: ${penguin_framework_LIBRARIES})")
-if(TARGET penguin::penguin)
-    message(STATUS "Imported target penguin::penguin successfully.")
-else()
-    message(FATAL_ERROR "Could not import target penguin::penguin from ${CMAKE_CURRENT_LIST_DIR}/penguin_framework-targets.cmake")
-endif()
