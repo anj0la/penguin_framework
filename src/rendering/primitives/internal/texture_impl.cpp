@@ -1,16 +1,9 @@
 #include <rendering/primitives/internal/texture_impl.hpp>
+#include <SDL3_image/SDL_image.h>
 
 namespace penguin::internal::rendering::primitives {
 
-	TextureImpl::TextureImpl(NativeRendererPtr ptr, const char* path) : texture(nullptr, &SDL_DestroyTexture) {
-		SDL_Surface* surface = SDL_LoadBMP(path);
-
-		texture.reset(
-			SDL_CreateTextureFromSurface(ptr.as<SDL_Renderer>(), surface)
-		);
-
-		SDL_DestroySurface(surface);
-
+	TextureImpl::TextureImpl(NativeRendererPtr ptr, const char* path) : texture(IMG_LoadTexture(ptr.as<SDL_Renderer>(), path), &SDL_DestroyTexture) {
 		penguin::internal::error::InternalError::throw_if(
 			!texture,
 			"Failed to create the texture.",
