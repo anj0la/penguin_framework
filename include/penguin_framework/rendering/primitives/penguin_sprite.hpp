@@ -58,7 +58,6 @@ namespace penguin::rendering::primitives {
 		void set_bounding_box(const penguin::math::Rect2& new_bounding_box);
 
 		bool intersects(const Sprite& other) const;
-		void clear_texture();
 		void clear_colour_tint();
 		bool has_texture() const;
 		void use_full_region();

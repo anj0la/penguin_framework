@@ -6,13 +6,21 @@ using penguin::window::Window;
 using penguin::window::WindowFlags;
 using penguin::math::Vector2i;
 
-// Setting Up the Test Suite
-
 class WindowTestFixture : public ::testing::Test {
 protected:
+    std::unique_ptr<Window> window_ptr;
+    std::unique_ptr<Window> invalid_window_ptr;
+
 	void SetUp() override {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
 		ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
+
+        window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden | WindowFlags::Resizable); 
+        ASSERT_TRUE(window_ptr->is_valid());
+
+        invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), WindowFlags::Hidden);
+        invalid_window_ptr->close(); // open = false, and window is now invalid
+        ASSERT_FALSE(invalid_window_ptr->is_valid());
 	}
 
 	void TearDown() override {
@@ -20,511 +28,750 @@ protected:
 	}
 };
 
-// Constructor Test
-
-TEST_F(WindowTestFixture, ConstructorDefault_Creates_HiddenWindow) {
+// Constructor
+TEST_F(WindowTestFixture, Constructor_Creates_HiddenWindow) {
     // Arrange & Act (Implicit via constructor)
-    Window window("", penguin::math::Vector2i(640, 480), WindowFlags::Hidden);
+    const char* expected_title = "Test Window";
+    const Vector2i expected_size(640, 480);
 
-    // Assert - Validate window
-    EXPECT_TRUE(window.is_valid());
+    // Assert
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(*window_ptr); // testing bool() operator
 
-    // Assert - Validate default properties for a hidden window
-    EXPECT_STREQ(window.get_title(), ""); // Default title is empty
-    EXPECT_EQ(window.get_width(), 640); // Default width is 640 pixels
-    EXPECT_EQ(window.get_height(), 480); // Default height is 480 pixels
+    EXPECT_STREQ(window_ptr->get_title(), expected_title);
+    EXPECT_EQ(window_ptr->get_width(), expected_size.x);
+    EXPECT_EQ(window_ptr->get_height(), expected_size.y); 
 
-    // Assert - Validate flags
-    EXPECT_TRUE(window.is_hidden());   // Explicitly requested
-    EXPECT_TRUE(window.is_open());     // Should be open after creation
-    EXPECT_TRUE(window.is_bordered()); // Default is bordered unless Borderless flag is set
+    EXPECT_TRUE(window_ptr->is_hidden()); 
+    EXPECT_TRUE(window_ptr->is_open());   
+    EXPECT_TRUE(window_ptr->is_resizable());
+    EXPECT_TRUE(window_ptr->is_bordered()); // Default is bordered unless Borderless flag is set
 
-    EXPECT_FALSE(window.is_always_on_top());
-    EXPECT_FALSE(window.is_focused());
-    EXPECT_FALSE(window.is_fullscreen());
-    EXPECT_FALSE(window.is_maximized());
-    EXPECT_FALSE(window.is_minimized());
-    EXPECT_FALSE(window.is_mouse_grabbed());
-    EXPECT_FALSE(window.is_resizable());
-}
-
-TEST_F(WindowTestFixture, ConstructorWithParams_Sets_Properties) {
-    // Arrange
-    const char* expected_title = "A Penguin Window";
-    const Vector2i expected_size(800, 600); 
-    const auto flags = WindowFlags::Hidden | WindowFlags::Resizable | WindowFlags::Borderless;
-
-    // Act (Implicit via constructor)
-    Window window(expected_title, expected_size, flags);
-
-    // Assert - Validate window
-    EXPECT_TRUE(window.is_valid());
-
-    // Assert - Validate specified properties
-    EXPECT_STREQ(window.get_title(), expected_title);
-    EXPECT_EQ(window.get_width(), expected_size.x);
-    EXPECT_EQ(window.get_height(), expected_size.y);
-
-    // Assert - Validate flags implied by constructor arguments
-    EXPECT_TRUE(window.is_hidden());    // Explicit flag
-    EXPECT_TRUE(window.is_resizable()); // Explicit flag
-    EXPECT_FALSE(window.is_bordered()); // Explicit Borderless flag overrides default
-
-    // Assert - Validate other flags remain default/false
-    EXPECT_TRUE(window.is_open());
-    EXPECT_FALSE(window.is_always_on_top());
-    EXPECT_FALSE(window.is_focused());
-    EXPECT_FALSE(window.is_fullscreen());
-    EXPECT_FALSE(window.is_maximized());
-    EXPECT_FALSE(window.is_minimized());
-    EXPECT_FALSE(window.is_mouse_grabbed());
+    EXPECT_FALSE(window_ptr->is_always_on_top());
+    EXPECT_FALSE(window_ptr->is_focused());
+    EXPECT_FALSE(window_ptr->is_fullscreen());
+    EXPECT_FALSE(window_ptr->is_maximized());
+    EXPECT_FALSE(window_ptr->is_minimized());
+    EXPECT_FALSE(window_ptr->is_mouse_grabbed());
 }
 
 // Window Functions
 
-TEST_F(WindowTestFixture, SetTitle_Updates_Title) {
-    // Arrange
-    Window window("Original Title", Vector2i(800, 600), WindowFlags::Hidden);
-    const char* expected_title = "Updated Title";
-    ASSERT_STRNE(window.get_title(), expected_title);
+TEST_F(WindowTestFixture, IsValid_WithValidWindow_ReturnsTrue) {
+    // Arrange (done in SetUp)
 
     // Act
-    window.set_title(expected_title);
+    bool is_valid = window_ptr->is_valid();
 
     // Assert
-    EXPECT_TRUE(window); 
-    EXPECT_STREQ(window.get_title(), expected_title);
+    EXPECT_TRUE(is_valid);
 }
 
+TEST_F(WindowTestFixture, BoolOperator_WithValidWindow_ReturnsTrue) {
+    // Arrange (done in SetUp)
+
+    // Act
+    bool bool_result = static_cast<bool>(*window_ptr);
+
+    // Assert
+    EXPECT_TRUE(bool_result);
+}
+
+TEST_F(WindowTestFixture, SetTitle_Updates_Title) {
+    // Arrange
+    const char* expected_title = "Updated Title";
+    ASSERT_STRNE(window_ptr->get_title(), expected_title);
+
+    // Act
+    window_ptr->set_title(expected_title);
+
+    // Assert
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_STREQ(window_ptr->get_title(), expected_title);
+}
 TEST_F(WindowTestFixture, SetMaxSize_Restricts_Size) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
     const Vector2i max_size(1024, 768);
 
     // Act
-    window.set_max_size(max_size);
+    window_ptr->set_max_size(max_size);
 
     // Assert
-    EXPECT_TRUE(window);
-    Vector2i actual_max_size = window.get_max_size();
+    EXPECT_TRUE(window_ptr->is_valid());
+    Vector2i actual_max_size = window_ptr->get_max_size();
     EXPECT_EQ(actual_max_size.x, max_size.x);
     EXPECT_EQ(actual_max_size.y, max_size.y);
 }
-
 TEST_F(WindowTestFixture, SetMaxSize_Keeps_Size) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
     const Vector2i max_size(-100, -400);
 
     // Act
-    window.set_max_size(max_size);
+    window_ptr->set_max_size(max_size);
 
     // Assert
-    EXPECT_TRUE(window);
-    Vector2i actual_max_size = window.get_max_size();
-    EXPECT_EQ(actual_max_size.x, window.get_width()); // the max size should be the window size if it has not been set by default
-    EXPECT_EQ(actual_max_size.y, window.get_height());
+    EXPECT_TRUE(window_ptr->is_valid());
+    Vector2i actual_max_size = window_ptr->get_max_size();
+    EXPECT_EQ(actual_max_size.x, window_ptr->get_width()); // the max size should be the window size if it has not been set by default
+    EXPECT_EQ(actual_max_size.y, window_ptr->get_height());
 }
 
 TEST_F(WindowTestFixture, SetMinSize_Restricts_Size) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    const Vector2i min_size(400, 300); 
+    const Vector2i min_size(400, 300);
 
     // Act
-    window.set_min_size(min_size);
+    window_ptr->set_min_size(min_size);
 
     // Assert
-    EXPECT_TRUE(window);
-    Vector2i actual_min_size = window.get_min_size();
+    EXPECT_TRUE(window_ptr->is_valid());
+    Vector2i actual_min_size = window_ptr->get_min_size();
     EXPECT_EQ(actual_min_size.x, min_size.x);
-    EXPECT_EQ(actual_min_size.y, min_size.y);  
+    EXPECT_EQ(actual_min_size.y, min_size.y);
 }
 
 TEST_F(WindowTestFixture, SetMinSize_Keeps_Size) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
     const Vector2i min_size(-800, -600);
 
     // Act
-    window.set_min_size(min_size);
+    window_ptr->set_min_size(min_size);
 
     // Assert
-    EXPECT_TRUE(window);
-    Vector2i actual_min_size = window.get_min_size();
-    EXPECT_EQ(actual_min_size.x, window.get_width()); // the min size should be the window size if it has not been set by default
-    EXPECT_EQ(actual_min_size.y, window.get_height());
-    
+    EXPECT_TRUE(window_ptr->is_valid());
+    Vector2i actual_min_size = window_ptr->get_min_size();
+    EXPECT_EQ(actual_min_size.x, window_ptr->get_width()); // the min size should be the window size if it has not been set by default
+    EXPECT_EQ(actual_min_size.y, window_ptr->get_height());
 }
 
 TEST_F(WindowTestFixture, Resize_Changes_Size) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    const Vector2i new_size(640, 480);
-    ASSERT_NE(window.get_width(), new_size.x); // Ensure size is different initially
-    ASSERT_NE(window.get_height(), new_size.y);
+    const Vector2i new_size(800, 600);
+    ASSERT_NE(window_ptr->get_width(), new_size.x); 
+    ASSERT_NE(window_ptr->get_height(), new_size.y);
 
     // Act
-    window.resize(new_size);
+    window_ptr->resize(new_size);
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_EQ(window.get_width(), new_size.x);
-    EXPECT_EQ(window.get_height(), new_size.y);
-    
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_EQ(window_ptr->get_width(), new_size.x);
+    EXPECT_EQ(window_ptr->get_height(), new_size.y);
 }
 
 TEST_F(WindowTestFixture, Resize_Keeps_Size) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    const Vector2i expected_size(800, 600);
-    const Vector2i new_size(-640, -480);
-    ASSERT_NE(window.get_width(), new_size.x); // Ensure size is different initially
-    ASSERT_NE(window.get_height(), new_size.y);
+    const Vector2i expected_size(640, 480);
+    const Vector2i new_size(-800, -600);
+    ASSERT_NE(window_ptr->get_width(), new_size.x);
+    ASSERT_NE(window_ptr->get_height(), new_size.y);
 
     // Act
-    window.resize(new_size);
+    window_ptr->resize(new_size);
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_EQ(window.get_width(), expected_size.x);
-    EXPECT_EQ(window.get_height(), expected_size.y);  
+    EXPECT_TRUE(*window_ptr);
+    EXPECT_EQ(window_ptr->get_width(), expected_size.x);
+    EXPECT_EQ(window_ptr->get_height(), expected_size.y);
 }
 
 TEST_F(WindowTestFixture, Show_Makes_HiddenWindow_Visible) {
     // Arrange
-    Window window("Hidden Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_TRUE(window.is_hidden()); 
+    ASSERT_TRUE(window_ptr->is_hidden());
 
     // Act
-    window.show();
+    window_ptr->show();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_hidden());
+    EXPECT_TRUE(*window_ptr);
+    EXPECT_FALSE(window_ptr->is_hidden());
 }
 
 TEST_F(WindowTestFixture, Hide_Makes_VisibleWindow_Hidden) {
     // Arrange
-    Window window("Visible Window", Vector2i(800, 600)); // No hidden flag
-    ASSERT_FALSE(window.is_hidden()); 
+    window_ptr->show();
+    ASSERT_FALSE(window_ptr->is_hidden());
 
     // Act
-    window.hide();
+    window_ptr->hide();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_hidden());
+    EXPECT_TRUE(*window_ptr);
+    EXPECT_TRUE(window_ptr->is_hidden());
 }
 
 TEST_F(WindowTestFixture, Minimize_Reduces_ResizableWindow) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    ASSERT_FALSE(window.is_minimized()); 
-    ASSERT_TRUE(window.is_resizable()); 
+    ASSERT_FALSE(window_ptr->is_minimized());
+    ASSERT_TRUE(window_ptr->is_resizable());
 
     // Act
-    window.minimize();
+    window_ptr->minimize();
 
     // Assert
     // NOTE: The dummy video driver cannot actually minimize a window.
     // This test only ensures that our intent to minimize is recorded internally.
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_minimized());
-    EXPECT_FALSE(window.is_maximized());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_minimized());
+    EXPECT_FALSE(window_ptr->is_maximized());
 }
 
 TEST_F(WindowTestFixture, MinimizeAsync_Reduces_ResizableWindow) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    ASSERT_FALSE(window.is_minimized());
-    ASSERT_TRUE(window.is_resizable());
+    ASSERT_FALSE(window_ptr->is_minimized());
+    ASSERT_TRUE(window_ptr->is_resizable());
 
     // Act
-    window.minimize_async();
+    window_ptr->minimize_async();
 
     // Assert
     // NOTE: The dummy video driver cannot actually minimize a window.
     // This test only ensures that our intent to minimize is recorded internally.
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_minimized());
-    EXPECT_FALSE(window.is_maximized());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_minimized());
+    EXPECT_FALSE(window_ptr->is_maximized());
 }
 
 TEST_F(WindowTestFixture, Maximize_Enlarges_ResizableWindow) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    ASSERT_FALSE(window.is_maximized());
-    ASSERT_TRUE(window.is_resizable()); 
+    ASSERT_FALSE(window_ptr->is_maximized());
+    ASSERT_TRUE(window_ptr->is_resizable());
 
     // Act
-    window.maximize(); 
+    window_ptr->maximize();
 
     // Assert
-    // NOTE: Dummy video driver cannot actually maximize a window.
+    // NOTE: The dummy video driver cannot actually maximize a window.
     // This test only ensures that our intent to maximize is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_maximized());
-    EXPECT_FALSE(window.is_minimized());   
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_maximized());
+    EXPECT_FALSE(window_ptr->is_minimized());
 }
 
 TEST_F(WindowTestFixture, MaximizeAsync_Enlarges_ResizableWindow) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    ASSERT_FALSE(window.is_maximized());
-    ASSERT_TRUE(window.is_resizable());
+    ASSERT_FALSE(window_ptr->is_maximized());
+    ASSERT_TRUE(window_ptr->is_resizable());
 
     // Act
-    window.maximize_async();
+    window_ptr->maximize_async();
 
     // Assert
-    // NOTE: Dummy video driver cannot actually maximize a window.
+    // NOTE: The dummy video driver cannot actually maximize a window.
     // This test only ensures that our intent to maximize is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_maximized());    
-    EXPECT_FALSE(window.is_minimized()); 
-}
-
-TEST_F(WindowTestFixture, Minimize_DoesNothing_On_NonResizableWindow) {
-    // Arrange
-    Window window("Fixed Window", Vector2i(800, 600), WindowFlags::Hidden); // No Resizable flag
-    ASSERT_FALSE(window.is_resizable());
-    ASSERT_FALSE(window.is_minimized());
-
-    // Act
-    window.minimize();
-
-    // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_minimized());
-   
-}
-
-TEST_F(WindowTestFixture, Maximize_DoesNothing_On_NonResizableWindow) {
-    // Arrange
-    Window window("Fixed Window", Vector2i(800, 600), WindowFlags::Hidden); // No Resizable flag
-    ASSERT_FALSE(window.is_resizable());
-    ASSERT_FALSE(window.is_maximized());
-
-    // Act
-    window.maximize();
-
-    // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_maximized());   
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_maximized());
+    EXPECT_FALSE(window_ptr->is_minimized());
 }
 
 TEST_F(WindowTestFixture, Restore_Returns_MinimizedWindow_ToNormal) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    window.minimize();
-    ASSERT_TRUE(window.is_minimized());
+    window_ptr->minimize();
+    ASSERT_TRUE(window_ptr->is_minimized());
 
     // Act
-    window.restore(); 
+    window_ptr->restore();
 
     // Assert
     // NOTE: The dummy video driver cannot actually restore a minimized window.
     // This test only ensures that our intent to restore is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_minimized());
-    EXPECT_FALSE(window.is_maximized()); 
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_minimized());
+    EXPECT_FALSE(window_ptr->is_maximized());
 }
 
 TEST_F(WindowTestFixture, Restore_Returns_MaximizedWindow_ToNormal) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    window.maximize();
-    ASSERT_TRUE(window.is_maximized());
+    window_ptr->maximize();
+    ASSERT_TRUE(window_ptr->is_maximized());
 
     // Act
-    window.restore(); 
+    window_ptr->restore();
 
     // Assert
     // NOTE: The dummy video driver cannot actually restore a maximized window.
     // This test only ensures that our intent to restore is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_maximized());
-    EXPECT_FALSE(window.is_minimized());  
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_maximized());
+    EXPECT_FALSE(window_ptr->is_minimized());
 }
 
 TEST_F(WindowTestFixture, RestoreAsync_Call_Succeeds) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable);
-    window.minimize();
-    ASSERT_TRUE(window.is_minimized());
+    window_ptr->minimize();
+    ASSERT_TRUE(window_ptr->is_minimized());
 
     // Act
-    window.restore_async();
+    window_ptr->restore_async();
 
     // Assert
     // NOTE: The dummy video driver cannot actually maximize a window.
     // This test only ensures that our intent to restore is recorded internally.
-    // Real window state change must be tested at the integration level.
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_maximized());
-    EXPECT_FALSE(window.is_minimized());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_maximized());
+    EXPECT_FALSE(window_ptr->is_minimized());
 }
 
 TEST_F(WindowTestFixture, EnableResizing_Makes_Window_Resizable) {
     // Arrange
-    Window window("Fixed Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_FALSE(window.is_resizable());
+    window_ptr->disable_resizing();
+    ASSERT_FALSE(window_ptr->is_resizable());
 
     // Act
-    window.enable_resizing();
+    window_ptr->enable_resizing();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_resizable());   
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_resizable());
 }
 
 TEST_F(WindowTestFixture, DisableResizing_Makes_Window_Fixed) {
     // Arrange
-    Window window("Resizable Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Resizable); // Starts resizable
-    ASSERT_TRUE(window.is_resizable());
+    ASSERT_TRUE(window_ptr->is_resizable());
 
     // Act
-    window.disable_resizing();
+    window_ptr->disable_resizing();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_resizable());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_resizable());
 }
 
 TEST_F(WindowTestFixture, DisableBorders_Removes_Border) {
     // Arrange
-    Window window("Bordered Window", Vector2i(800, 600), WindowFlags::Hidden); // Starts bordered (default)
-    ASSERT_TRUE(window.is_bordered());
+    ASSERT_TRUE(window_ptr->is_bordered()); // Starts bordered (default)
 
     // Act
-    window.disable_borders();
+    window_ptr->disable_borders();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_bordered());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_bordered());
 }
 
 TEST_F(WindowTestFixture, EnableBorders_Adds_Border) {
     // Arrange
-    Window window("Borderless Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::Borderless); // Starts borderless
-    ASSERT_FALSE(window.is_bordered());
+    window_ptr->disable_borders(); // Make it borderless first
+    ASSERT_FALSE(window_ptr->is_bordered());
 
     // Act
-    window.enable_borders();
+    window_ptr->enable_borders();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_bordered());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_bordered());
 }
 
 TEST_F(WindowTestFixture, EnterFullscreen_Makes_Window_Fullscreen) {
     // Arrange
-    Window window("Windowed Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_FALSE(window.is_fullscreen());
+    ASSERT_FALSE(window_ptr->is_fullscreen());
 
     // Act
-    window.enter_fullscreen();
+    window_ptr->enter_fullscreen();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_fullscreen());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_fullscreen());
 }
 
 TEST_F(WindowTestFixture, ExitFullscreen_Makes_Window_Windowed) {
     // Arrange
-    Window window("Fullscreen Window", Vector2i(800, 600), WindowFlags::Hidden);
-    window.enter_fullscreen(); // Assume this works
-    ASSERT_TRUE(window.is_fullscreen());
+    window_ptr->enter_fullscreen(); // Assume this works
+    ASSERT_TRUE(window_ptr->is_fullscreen());
 
     // Act
-    window.exit_fullscreen();
+    window_ptr->exit_fullscreen();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_fullscreen());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_fullscreen());
 }
 
 TEST_F(WindowTestFixture, GrabMouse_Confines_Mouse) {
     // Arrange
-    Window window("Free Mouse Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_FALSE(window.is_mouse_grabbed());
+    ASSERT_FALSE(window_ptr->is_mouse_grabbed());
 
     // Act
-    window.grab_mouse();
+    window_ptr->grab_mouse();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_mouse_grabbed());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_mouse_grabbed());
 }
 
 TEST_F(WindowTestFixture, ReleaseMouse_Frees_Mouse) {
     // Arrange
-    Window window("Grabbed Mouse Window", Vector2i(800, 600), WindowFlags::Hidden);
-    window.grab_mouse(); // Assume this works
-    ASSERT_TRUE(window.is_mouse_grabbed());
+    window_ptr->grab_mouse(); // Assume this works
+    ASSERT_TRUE(window_ptr->is_mouse_grabbed());
 
     // Act
-    window.release_mouse();
+    window_ptr->release_mouse();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_mouse_grabbed());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_mouse_grabbed());
 }
 
 TEST_F(WindowTestFixture, EnableAlwaysOnTop_Keeps_Window_OnTop) {
     // Arrange
-    Window window("Normal Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_FALSE(window.is_always_on_top());
+    ASSERT_FALSE(window_ptr->is_always_on_top());
 
     // Act
-    window.add_always_on_top();
+    window_ptr->add_always_on_top();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_always_on_top());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_always_on_top());
 }
 
 TEST_F(WindowTestFixture, DisableAlwaysOnTop_Allows_Window_ToBeObscured) {
     // Arrange
-    Window window("Top Window", Vector2i(800, 600), WindowFlags::Hidden);
-    window.add_always_on_top();
-    ASSERT_TRUE(window.is_always_on_top());
+    window_ptr->add_always_on_top();
+    ASSERT_TRUE(window_ptr->is_always_on_top());
 
     // Act
-    window.remove_always_on_top();
+    window_ptr->remove_always_on_top();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_always_on_top());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_always_on_top());
 }
 
 TEST_F(WindowTestFixture, GainFocus_Requests_Focus) {
     // Arrange
-    Window window("Background Window", Vector2i(800, 600), WindowFlags::Hidden);
-    ASSERT_FALSE(window.is_focused()); // Focus starts false (usually)
+    ASSERT_FALSE(window_ptr->is_focused()); // Focus starts false (usually)
 
     // Act
-    window.gain_focus();
+    window_ptr->gain_focus();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_TRUE(window.is_focused());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_TRUE(window_ptr->is_focused());
 }
 
 TEST_F(WindowTestFixture, LoseFocus_Releases_Focus) {
     // Arrange
-    Window window("Background Window", Vector2i(800, 600), WindowFlags::Hidden | WindowFlags::InputFocus);
-    ASSERT_TRUE(window.is_focused());
+    window_ptr->gain_focus(); // Make it focused first
+    ASSERT_TRUE(window_ptr->is_focused());
 
     // Act
-    window.lose_focus();
+    window_ptr->lose_focus();
 
     // Assert
-    EXPECT_TRUE(window);
-    EXPECT_FALSE(window.is_focused());
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_focused());
+}
+
+
+TEST_F(WindowTestFixture, GetNativePtr_WithValidWindow_ReturnsNonNullPtr) {
+    // Arrange (done in SetUp)
+
+    // Act
+    auto native_ptr = window_ptr->get_native_ptr();
+
+    // Assert
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_NE(native_ptr.ptr, nullptr);
+}
+
+// Other Window Tests
+
+TEST_F(WindowTestFixture, Minimize_DoesNothing_On_NonResizableWindow) {
+    // Arrange
+    window_ptr->disable_resizing(); // Make it non-resizable
+    ASSERT_FALSE(window_ptr->is_resizable());
+    ASSERT_FALSE(window_ptr->is_minimized());
+
+    // Act
+    window_ptr->minimize();
+
+    // Assert
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_minimized());
+}
+
+TEST_F(WindowTestFixture, Maximize_DoesNothing_On_NonResizableWindow) {
+    // Arrange
+    window_ptr->disable_resizing(); // Make it non-resizable
+    ASSERT_FALSE(window_ptr->is_resizable());
+    ASSERT_FALSE(window_ptr->is_maximized());
+
+    // Act
+    window_ptr->maximize();
+
+    // Assert
+    EXPECT_TRUE(window_ptr->is_valid());
+    EXPECT_FALSE(window_ptr->is_maximized());
+}
+
+// Invalid Window Operations
+
+TEST_F(WindowTestFixture, IsValid_WithInvalidWindow_ReturnsFalse) {
+    // Arrange (done in SetUp)
+
+    // Act
+    bool is_valid = invalid_window_ptr->is_valid();
+
+    // Assert
+    EXPECT_FALSE(is_valid);
+}
+
+TEST_F(WindowTestFixture, BoolOperator_WithInvalidWindow_ReturnsFalse) {
+    // Arrange (done in SetUp)
+
+    // Act
+    bool bool_result = static_cast<bool>(*invalid_window_ptr);
+
+    // Assert
+    EXPECT_FALSE(bool_result);
+}
+
+TEST_F(WindowTestFixture, SetTitle_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->set_title("New Title");
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, SetMaxSize_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->set_max_size(Vector2i(1024, 768));
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, SetMinSize_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->set_min_size(Vector2i(400, 300));
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, Resize_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->resize(Vector2i(640, 480));
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, Show_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->show();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, Hide_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->hide();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, Minimize_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->minimize();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, MinimizeAsync_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->minimize_async();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, Maximize_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->maximize();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, MaximizeAsync_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->maximize_async();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, Restore_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->restore();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, RestoreAsync_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->restore_async();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, EnableResizing_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->enable_resizing();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, DisableResizing_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->disable_resizing();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, DisableBorders_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->disable_borders();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, EnableBorders_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->enable_borders();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, EnterFullscreen_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->enter_fullscreen();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, ExitFullscreen_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->exit_fullscreen();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, GrabMouse_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->grab_mouse();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, ReleaseMouse_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->release_mouse();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, EnableAlwaysOnTop_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->add_always_on_top();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, DisableAlwaysOnTop_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->remove_always_on_top();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, GainFocus_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->gain_focus();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, LoseFocus_WithInvalidWindow_WindowRemainsInvalid) {
+    // Arrange (done in SetUp)
+
+    // Act
+    invalid_window_ptr->lose_focus();
+
+    // Assert
+    EXPECT_FALSE(invalid_window_ptr->is_valid());
+}
+
+TEST_F(WindowTestFixture, GetNativePtr_WithInvalidWindow_ReturnsNullPtr) {
+    // Arrange (done in SetUp)
+
+    // Act
+    auto native_ptr = invalid_window_ptr->get_native_ptr();
+
+    // Assert
+    EXPECT_EQ(native_ptr.ptr, nullptr);
 }

@@ -4,13 +4,12 @@
 
 namespace penguin::rendering::primitives {
 
-	Texture::Texture(NativeRendererPtr renderer_ptr, const char* path) : pimpl_(nullptr), valid_state_(false) {
+	Texture::Texture(NativeRendererPtr renderer_ptr, const char* path) : pimpl_(nullptr) {
 		// Log attempt to create a texture
 		PF_LOG_INFO("Attempting to create a texture...");
 
 		try {
 			pimpl_ = std::make_unique<penguin::internal::rendering::primitives::TextureImpl>(renderer_ptr, path);
-			valid_state_ = true;
 			PF_LOG_INFO("Success: Texture created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
@@ -45,7 +44,7 @@ namespace penguin::rendering::primitives {
 			return false;
 		}
 
-		return pimpl_->texture.get(); // the internal texture may be invalid
+		return pimpl_->texture.get();
 	}
 
 	Texture::operator bool() const noexcept {

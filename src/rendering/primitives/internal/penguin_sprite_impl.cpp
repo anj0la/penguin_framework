@@ -3,15 +3,15 @@
 namespace penguin::internal::rendering::primitives {
 
 	SpriteImpl::SpriteImpl(std::shared_ptr<penguin::rendering::primitives::Texture> p_texture) : texture(std::move(p_texture)) {
-
+		
 		penguin::internal::error::InternalError::throw_if(
-			!p_texture,
+			!texture,
 			"Failed to load the texture.",
 			penguin::internal::error::ErrorCode::Resource_Load_Failed
 		);
 
 		position = penguin::math::Vector2::Zero; // the top-left corner represents the position of the Sprite
-		size = p_texture.get()->get_size();
+		size = texture->get_size();
 		texture_region = penguin::math::Rect2{ position.x, position.y, static_cast<float>(size.x), static_cast<float>(size.y) }; // position -> (0,0), size -> (texture_width, texture_height) for the full texture
 		screen_placement = penguin::math::Rect2{ position.x, position.y, static_cast<float>(size.x), static_cast<float>(size.y) };
 		scale_factor = penguin::math::Vector2::One;

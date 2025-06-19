@@ -20,24 +20,24 @@ namespace penguin::log {
         return *instance;
     }
 
-    void Logger::debug(const char* message) {
+    void Logger::debug(const char* message, const std::source_location& p_location) {
         std::lock_guard<std::mutex> lock(pimpl_->log_mutex);
-        pimpl_->write_log(penguin::internal::log::LogEntry(LogLevel::Debug, message));
+        pimpl_->write_log(penguin::internal::log::LogEntry(LogLevel::Debug, message, p_location));
     }
 
-    void Logger::info(const char* message) {
+    void Logger::info(const char* message, const std::source_location& p_location) {
         std::lock_guard<std::mutex> lock(pimpl_->log_mutex);
-        pimpl_->write_log(penguin::internal::log::LogEntry(LogLevel::Info, message));
+        pimpl_->write_log(penguin::internal::log::LogEntry(LogLevel::Info, message, p_location));
     }
 
-    void Logger::warning(const char* message) {
+    void Logger::warning(const char* message, const std::source_location& p_location) {
         std::lock_guard<std::mutex> lock(pimpl_->log_mutex);
-        pimpl_->write_log(penguin::internal::log::LogEntry(LogLevel::Warning, message));
+        pimpl_->write_log(penguin::internal::log::LogEntry(LogLevel::Warning, message, p_location));
     }
 
-    void Logger::error(const char* message) {
+    void Logger::error(const char* message, const std::source_location& p_location) {
         std::lock_guard<std::mutex> lock(pimpl_->log_mutex);
-        penguin::internal::log::LogEntry error_entry(LogLevel::Error, message);
+        penguin::internal::log::LogEntry error_entry(LogLevel::Error, message, p_location);
         pimpl_->write_log(error_entry);
 
         pimpl_->last_error = error_entry;

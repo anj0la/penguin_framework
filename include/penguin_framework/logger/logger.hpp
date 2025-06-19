@@ -4,6 +4,8 @@
 
 #include <penguin_framework/logger/log_level.hpp>
 #include <memory>
+#include <source_location>
+
 
 namespace penguin::internal::log {
     class LoggerImpl;
@@ -32,10 +34,10 @@ namespace penguin::log {
 
         // Logging functions
 
-        void debug(const char* message);
-        void info(const char* message);
-        void warning(const char* message);
-        void error(const char* message);
+        void debug(const char* message, const std::source_location& p_location = std::source_location::current());
+        void info(const char* message, const std::source_location& p_location = std::source_location::current());
+        void warning(const char* message, const std::source_location& p_location = std::source_location::current());
+        void error(const char* message, const std::source_location& p_location = std::source_location::current());
 
         // Last error functionality
 

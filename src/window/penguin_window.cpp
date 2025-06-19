@@ -40,7 +40,7 @@ namespace penguin::window {
 			return false;
 		}
 
-		return pimpl_->window.get() != nullptr && pimpl_->open; // pimpl_ is valid, but internal states might not be
+		return pimpl_->window.get() && pimpl_->open; // pimpl_ is valid, but internal states might not be
 	}
 	
 	Window::operator bool() const noexcept {

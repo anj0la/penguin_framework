@@ -15,6 +15,11 @@ target_link_libraries(
 	  GTest::gtest_main
 )
 
+target_include_directories(run_penguin_primitives_tests
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/tests
+)
+
 copy_dll_files(run_penguin_primitives_tests)
 add_macro(run_penguin_primitives_tests TEST_ASSETS_DIR "${CMAKE_SOURCE_DIR}/tests/assets")
 gtest_discover_tests(run_penguin_primitives_tests)

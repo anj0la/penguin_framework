@@ -36,6 +36,5 @@ namespace penguin::rendering::primitives {
 
 	private:
 		std::unique_ptr<penguin::internal::rendering::primitives::TextureImpl> pimpl_;
-		bool valid_state_;
 	};
 }

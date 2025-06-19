@@ -4,23 +4,20 @@
 #include <SDL3/SDL.h>
 #include <gtest/gtest.h>
 #include <memory>
-#include <filesystem>
 #include <string>
+
+#include <common/test_helpers.hpp>
 
 using penguin::window::Window;
 using penguin::window::WindowFlags;
 using penguin::rendering::Renderer;
 using penguin::rendering::primitives::Sprite;
-using penguin::core::rendering::primitives::Texture;
-using penguin::core::rendering::primitives::FlipMode;
-
-// Helper Functions
-
-std::filesystem::path get_test_asset_path(const char* name) {
-    return std::filesystem::path(TEST_ASSETS_DIR) / name;
-}
-
-// Setting Up the Test Suite
+using penguin::rendering::primitives::Texture;
+using penguin::rendering::primitives::FlipMode;
+using penguin::math::Vector2;
+using penguin::math::Vector2i;
+using penguin::math::Rect2;
+using penguin::math::Colour;
 
 class SpriteTestFixture : public ::testing::Test {
 protected:
@@ -28,8 +25,10 @@ protected:
     std::unique_ptr<Renderer> renderer_ptr;
     std::shared_ptr<Texture> texture_ptr;
     std::unique_ptr<Sprite> sprite_ptr;
-    String asset_name = "penguin_cute.bmp";
-    std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name.c_str())).string();
+    std::unique_ptr<Sprite> second_sprite_ptr;
+    std::unique_ptr<Sprite> invalid_sprite_ptr;
+    const char* asset_name = "penguin_cute.bmp";
+    std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
 
     void SetUp() override {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
@@ -46,6 +45,11 @@ protected:
 
         sprite_ptr = std::make_unique<Sprite>(texture_ptr);
         ASSERT_TRUE(sprite_ptr->is_valid());
+
+        second_sprite_ptr = std::make_unique<Sprite>(texture_ptr);
+        ASSERT_TRUE(second_sprite_ptr->is_valid());
+
+        invalid_sprite_ptr = std::make_unique<Sprite>(nullptr);
     }
 
     void TearDown() override {
@@ -53,6 +57,7 @@ protected:
     }
 };
 
+// Properties
 TEST_F(SpriteTestFixture, CreatedSprite_HasDefault_PropertiesSet) {
     // Arrange
     Vector2 expected_position(0.0f, 0.0f);
@@ -82,17 +87,38 @@ TEST_F(SpriteTestFixture, CreatedSprite_HasDefault_PropertiesSet) {
     EXPECT_EQ(expected_bounding_box, sprite_ptr->get_bounding_box());
     EXPECT_TRUE(sprite_ptr->has_texture());
 }
-
 TEST_F(SpriteTestFixture, Constructor_WithNullTexture_CreatesInvalidSprite) {
     // Arrange
     std::shared_ptr<Texture> null_texture = nullptr;
 
     // Act
-    auto invalid_sprite = std::make_unique<Sprite>(null_texture);
+    auto invalid_sprite_ptr = std::make_unique<Sprite>(null_texture);
 
     // Assert
-    EXPECT_FALSE(invalid_sprite->is_valid());
-    EXPECT_FALSE(*invalid_sprite);
+    EXPECT_FALSE(invalid_sprite_ptr->is_valid());
+    EXPECT_FALSE(*invalid_sprite_ptr);
+}
+
+// Validity
+
+TEST_F(SpriteTestFixture, IsValid_WithValidSprite_ReturnsTrue) {
+    // Arrange (done in SetUp)
+
+    // Act
+    bool is_valid = sprite_ptr->is_valid();
+
+    // Assert
+    EXPECT_TRUE(is_valid);
+}
+
+TEST_F(SpriteTestFixture, BoolOperator_WithInvalidSprite_ReturnsTrue) {
+    // Arrange (done in SetUp)
+
+    // Act
+    bool bool_result = static_cast<bool>(*sprite_ptr);
+
+    // Assert
+    EXPECT_TRUE(bool_result);
 }
 
 // Position
@@ -108,8 +134,6 @@ TEST_F(SpriteTestFixture, GetPosition_Returns_SpritePosition) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(expected_position, actual_position);
 }
-
-
 TEST_F(SpriteTestFixture, SetPosition_WithVector_Sets_SpritePosition) {
     // Arrange
     Vector2 new_position(100.0f, 150.0f);
@@ -122,7 +146,6 @@ TEST_F(SpriteTestFixture, SetPosition_WithVector_Sets_SpritePosition) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(new_position, actual_position);
 }
-
 TEST_F(SpriteTestFixture, SetPosition_WithFloats_Sets_SpritePosition) {
     // Arrange
     float x = 200.0f, y = 250.0f;
@@ -137,8 +160,7 @@ TEST_F(SpriteTestFixture, SetPosition_WithFloats_Sets_SpritePosition) {
     EXPECT_EQ(expected_position, actual_position);
 }
 
-// Size Tests
-
+// Size
 TEST_F(SpriteTestFixture, GetSize_Returns_SpriteSize) {
     // Arrange
     Vector2i expected_size(362, 362);
@@ -150,7 +172,6 @@ TEST_F(SpriteTestFixture, GetSize_Returns_SpriteSize) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(expected_size, actual_size);
 }
-
 TEST_F(SpriteTestFixture, GetWidth_Returns_SpriteWidth) {
     // Arrange
     int expected_width = 362;
@@ -162,7 +183,6 @@ TEST_F(SpriteTestFixture, GetWidth_Returns_SpriteWidth) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(expected_width, actual_width);
 }
-
 TEST_F(SpriteTestFixture, GetHeight_Returns_SpriteHeight) {
     // Arrange
     int expected_height = 362;
@@ -175,8 +195,7 @@ TEST_F(SpriteTestFixture, GetHeight_Returns_SpriteHeight) {
     EXPECT_EQ(expected_height, actual_height);
 }
 
-// Scale Tests
-
+// Scale
 TEST_F(SpriteTestFixture, GetScaleFactor_Returns_SpriteScale) {
     // Arrange
     Vector2 expected_scale(1.0f, 1.0f);
@@ -188,7 +207,6 @@ TEST_F(SpriteTestFixture, GetScaleFactor_Returns_SpriteScale) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(expected_scale, actual_scale);
 }
-
 TEST_F(SpriteTestFixture, SetScaleFactor_WithVector_Sets_SpriteScale) {
     // Arrange
     Vector2 new_scale(2.0f, 3.0f);
@@ -201,7 +219,6 @@ TEST_F(SpriteTestFixture, SetScaleFactor_WithVector_Sets_SpriteScale) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(new_scale, actual_scale);
 }
-
 TEST_F(SpriteTestFixture, SetScaleFactor_WithFloats_Sets_SpriteScale) {
     // Arrange
     float x = 1.5f, y = 2.5f;
@@ -216,7 +233,7 @@ TEST_F(SpriteTestFixture, SetScaleFactor_WithFloats_Sets_SpriteScale) {
     EXPECT_EQ(expected_scale, actual_scale);
 }
 
-// Angle Tests
+// Angle
 
 TEST_F(SpriteTestFixture, GetAngle_Returns_SpriteAngle) {
     // Arrange
@@ -243,7 +260,7 @@ TEST_F(SpriteTestFixture, SetAngle_Sets_SpriteAngle) {
     EXPECT_DOUBLE_EQ(new_angle, actual_angle);
 }
 
-// Anchor Tests
+// Anchor
 
 TEST_F(SpriteTestFixture, GetAnchor_Returns_SpriteAnchor) {
     // Arrange
@@ -298,7 +315,21 @@ TEST_F(SpriteTestFixture, SetAnchor_ClampsValues_ToBounds) {
     EXPECT_EQ(expected_clamped_anchor, actual_anchor);
 }
 
-// Visibility Tests
+TEST_F(SpriteTestFixture, SetAnchor_WithFloats_ClampsValues_ToBounds) {
+    // Arrange
+    float x = -0.50f, y = 1.25f;
+    Vector2 expected_anchor(0.0f, 1.0f);
+
+    // Act
+    sprite_ptr->set_anchor(x, y);
+    Vector2 actual_anchor = sprite_ptr->get_anchor();
+
+    // Assert
+    EXPECT_TRUE(sprite_ptr->is_valid());
+    EXPECT_EQ(expected_anchor, actual_anchor);
+}
+
+// Visibility
 
 TEST_F(SpriteTestFixture, IsHidden_Returns_SpriteVisibility) {
     // Arrange
@@ -339,7 +370,7 @@ TEST_F(SpriteTestFixture, Show_Makes_SpriteVisible) {
     EXPECT_FALSE(actual_hidden);
 }
 
-// Flip Mode Tests
+// Flip Mode
 
 TEST_F(SpriteTestFixture, GetFlipMode_Returns_SpriteFlipMode) {
     // Arrange
@@ -366,8 +397,7 @@ TEST_F(SpriteTestFixture, SetFlipMode_Sets_SpriteFlipMode) {
     EXPECT_EQ(new_mode, actual_mode);
 }
 
-// Texture Region Tests
-
+// Texture Region
 TEST_F(SpriteTestFixture, GetTextureRegion_Returns_SpriteTextureRegion) {
     // Arrange & Act
     Rect2 actual_region = sprite_ptr->get_texture_region();
@@ -377,7 +407,6 @@ TEST_F(SpriteTestFixture, GetTextureRegion_Returns_SpriteTextureRegion) {
     EXPECT_GE(actual_region.size.x, 0.0f);
     EXPECT_GE(actual_region.size.y, 0.0f);
 }
-
 TEST_F(SpriteTestFixture, SetTextureRegion_Sets_SpriteTextureRegion) {
     // Arrange
     Rect2 new_region(10.0f, 10.0f, 100.0f, 100.0f);
@@ -390,7 +419,6 @@ TEST_F(SpriteTestFixture, SetTextureRegion_Sets_SpriteTextureRegion) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(new_region, actual_region);
 }
-
 TEST_F(SpriteTestFixture, UseFullRegion_Sets_TextureRegionToFullSize) {
     // Arrange
     Vector2i sprite_size = sprite_ptr->get_size();
@@ -405,8 +433,7 @@ TEST_F(SpriteTestFixture, UseFullRegion_Sets_TextureRegionToFullSize) {
     EXPECT_EQ(expected_region, actual_region);
 }
 
-// Screen Placement Tests
-
+// Screen Placement
 TEST_F(SpriteTestFixture, GetScreenPlacement_Returns_SpriteScreenPlacement) {
     // Arrange & Act
     Rect2 actual_placement = sprite_ptr->get_screen_placement();
@@ -416,7 +443,6 @@ TEST_F(SpriteTestFixture, GetScreenPlacement_Returns_SpriteScreenPlacement) {
     EXPECT_GE(actual_placement.size.x, 0.0f);
     EXPECT_GE(actual_placement.size.y, 0.0f);
 }
-
 TEST_F(SpriteTestFixture, SetScreenPlacement_Sets_SpriteScreenPlacement) {
     // Arrange
     Rect2 new_placement(50.0f, 50.0f, 200.0f, 200.0f);
@@ -444,7 +470,7 @@ TEST_F(SpriteTestFixture, UseDefaultScreenPlacement_Sets_ScreenPlacementToDefaul
     EXPECT_EQ(expected_placement, actual_placement);
 }
 
-// Bounding Box Tests
+// Bounding Box
 
 TEST_F(SpriteTestFixture, GetBoundingBox_Returns_SpriteBoundingBox) {
     // Arrange
@@ -475,8 +501,7 @@ TEST_F(SpriteTestFixture, SetBoundingBox_Sets_SpriteBoundingBox) {
     EXPECT_EQ(new_bounding_box, actual_bounding_box);
 }
 
-// Color Tint Tests
-
+// Colour Tint
 TEST_F(SpriteTestFixture, SetColourTint_Sets_SpriteColourTint) {
     // Arrange
     Colour new_tint = Colours::Red;
@@ -489,7 +514,6 @@ TEST_F(SpriteTestFixture, SetColourTint_Sets_SpriteColourTint) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_EQ(new_tint, actual_tint);
 }
-
 TEST_F(SpriteTestFixture, ClearColourTint_Clears_SpriteColourTint) {
     // Arrange
     sprite_ptr->set_colour_tint(Colours::Blue);
@@ -504,8 +528,7 @@ TEST_F(SpriteTestFixture, ClearColourTint_Clears_SpriteColourTint) {
     EXPECT_EQ(expected_tint, actual_tint);
 }
 
-// Texture Tests
-
+// Texture
 TEST_F(SpriteTestFixture, HasTexture_Returns_True_WhenTextureExists) {
     // Arrange & Act
     bool has_texture = sprite_ptr->has_texture();
@@ -513,10 +536,9 @@ TEST_F(SpriteTestFixture, HasTexture_Returns_True_WhenTextureExists) {
     // Assert
     EXPECT_TRUE(has_texture);
 }
-
 TEST_F(SpriteTestFixture, SetTexture_Sets_NewTexture) {
     // Arrange
-    auto new_texture = std::make_shared<Texture>(renderer.get_native_ptr(), abs_path.c_str());
+    auto new_texture = std::make_shared<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
 
     // Act
     sprite_ptr->set_texture(new_texture);
@@ -526,55 +548,35 @@ TEST_F(SpriteTestFixture, SetTexture_Sets_NewTexture) {
     EXPECT_TRUE(sprite_ptr->is_valid());
 }
 
-TEST_F(SpriteTestFixture, ClearTexture_Makes_TextureNull) {
-    // Arrange
-    EXPECT_TRUE(sprite_ptr->has_texture()); // Ensure texture exists initially
-
-    // Act
-    sprite_ptr->clear_texture();
-
-    // Assert
-    EXPECT_TRUE(sprite_ptr->is_valid());
-    EXPECT_FALSE(sprite_ptr->has_texture());
-    EXPECT_EQ(Vector2i::Zero, sprite_ptr->get_size());
-}
-
-// Collision Tests
-
+// Collisions
 TEST_F(SpriteTestFixture, Intersects_Returns_True_WhenSpritesOverlap) {
     // Arrange
-    auto second_texture = std::make_shared<Texture>(renderer.get_native_ptr(), abs_path.c_str());
-    auto second_sprite = std::make_unique<Sprite>(second_texture);
-
     sprite_ptr->set_position(0.0f, 0.0f);
-    second_sprite->set_position(100.0f, 100.0f); // Overlapping with first sprite
+    second_sprite_ptr->set_position(100.0f, 100.0f); // Overlapping with first sprite
 
     // Act
-    bool intersects = sprite_ptr->intersects(*second_sprite);
+    bool intersects = sprite_ptr->intersects(*second_sprite_ptr);
 
     // Assert
     EXPECT_TRUE(sprite_ptr->is_valid());
+    EXPECT_TRUE(second_sprite_ptr->is_valid());
     EXPECT_TRUE(intersects);
 }
-
 TEST_F(SpriteTestFixture, Intersects_Returns_False_WhenSpritesDoNotOverlap) {
     // Arrange
-    auto second_texture = std::make_shared<Texture>(renderer.get_native_ptr(), abs_path.c_str());
-    auto second_sprite = std::make_unique<Sprite>(second_texture);
-
     sprite_ptr->set_position(0.0f, 0.0f);
-    second_sprite->set_position(500.0f, 500.0f); // Far away from first sprite
+    second_sprite_ptr->set_position(500.0f, 500.0f); // Far away from first sprite
 
     // Act
-    bool intersects = sprite_ptr->intersects(*second_sprite);
+    bool intersects = sprite_ptr->intersects(*second_sprite_ptr);
 
     // Assert
     EXPECT_TRUE(sprite_ptr->is_valid());
+    EXPECT_TRUE(second_sprite_ptr->is_valid());
     EXPECT_FALSE(intersects);
 }
 
-// Native Pointer Tests
-
+// Native Pointer
 TEST_F(SpriteTestFixture, GetNativePtr_Returns_ValidPointer_WhenSpriteValid) {
     // Arrange & Act
     NativeTexturePtr native_ptr = sprite_ptr->get_native_ptr();
@@ -583,64 +585,79 @@ TEST_F(SpriteTestFixture, GetNativePtr_Returns_ValidPointer_WhenSpriteValid) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_NE(native_ptr.ptr, nullptr);
 }
-
 TEST_F(SpriteTestFixture, GetNativePtr_Returns_NullPointer_WhenSpriteInvalid) {
-    // Arrange
-    auto invalid_sprite = std::make_unique<Sprite>(nullptr);
+    // Arrange (done via SetUp)
 
     // Act
-    NativeTexturePtr native_ptr = invalid_sprite->get_native_ptr();
+    NativeTexturePtr native_ptr = invalid_sprite_ptr->get_native_ptr();
 
     // Assert
-    EXPECT_FALSE(sprite_ptr->is_valid());
+    EXPECT_FALSE(invalid_sprite_ptr->is_valid());
     EXPECT_EQ(native_ptr.ptr, nullptr);
 }
 
-// Invalid Sprite Operation Tests
+// Invalid Sprite Operations
 
-TEST_F(SpriteTestFixture, InvalidSprite_GettersReturn_DefaultValues) {
-    // Arrange
-    auto invalid_sprite = std::make_unique<Sprite>(nullptr);
+TEST_F(SpriteTestFixture, IsValid_WithValidSprite_ReturnsFalse) {
+    // Arrange (done in SetUp)
 
-    // Act & Assert
-    EXPECT_FALSE(invalid_sprite->is_valid());
-    EXPECT_FALSE(invalid_sprite->has_texture());
+    // Act
+    bool is_valid = invalid_sprite_ptr->is_valid();
 
-    // These should all log warnings but not crash
-    invalid_sprite->get_position();
-    invalid_sprite->get_size();
-    invalid_sprite->get_width();
-    invalid_sprite->get_height();
-    invalid_sprite->get_scale_factor();
-    invalid_sprite->get_angle();
-    invalid_sprite->get_anchor();
-    invalid_sprite->is_hidden();
-    invalid_sprite->get_flip_mode();
-    invalid_sprite->get_bounding_box();
-    invalid_sprite->get_texture_region();
-    invalid_sprite->get_screen_placement();
-
-    EXPECT_FALSE(invalid_sprite->is_valid()); // Still invalid after operations
+    // Assert
+    EXPECT_FALSE(is_valid);
 }
 
-TEST_F(SpriteTestFixture, InvalidSprite_SettersLog_Warnings) {
-    // Arrange
-    auto invalid_sprite = std::make_unique<Sprite>(nullptr);
+TEST_F(SpriteTestFixture, BoolOperator_WithInvalidSprite_ReturnsFalse) {
+    // Arrange (done in SetUp)
+
+    // Act
+    bool bool_result = static_cast<bool>(*invalid_sprite_ptr);
+
+    // Assert
+    EXPECT_FALSE(bool_result);
+}
+
+TEST_F(SpriteTestFixture, InvalidSprite_GettersReturn_DefaultValues) {
+    // Arrange (done via SetUp)
 
     // Act & Assert
-    EXPECT_FALSE(invalid_sprite->is_valid());
+    EXPECT_FALSE(invalid_sprite_ptr->is_valid());
+    EXPECT_FALSE(invalid_sprite_ptr->has_texture());
 
     // These should all log warnings but not crash
-    invalid_sprite->set_position(Vector2(10.0f, 10.0f));
-    invalid_sprite->set_scale_factor(Vector2(2.0f, 2.0f));
-    invalid_sprite->set_angle(45.0);
-    invalid_sprite->set_anchor(Vector2(0.5f, 0.5f));
-    invalid_sprite->show();
-    invalid_sprite->hide();
-    invalid_sprite->set_flip_mode(FlipMode::Horizontal);
-    invalid_sprite->set_texture_region(Rect2(0, 0, 100, 100));
-    invalid_sprite->set_screen_placement(Rect2(0, 0, 100, 100));
-    invalid_sprite->set_bounding_box(Rect2(0, 0, 100, 100));
+    Vector2 default_pos = invalid_sprite_ptr->get_position();
+    Vector2i default_size = invalid_sprite_ptr->get_size();
+    int default_width = invalid_sprite_ptr->get_width();
+    int default_height = invalid_sprite_ptr->get_height();
+    Vector2 default_scale_factor = invalid_sprite_ptr->get_scale_factor();
+    float default_angle = invalid_sprite_ptr->get_angle();
+    Vector2 default_anchor = invalid_sprite_ptr->get_anchor();
+    bool default_visibility = invalid_sprite_ptr->is_hidden();
+    FlipMode default_mode = invalid_sprite_ptr->get_flip_mode();
+    Rect2 default_bounding_box = invalid_sprite_ptr->get_bounding_box();
+    Rect2 default_texture_region = invalid_sprite_ptr->get_texture_region();
+    Rect2 default_screen_placement = invalid_sprite_ptr->get_screen_placement();
 
-    EXPECT_FALSE(invalid_sprite->is_valid()); // Still invalid after operations
+    EXPECT_FALSE(invalid_sprite_ptr->is_valid());
+}
+TEST_F(SpriteTestFixture, InvalidSprite_SettersLog_Warnings) {
+    // Arrange (done via SetUp)
+
+    // Act & Assert
+    EXPECT_FALSE(invalid_sprite_ptr->is_valid());
+
+    // These should all log warnings but not crash
+    invalid_sprite_ptr->set_position(Vector2(10.0f, 10.0f));
+    invalid_sprite_ptr->set_scale_factor(Vector2(2.0f, 2.0f));
+    invalid_sprite_ptr->set_angle(45.0);
+    invalid_sprite_ptr->set_anchor(Vector2(0.5f, 0.5f));
+    invalid_sprite_ptr->show();
+    invalid_sprite_ptr->hide();
+    invalid_sprite_ptr->set_flip_mode(FlipMode::Horizontal);
+    invalid_sprite_ptr->set_texture_region(Rect2(0, 0, 100, 100));
+    invalid_sprite_ptr->set_screen_placement(Rect2(0, 0, 100, 100));
+    invalid_sprite_ptr->set_bounding_box(Rect2(0, 0, 100, 100));
+
+    EXPECT_FALSE(invalid_sprite_ptr->is_valid());
 }

@@ -41,7 +41,7 @@ namespace penguin::rendering::systems {
 			return false;
 		}
 
-		return pimpl_->texture_loader.is_valid(); // checks that the textureloader itself is also valid
+		return pimpl_->texture_loader.is_valid() && pimpl_->renderer_ptr.ptr;
 	}
 
 	AssetManager::operator bool() const noexcept {

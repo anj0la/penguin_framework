@@ -8,7 +8,7 @@
 
 namespace penguin::internal::rendering::systems {
 	// Forward declaration
-	struct AssetManagerImpl;
+	class AssetManagerImpl;
 }
 
 namespace penguin::rendering::systems {

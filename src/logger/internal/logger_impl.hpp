@@ -23,7 +23,8 @@ namespace penguin::internal::log {
         int column;
         std::string function;
 
-        LogEntry(penguin::log::LogLevel p_level, std::string_view p_message, const std::source_location& p_location = std::source_location::current());
+        LogEntry(penguin::log::LogLevel p_level, std::string_view p_message, const std::source_location& p_location);
+        LogEntry();
     };
 
 	class LoggerImpl {

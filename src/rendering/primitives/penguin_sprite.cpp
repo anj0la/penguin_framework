@@ -44,7 +44,7 @@ namespace penguin::rendering::primitives {
 			return false;
 		}
 
-		return true; // the Sprite is valid at this point, does NOT guarantee the texture associated with the sprite is
+		return pimpl_->texture.get() && pimpl_->get_native_ptr().ptr; // checks that the shared ptr Texture is not null along with the native texture ptr
 	}
 
 	Sprite::operator bool() const noexcept {
@@ -56,6 +56,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Vector2 Sprite::get_position() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_position() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Vector2::Zero;
 		}
 
 		return pimpl_->position;
@@ -64,6 +65,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Vector2i Sprite::get_size() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_size() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Vector2i::Zero;
 		}
 
 		return pimpl_->size;
@@ -72,6 +74,7 @@ namespace penguin::rendering::primitives {
 	int Sprite::get_width() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_width() called on an uninitialized or destroyed sprite.");
+			return 0;
 		}
 
 		return pimpl_->size.x;
@@ -80,6 +83,7 @@ namespace penguin::rendering::primitives {
 	int Sprite::get_height() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_height() called on an uninitialized or destroyed sprite.");
+			return 0;
 		}
 
 		return pimpl_->size.y;
@@ -88,6 +92,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Rect2 Sprite::get_texture_region() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_texture_region() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Rect2{ penguin::math::Vector2::Zero, penguin::math::Vector2::Zero };
 		}
 
 		return pimpl_->texture_region;
@@ -96,6 +101,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Rect2 Sprite::get_screen_placement() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_screen_placement() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Rect2{ penguin::math::Vector2::Zero, penguin::math::Vector2::Zero };
 		}
 
 		return pimpl_->screen_placement;
@@ -104,6 +110,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Vector2 Sprite::get_scale_factor() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_scale_factor() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Vector2::Zero;
 		}
 
 		return pimpl_->scale_factor;;
@@ -112,6 +119,7 @@ namespace penguin::rendering::primitives {
 	double Sprite::get_angle() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_angle() called on an uninitialized or destroyed sprite.");
+			return 0.0;
 		} 
 
 		return pimpl_->angle;
@@ -120,6 +128,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Vector2 Sprite::get_anchor() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_anchor() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Vector2::Zero;
 		}
 
 		return pimpl_->anchor;
@@ -128,14 +137,16 @@ namespace penguin::rendering::primitives {
 	bool Sprite::is_hidden() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("is_hidden() called on an uninitialized or destroyed sprite.");
+			return true;
 		}
 
-		return pimpl_->visible;
+		return !pimpl_->visible;
 	}
 
 	penguin::math::Colour Sprite::get_colour_tint() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_colour_tint() called on an uninitialized or destroyed sprite.");
+			return Colours::NoTint;
 		}
 
 		return pimpl_->tint;
@@ -144,6 +155,7 @@ namespace penguin::rendering::primitives {
 	FlipMode Sprite::get_flip_mode() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_flip_mode() called on an uninitialized or destroyed sprite.");
+			return FlipMode::None;
 		}
 
 		return pimpl_->mode;
@@ -152,6 +164,7 @@ namespace penguin::rendering::primitives {
 	penguin::math::Rect2 Sprite::get_bounding_box() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_bounding_box() called on an uninitialized or destroyed sprite.");
+			return penguin::math::Rect2{ penguin::math::Vector2::Zero, penguin::math::Vector2::Zero };
 		}
 
 		return pimpl_->bounding_box;
@@ -162,46 +175,28 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_texture(std::shared_ptr<Texture> new_texture) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_texture() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		if (!new_texture) {
-			PF_LOG_WARNING("Null_Argument: Texture is null."); // allow the user to still make the texture null, but warn them
+			PF_LOG_WARNING("Null_Argument: Texture is null."); 
+			pimpl_->texture = std::move(new_texture);  // Still allow setting null
+			pimpl_->size = penguin::math::Vector2i::Zero; // Set size to 0
+			return; // Early return since we can't get size from null texture
 		}
 
 		pimpl_->texture = std::move(new_texture);
-		pimpl_->size = new_texture.get()->get_size();
+		pimpl_->size = pimpl_->texture->get_size();
 	}
 
 	void Sprite::set_position(const penguin::math::Vector2& new_position) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_position() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->position = new_position;
-	}
-
-	void Sprite::set_position(float x, float y) {
-		if (!is_valid()) {
-			PF_LOG_WARNING("set_position() called on an uninitialized or destroyed sprite.");
-		}
-
-		pimpl_->position = penguin::math::Vector2(x, y);
-	}
-
-	void Sprite::set_texture_region(const penguin::math::Rect2& new_region) {
-		if (!is_valid()) {
-			PF_LOG_WARNING("set_texture_region() called on an uninitialized or destroyed sprite.");
-		}
-
-		pimpl_->texture_region = new_region; // We don't update the screen placement
-	}
-
-	void Sprite::set_screen_placement(const penguin::math::Rect2& new_placement) {
-		if (!is_valid()) {
-			PF_LOG_WARNING("set_screen_placement() called on an uninitialized or destroyed sprite.");
-		}
-
-		pimpl_->screen_placement = new_placement;
+		pimpl_->bounding_box.position = new_position;
 
 		bool res = pimpl_->update_screen_placement();
 
@@ -211,9 +206,52 @@ namespace penguin::rendering::primitives {
 		}
 	}
 
+	void Sprite::set_position(float x, float y) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_position() called on an uninitialized or destroyed sprite.");
+			return;
+		}
+
+		pimpl_->position = penguin::math::Vector2(x, y);
+		pimpl_->bounding_box.position = pimpl_->position;
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
+	}
+
+	void Sprite::set_texture_region(const penguin::math::Rect2& new_region) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_texture_region() called on an uninitialized or destroyed sprite.");
+			return;
+		}
+
+		pimpl_->texture_region = new_region;
+
+		bool res = pimpl_->update_screen_placement();
+
+		if (!res) {
+			// Log as warning 
+			PF_LOG_WARNING("Invalid_Operation: Texture was null or the source portion had a zero area.");
+		}
+	}
+
+	void Sprite::set_screen_placement(const penguin::math::Rect2& new_placement) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("set_screen_placement() called on an uninitialized or destroyed sprite.");
+			return;
+		}
+
+		pimpl_->screen_placement = new_placement;
+	}
+
 	void Sprite::set_scale_factor(const penguin::math::Vector2& new_scale_factor) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_scale_factor() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->scale_factor = new_scale_factor;
@@ -228,6 +266,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_scale_factor(float x, float y) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_scale_factor() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->scale_factor = penguin::math::Vector2(x, y);
@@ -243,6 +282,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_angle(double new_angle) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_angle() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->angle = new_angle;
@@ -251,9 +291,11 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_anchor(const penguin::math::Vector2& new_anchor) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_anchor() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
-		pimpl_->anchor = std::clamp(new_anchor, penguin::math::Vector2::Zero, penguin::math::Vector2::One);
+		pimpl_->anchor.x = std::clamp(new_anchor.x, 0.0f, 1.0f);
+		pimpl_->anchor.y = std::clamp(new_anchor.y, 0.0f, 1.0f);
 
 		bool res = pimpl_->update_screen_placement();
 
@@ -266,9 +308,11 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_anchor(float x, float y) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_anchor() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
-		pimpl_->anchor = std::clamp(penguin::math::Vector2(x, y), penguin::math::Vector2::Zero, penguin::math::Vector2::One);
+		pimpl_->anchor.x = std::clamp(x, 0.0f, 1.0f);
+		pimpl_->anchor.y = std::clamp(y, 0.0f, 1.0f);
 
 		bool res = pimpl_->update_screen_placement();
 
@@ -281,6 +325,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::show() {
 		if (!is_valid()) {
 			PF_LOG_WARNING("show() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->visible = true;
@@ -289,6 +334,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::hide() {
 		if (!is_valid()) {
 			PF_LOG_WARNING("hide() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->visible = false;
@@ -297,6 +343,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_flip_mode(FlipMode new_mode) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_flip_mode() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->mode = new_mode;
@@ -305,6 +352,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_colour_tint(const penguin::math::Colour& new_tint) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_colour_tint() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		bool res = pimpl_->set_colour_tint(new_tint);
@@ -317,6 +365,7 @@ namespace penguin::rendering::primitives {
 	void Sprite::set_bounding_box(const penguin::math::Rect2 &new_bounding_box) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_bounding_box() called on an uninitialized or destroyed sprite.");
+			return;
 		}
 
 		pimpl_->bounding_box = new_bounding_box;
@@ -327,23 +376,13 @@ namespace penguin::rendering::primitives {
 	bool Sprite::intersects(const Sprite& other) const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("intersects() called on an uninitialized or destroyed sprite.");
+			return false;
 		}
 
 		return pimpl_->bounding_box.intersects(other.get_bounding_box());
 	}
 
 	// Other functions
-
-	void Sprite::clear_texture() {
-		if (!is_valid()) {
-			PF_LOG_WARNING("clear_texture() called on an uninitialized or destroyed sprite.");
-			return; // can't access a function with a NULL pointer
-		}
-
-		pimpl_->texture.reset(); // makes texture null
-		PF_LOG_INFO("Texture is now null.");
-		pimpl_->size = penguin::math::Vector2i::Zero;
-	}
 
 	void Sprite::clear_colour_tint() {
 		if (!is_valid()) {

@@ -37,7 +37,7 @@ namespace penguin::rendering {
 			return false;
 		}
 
-		return pimpl_->renderer.get() != nullptr;
+		return pimpl_->renderer.get();
 	}
 
 	Renderer::operator bool() const noexcept {
@@ -232,7 +232,7 @@ namespace penguin::rendering {
 
 	// Drawing functions for Sprites
 
-	void Renderer::draw_sprite(penguin::rendering::primitives::Sprite& spr) {
+	void Renderer::draw_sprite(const penguin::rendering::primitives::Sprite& spr) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("draw_sprite() called on an uninitialized or destroyed renderer.");
 			return;
@@ -248,7 +248,7 @@ namespace penguin::rendering {
 		}
 	}
 
-	void Renderer::draw_sprite_transformed(penguin::rendering::primitives::Sprite spr) {
+	void Renderer::draw_sprite_transformed(const penguin::rendering::primitives::Sprite& spr) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("draw_sprite_transformed() called on an uninitialized or destroyed renderer.");
 			return;

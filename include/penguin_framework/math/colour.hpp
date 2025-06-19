@@ -58,29 +58,26 @@ namespace penguin::math {
         // Assignment operators
 
         constexpr Colour& operator+=(const Colour& c) {
-            r = std::clamp(r + c.r, 0.0f, 1.0f);
-            g = std::clamp(g + c.g, 0.0f, 1.0f);
-            b = std::clamp(b + c.b, 0.0f, 1.0f);
-            a = std::clamp(a + c.a, 0.0f, 1.0f);
-
+            r = std::min(std::max(r + c.r, 0.0f), 1.0f);
+            g = std::min(std::max(g + c.g, 0.0f), 1.0f);
+            b = std::min(std::max(b + c.b, 0.0f), 1.0f);
+            a = std::min(std::max(a + c.a, 0.0f), 1.0f);
             return *this;
         }
 
         constexpr Colour& operator-=(const Colour& c) {
-            r = std::clamp(r - c.r, 0.0f, 1.0f);
-            g = std::clamp(g - c.g, 0.0f, 1.0f);
-            b = std::clamp(b - c.b, 0.0f, 1.0f);
-            a = std::clamp(a - c.a, 0.0f, 1.0f);
-
+            r = std::min(std::max(r - c.r, 0.0f), 1.0f);
+            g = std::min(std::max(g - c.g, 0.0f), 1.0f);
+            b = std::min(std::max(b - c.b, 0.0f), 1.0f);
+            a = std::min(std::max(a - c.a, 0.0f), 1.0f);
             return *this;
         }
 
         constexpr Colour& operator*=(const Colour& c) {
-            r = std::clamp(r * c.r, 0.0f, 1.0f);
-            g = std::clamp(g * c.g, 0.0f, 1.0f);
-            b = std::clamp(b * c.b, 0.0f, 1.0f);
-            a = std::clamp(a * c.a, 0.0f, 1.0f);
-
+            r = std::min(std::max(r * c.r, 0.0f), 1.0f);
+            g = std::min(std::max(g * c.g, 0.0f), 1.0f);
+            b = std::min(std::max(b * c.b, 0.0f), 1.0f);
+            a = std::min(std::max(a * c.a, 0.0f), 1.0f);
             return *this;
         }
 
@@ -89,12 +86,10 @@ namespace penguin::math {
             float res_g = g / c.g;
             float res_b = b / c.b;
             float res_a = a / c.a;
-
-            r = std::clamp(std::isnan(res_r) ? 0.0f : res_r, 0.0f, 1.0f);
-            g = std::clamp(std::isnan(res_g) ? 0.0f : res_g, 0.0f, 1.0f);
-            b = std::clamp(std::isnan(res_b) ? 0.0f : res_b, 0.0f, 1.0f);
-            a = std::clamp(std::isnan(res_a) ? 0.0f : res_a, 0.0f, 1.0f);
-
+            r = std::min(std::max(std::isnan(res_r) ? 0.0f : res_r, 0.0f), 1.0f);
+            g = std::min(std::max(std::isnan(res_g) ? 0.0f : res_g, 0.0f), 1.0f);
+            b = std::min(std::max(std::isnan(res_b) ? 0.0f : res_b, 0.0f), 1.0f);
+            a = std::min(std::max(std::isnan(res_a) ? 0.0f : res_a, 0.0f), 1.0f);
             return *this;
         }
 
@@ -128,6 +123,7 @@ namespace penguin::math {
 
             return *this;
         }
+
         constexpr Colour& operator*=(float scalar) {
             r = std::clamp(r * scalar, 0.0f, 1.0f);
             g = std::clamp(g * scalar, 0.0f, 1.0f);
@@ -150,6 +146,7 @@ namespace penguin::math {
 
             return *this;
         }
+
 
         // Static functions 
 

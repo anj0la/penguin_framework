@@ -56,8 +56,8 @@ namespace penguin::rendering {
 
 		// Drawing functions for Sprites
 
-		void draw_sprite(penguin::rendering::primitives::Sprite& spr);
-		void draw_sprite_transformed(penguin::rendering::primitives::Sprite spr);
+		void draw_sprite(const penguin::rendering::primitives::Sprite& spr);
+		void draw_sprite_transformed(const penguin::rendering::primitives::Sprite& spr);
 
 		NativeRendererPtr get_native_ptr() const;
 

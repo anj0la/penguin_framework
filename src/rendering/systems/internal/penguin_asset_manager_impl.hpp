@@ -11,11 +11,12 @@
 #include <error/internal/internal_error.hpp>
 
 #include <memory>
+#include <vector>
 #include <filesystem>
 
 namespace penguin::internal::rendering::systems {
 
-	struct AssetManagerImpl {
+	class AssetManagerImpl {
 	public:
 		// AssetManager MUST NOT outlive Renderer
 		// Created by the framework and managed:
@@ -37,5 +38,8 @@ namespace penguin::internal::rendering::systems {
 		AssetManagerImpl& operator=(AssetManagerImpl&&) noexcept = delete;
 
 		std::shared_ptr<penguin::rendering::primitives::Texture> load(const char* path);
+	private:
+		bool has_supported_image_ext(const std::filesystem::path& path);
+		const std::vector<std::string> supported = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
 	};
 }

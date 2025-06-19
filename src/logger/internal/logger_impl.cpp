@@ -13,11 +13,19 @@ namespace penguin::internal::log {
         column(p_location.column()),
         function(p_location.function_name()) {}
 
+    LogEntry::LogEntry() 
+        : timestamp(std::chrono::system_clock::now()),
+        level(penguin::log::LogLevel::Error),
+        message(""),
+        file(""),
+        line(0),
+        column(0),
+        function("") { }
+
     // Initializing LoggerImpl
 
     LoggerImpl::LoggerImpl()
-        : last_error(penguin::log::LogLevel::Error, ""),
-        has_error(false),
+        : has_error(false),
         min_log_level(penguin::log::LogLevel::Debug) {
 
         // Creating logs folder and default log file
