@@ -51,7 +51,7 @@ namespace penguin::rendering::primitives {
 
 	float Font::get_size() {
 		if (!is_valid()) {
-			PF_LOG_WARNING("get_size() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("get_size() called on an uninitialized or destroyed font.");
 			return 0.0f;
 		}
 
@@ -60,7 +60,7 @@ namespace penguin::rendering::primitives {
 
 	int Font::get_outline() {
 		if (!is_valid()) {
-			PF_LOG_WARNING("get_outline() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("get_outline() called on an uninitialized or destroyed font.");
 			return 0;
 		}
 
@@ -69,7 +69,7 @@ namespace penguin::rendering::primitives {
 
 	const char* Font::get_styles() const {
 		if (!is_valid()) {
-			PF_LOG_WARNING("get_styles() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("get_styles() called on an uninitialized or destroyed font.");
 			return "";
 		}
 
@@ -78,7 +78,7 @@ namespace penguin::rendering::primitives {
 
 	void Font::set_size(float new_size) {
 		if (!is_valid()) {
-			PF_LOG_WARNING("set_size() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("set_size() called on an uninitialized or destroyed font.");
 			return;
 		}
 
@@ -87,7 +87,7 @@ namespace penguin::rendering::primitives {
 
 	void Font::set_outline(int new_outline) {
 		if (!is_valid()) {
-			PF_LOG_WARNING("set_outline() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("set_outline() called on an uninitialized or destroyed font.");
 			return;
 		}
 
@@ -96,7 +96,7 @@ namespace penguin::rendering::primitives {
 
 	void Font::add_style(FontStyle style) {
 		if (!is_valid()) {
-			PF_LOG_WARNING("add_style() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("add_style() called on an uninitialized or destroyed font.");
 			return;
 		}
 
@@ -105,7 +105,7 @@ namespace penguin::rendering::primitives {
 
 	void Font::remove_style(FontStyle style) {
 		if (!is_valid()) {
-			PF_LOG_WARNING("remove_style() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("remove_style() called on an uninitialized or destroyed font.");
 			return;
 		}
 
@@ -114,7 +114,7 @@ namespace penguin::rendering::primitives {
 
 	void Font::replace_style(FontStyle style) {
 		if (!is_valid()) {
-			PF_LOG_WARNING("override_style() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("override_style() called on an uninitialized or destroyed font.");
 			return;
 		}
 
@@ -123,7 +123,7 @@ namespace penguin::rendering::primitives {
 
 	NativeFontPtr Font::get_native_ptr() {
 		if (!is_valid()) {
-			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed sprite.");
+			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed font.");
 			return NativeFontPtr{ nullptr };
 		}
 

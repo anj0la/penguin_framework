@@ -14,6 +14,6 @@ struct NativePtr {
 using NativeWindowPtr = NativePtr;
 using NativeRendererPtr = NativePtr;
 using NativeTexturePtr = NativePtr;
-using NativeTextRendererPtr = NativePtr;
+using NativeTextContextPtr = NativePtr;
 using NativeTextPtr = NativePtr;
 using NativeFontPtr = NativePtr;

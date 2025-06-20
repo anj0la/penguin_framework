@@ -152,7 +152,7 @@ add_library(penguin_framework
         "src/rendering/primitives/internal/sprite_impl.cpp" 
         "src/rendering/systems/internal/texture_loader_impl.cpp" 
         "src/rendering/systems/internal/asset_manager_impl.cpp" 
-        "src/rendering/internal/renderer_impl.cpp" "src/rendering/primitives/internal/font_impl.cpp" "src/rendering/primitives/font.cpp")
+        "src/rendering/internal/renderer_impl.cpp" "src/rendering/primitives/internal/font_impl.cpp" "src/rendering/primitives/font.cpp" "src/rendering/drawables/internal/text_impl.cpp" "src/rendering/drawables/text.cpp")
 
 add_library(penguin::penguin ALIAS penguin_framework)
 
