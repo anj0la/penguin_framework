@@ -20,11 +20,13 @@ namespace penguin::internal::error {
         Renderer_Creation_Failed,
         Texture_Creation_Failed,
         Sprite_Creation_Failed,
-        //Font_Creation_Failed,
-        //Text_Creation_Failed
+        Font_Creation_Failed,
+        Text_Creation_Failed,
         //Audio_Device_Open_Failed,
         Asset_Manager_Init_Failed,
         Texture_Loader_Init_Failed,
+        Font_Loader_Init_Failed,
+        // Text_Loader_Init_Failed,
 
         // Resource Handling
         File_Not_Found,             // The path was valid, but the file isn't there

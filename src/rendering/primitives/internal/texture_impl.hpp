@@ -18,7 +18,6 @@
 namespace penguin::internal::rendering::primitives {
 
 	struct TextureImpl {
-
 		std::unique_ptr <SDL_Texture, void(*)(SDL_Texture*)> texture;
 		penguin::math::Vector2i size;
 
