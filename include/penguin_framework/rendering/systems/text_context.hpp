@@ -2,7 +2,6 @@
 
 #include <penguin_framework/penguin_api.hpp>
 
-
 #include <penguin_framework/common/native_types.hpp>
 #include <memory>
 
@@ -15,7 +14,7 @@ namespace penguin::rendering::systems {
 
     class PENGUIN_API TextContext {
     public:
-        TextContext(NativeRendererPtr renderer_ptr);
+        TextContext(NativeRendererPtr renderer);
         ~TextContext();
 
         // Move semantics

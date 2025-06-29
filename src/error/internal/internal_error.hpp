@@ -25,6 +25,7 @@ namespace penguin::internal::error {
         //Audio_Device_Open_Failed,
         Asset_Manager_Init_Failed,
         Texture_Loader_Init_Failed,
+        Text_Context_Init_Failed,
         Font_Loader_Init_Failed,
         // Text_Loader_Init_Failed,
 
@@ -69,6 +70,8 @@ namespace penguin::internal::error {
                 return "Asset_Manager_Creation_Failed";
             case ErrorCode::Texture_Loader_Init_Failed:
                 return "Texture_Loader_Creation_Failed";
+            case ErrorCode::Text_Context_Init_Failed:
+                return "Text_Context_Init_Failed";
 
             case ErrorCode::File_Not_Found:
                 return "Resource_Load_Failed";
