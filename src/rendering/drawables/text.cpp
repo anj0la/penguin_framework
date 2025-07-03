@@ -4,14 +4,14 @@
 
 namespace penguin::rendering::drawables {
 
-	Text::Text(NativeTextContextPtr text_context_ptr, std::shared_ptr<penguin::rendering::primitives::Font> font, 
+	Text::Text(systems::TextContext text_context, std::shared_ptr<penguin::rendering::primitives::Font> font,
 		const char* str, penguin::math::Colour colour, penguin::math::Vector2 position) : pimpl_(nullptr) {
 
-		// Log attempt to create a sprite
+		// Log attempt to create a text
 		PF_LOG_INFO("Attempting to create text...");
 
 		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::drawables::TextImpl>(text_context_ptr, font->get_native_ptr(), str, colour, position);
+			pimpl_ = std::make_unique<penguin::internal::rendering::drawables::TextImpl>(text_context.get_native_ptr(), font->get_native_ptr(), str, colour, position);
 			PF_LOG_INFO("Success: Text created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
