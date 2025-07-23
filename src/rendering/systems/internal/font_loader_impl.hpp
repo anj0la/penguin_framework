@@ -28,6 +28,6 @@ namespace penguin::internal::rendering::systems {
 
 		// Load function
 
-		std::shared_ptr<penguin::rendering::primitives::Font> load(const char* path, float size);
+		std::shared_ptr<penguin::rendering::primitives::Font> load(const char* path, float size, int outline);
 	};
 }

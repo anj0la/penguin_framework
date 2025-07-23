@@ -13,26 +13,66 @@ namespace penguin::internal::rendering::primitives {
         size = p_size;
         outline = p_outline;
         applied_styles = TTF_STYLE_NORMAL;
+        normal = true;
+        bold = false;
+        italic = false;
+        underline = false;
+        strikethrough = false;
     }
+    
+    void FontImpl::make_normal() {
+        normal = true;
+        bold = false;
+        italic = false;
+        underline = false;
+        strikethrough = false;
 
-    void FontImpl::add_style(penguin::rendering::primitives::FontStyle style_flags) {
-        applied_styles |= static_cast<TTF_FontStyleFlags>(style_flags);
+        applied_styles = TTF_STYLE_NORMAL;
         TTF_SetFontStyle(font.get(), applied_styles);
     }
 
-    void FontImpl::remove_style(penguin::rendering::primitives::FontStyle style_flags) {
-        applied_styles &= ~static_cast<TTF_FontStyleFlags>(style_flags);
+    void FontImpl::make_bold() {
+        if (normal) {
+            normal = false;
+            applied_styles &= TTF_STYLE_NORMAL;
+        }
+        bold = true;
+
+        applied_styles |= TTF_STYLE_BOLD;
         TTF_SetFontStyle(font.get(), applied_styles);
     }
 
-    void FontImpl::replace_style(penguin::rendering::primitives::FontStyle style_flag) {
-        applied_styles = static_cast<TTF_FontStyleFlags>(style_flag);
+    void FontImpl::make_italic() {
+        if (normal) {
+            normal = false;
+            applied_styles &= TTF_STYLE_NORMAL;
+        }
+        italic = true;
+
+        applied_styles |= TTF_STYLE_ITALIC;
         TTF_SetFontStyle(font.get(), applied_styles);
     }
 
-    const char* FontImpl::get_styles() const {
-        int bitmask = TTF_GetFontStyle(font.get());
-        return style_names[bitmask];
+    void FontImpl::make_underline() {
+        if (normal) {
+            normal = false;
+            applied_styles &= TTF_STYLE_NORMAL;
+        }
+        underline = true;
+
+        applied_styles |= TTF_STYLE_UNDERLINE;
+        TTF_SetFontStyle(font.get(), applied_styles);
+    }
+
+    void FontImpl::make_strikethrough() {
+        if (normal) {
+            normal = false;
+            applied_styles &= TTF_STYLE_NORMAL;
+        }
+        strikethrough = true;
+
+        applied_styles |= TTF_STYLE_STRIKETHROUGH;
+        TTF_SetFontStyle(font.get(), applied_styles);
     }
 
 }

@@ -1,7 +1,7 @@
 #include <penguin_framework/window/window.hpp>
 #include <penguin_framework/rendering/renderer.hpp>
-#include <penguin_framework/rendering/primitives/sprite.hpp> 
-#include <SDL3/SDL.h>
+#include <penguin_framework/rendering/drawables/sprite.hpp> 
+#include <penguin_framework/penguin_init.hpp>
 #include <gtest/gtest.h>
 #include <memory>
 #include <filesystem>
@@ -11,7 +11,7 @@
 using penguin::window::Window;
 using penguin::window::WindowFlags;
 using penguin::rendering::Renderer;
-using penguin::rendering::primitives::Sprite;
+using penguin::rendering::drawables::Sprite;
 using penguin::rendering::primitives::Texture;
 using penguin::rendering::primitives::FlipMode;
 using penguin::math::Vector2;
@@ -23,6 +23,7 @@ using penguin::math::Colour;
 class RendererTestFixture : public ::testing::Test {
 protected:
     std::unique_ptr<Window> window_ptr;
+    std::unique_ptr<Window> invalid_window_ptr;
     std::unique_ptr<Renderer> renderer_ptr;
     std::unique_ptr<Renderer> invalid_renderer_ptr;
     std::shared_ptr<Texture> texture_ptr;
@@ -39,16 +40,19 @@ protected:
     const int test_radius_y = 15;
 
     void SetUp() override {
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
-        ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
+        penguin::InitOptions options{ .headless_mode = true };
+        ASSERT_TRUE(penguin::init(options));
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
         ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
 
-        renderer_ptr = std::make_unique<Renderer>(window_ptr.get()->get_native_ptr(), "software");
+        invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), static_cast<WindowFlags>(0xFFFFFFFF)); // the flag is a nonsensical value
+        ASSERT_FALSE(invalid_window_ptr->is_valid());
+
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
 
-        invalid_renderer_ptr = std::make_unique<Renderer>(NativeWindowPtr{ nullptr }, "");
+        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr.get(), ""); 
         ASSERT_FALSE(invalid_renderer_ptr->is_valid());
 
         texture_ptr = std::make_shared<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
@@ -59,7 +63,7 @@ protected:
     }
 
     void TearDown() override {
-        SDL_Quit();
+        penguin::quit();
     }
 };
 

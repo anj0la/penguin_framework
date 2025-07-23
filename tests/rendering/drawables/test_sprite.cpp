@@ -1,7 +1,7 @@
 #include <penguin_framework/window/window.hpp>
 #include <penguin_framework/rendering/renderer.hpp>
-#include <penguin_framework/rendering/primitives/sprite.hpp>
-#include <SDL3/SDL.h>
+#include <penguin_framework/rendering/drawables/sprite.hpp>
+#include <penguin_framework/penguin_init.hpp>
 #include <gtest/gtest.h>
 #include <memory>
 #include <string>
@@ -11,7 +11,7 @@
 using penguin::window::Window;
 using penguin::window::WindowFlags;
 using penguin::rendering::Renderer;
-using penguin::rendering::primitives::Sprite;
+using penguin::rendering::drawables::Sprite;
 using penguin::rendering::primitives::Texture;
 using penguin::rendering::primitives::FlipMode;
 using penguin::math::Vector2;
@@ -31,13 +31,13 @@ protected:
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
 
     void SetUp() override {
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
-        ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
+        penguin::InitOptions options{ .headless_mode = true };
+        ASSERT_TRUE(penguin::init(options));
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
         ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
 
-        renderer_ptr = std::make_unique<Renderer>(window_ptr.get()->get_native_ptr(), "software");
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
 
         texture_ptr = std::make_shared<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
@@ -50,14 +50,16 @@ protected:
         ASSERT_TRUE(second_sprite_ptr->is_valid());
 
         invalid_sprite_ptr = std::make_unique<Sprite>(nullptr);
+        ASSERT_FALSE(invalid_sprite_ptr->is_valid());
     }
 
     void TearDown() override {
-        SDL_Quit();
+        penguin::quit();
     }
 };
 
 // Properties
+
 TEST_F(SpriteTestFixture, CreatedSprite_HasDefault_PropertiesSet) {
     // Arrange
     Vector2 expected_position(0.0f, 0.0f);
@@ -434,6 +436,7 @@ TEST_F(SpriteTestFixture, UseFullRegion_Sets_TextureRegionToFullSize) {
 }
 
 // Screen Placement
+
 TEST_F(SpriteTestFixture, GetScreenPlacement_Returns_SpriteScreenPlacement) {
     // Arrange & Act
     Rect2 actual_placement = sprite_ptr->get_screen_placement();
@@ -502,6 +505,7 @@ TEST_F(SpriteTestFixture, SetBoundingBox_Sets_SpriteBoundingBox) {
 }
 
 // Colour Tint
+
 TEST_F(SpriteTestFixture, SetColourTint_Sets_SpriteColourTint) {
     // Arrange
     Colour new_tint = Colours::Red;
@@ -517,7 +521,7 @@ TEST_F(SpriteTestFixture, SetColourTint_Sets_SpriteColourTint) {
 TEST_F(SpriteTestFixture, ClearColourTint_Clears_SpriteColourTint) {
     // Arrange
     sprite_ptr->set_colour_tint(Colours::Blue);
-    Colour expected_tint = Colours::NoTint; // Assuming this is the default/cleared state
+    Colour expected_tint = Colours::NoTint;
 
     // Act
     sprite_ptr->clear_colour_tint();
@@ -529,6 +533,7 @@ TEST_F(SpriteTestFixture, ClearColourTint_Clears_SpriteColourTint) {
 }
 
 // Texture
+
 TEST_F(SpriteTestFixture, HasTexture_Returns_True_WhenTextureExists) {
     // Arrange & Act
     bool has_texture = sprite_ptr->has_texture();
@@ -549,6 +554,7 @@ TEST_F(SpriteTestFixture, SetTexture_Sets_NewTexture) {
 }
 
 // Collisions
+
 TEST_F(SpriteTestFixture, Intersects_Returns_True_WhenSpritesOverlap) {
     // Arrange
     sprite_ptr->set_position(0.0f, 0.0f);
@@ -577,6 +583,7 @@ TEST_F(SpriteTestFixture, Intersects_Returns_False_WhenSpritesDoNotOverlap) {
 }
 
 // Native Pointer
+
 TEST_F(SpriteTestFixture, GetNativePtr_Returns_ValidPointer_WhenSpriteValid) {
     // Arrange & Act
     NativeTexturePtr native_ptr = sprite_ptr->get_native_ptr();
@@ -585,6 +592,7 @@ TEST_F(SpriteTestFixture, GetNativePtr_Returns_ValidPointer_WhenSpriteValid) {
     EXPECT_TRUE(sprite_ptr->is_valid());
     EXPECT_NE(native_ptr.ptr, nullptr);
 }
+
 TEST_F(SpriteTestFixture, GetNativePtr_Returns_NullPointer_WhenSpriteInvalid) {
     // Arrange (done via SetUp)
 
@@ -598,7 +606,7 @@ TEST_F(SpriteTestFixture, GetNativePtr_Returns_NullPointer_WhenSpriteInvalid) {
 
 // Invalid Sprite Operations
 
-TEST_F(SpriteTestFixture, IsValid_WithValidSprite_ReturnsFalse) {
+TEST_F(SpriteTestFixture, IsValid_WithInvalidSprite_ReturnsFalse) {
     // Arrange (done in SetUp)
 
     // Act

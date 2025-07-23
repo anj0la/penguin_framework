@@ -2,7 +2,7 @@
 
 #include <penguin_framework/common/native_types.hpp>
 
-#include <penguin_framework/rendering/primitives/sprite.hpp>
+#include <penguin_framework/rendering/drawables/sprite.hpp>
 
 #include <penguin_framework/math/rect2.hpp>
 #include <penguin_framework/math/circle2.hpp>

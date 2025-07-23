@@ -1,9 +1,8 @@
 #pragma once
 
-#include <penguin_framework/penguin_api.hpp>
+#include <penguin_api.hpp>
 
 #include <penguin_framework/common/native_types.hpp>
-#include <penguin_framework/rendering/primitives/font_style.hpp>
 
 #include <memory>
 
@@ -16,7 +15,7 @@ namespace penguin::rendering::primitives {
 
     class PENGUIN_API Font {
     public:
-        Font(const char* path, float size);
+        Font(const char* path, float size = 12.0f, int outline = 1);
         ~Font();
 
         Font(Font&&) noexcept;
@@ -29,13 +28,23 @@ namespace penguin::rendering::primitives {
 
         float get_size();
         int get_outline();
-        const char* get_styles() const;
 
         void set_size(float new_size);
         void set_outline(int new_outline);
-        void add_style(FontStyle style);
-        void remove_style(FontStyle style);
-        void replace_style(FontStyle style);
+    
+        void make_normal();
+        void make_bold();
+        void make_italic();
+        void make_underline();
+        void make_strikethrough();
+
+        bool is_bold() const;
+        bool is_italic() const;
+        bool is_underline() const;
+        bool is_strikethrough() const;
+        bool is_normal() const;
+
+        void clear();
 
         NativeFontPtr get_native_ptr();
 

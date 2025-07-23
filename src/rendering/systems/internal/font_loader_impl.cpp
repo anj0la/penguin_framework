@@ -3,7 +3,7 @@
 namespace penguin::internal::rendering::systems {
 
     // WORKS ONLY ON SINGLE THREAD
-    std::shared_ptr<penguin::rendering::primitives::Font> FontLoaderImpl::load(const char* path, float size) {
+    std::shared_ptr<penguin::rendering::primitives::Font> FontLoaderImpl::load(const char* path, float size, int outline) {
         std::string path_str(path);
 
         auto it = font_cache.find(path_str);
@@ -13,7 +13,7 @@ namespace penguin::internal::rendering::systems {
         }
 
         // Not found in cache, load it
-        std::shared_ptr<penguin::rendering::primitives::Font> new_font = std::make_shared<penguin::rendering::primitives::Font>(path, size);
+        std::shared_ptr<penguin::rendering::primitives::Font> new_font = std::make_shared<penguin::rendering::primitives::Font>(path, size, outline);
 
         // Add to cache
         font_cache[path_str] = new_font; // NOTE: Only works on a single thread

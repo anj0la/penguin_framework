@@ -14,7 +14,7 @@ function(copy_dll_files target_name)
 
     if(WIN32 AND PF_BUILD_SHARED)
         set(TEST_EXE_DIR "$<TARGET_FILE_DIR:${target_name}>")
-        set(DLL_TARGETS "penguin::penguin;SDL3::SDL3;GTest::gtest;GTest::gtest_main") 
+        set(DLL_TARGETS "penguin::penguin;SDL3::SDL3;SDL3_image::SDL3_image;SDL3_ttf::SDL3_ttf;GTest::gtest;GTest::gtest_main")
         foreach(DLL_TARGET ${DLL_TARGETS})
             if(TARGET ${DLL_TARGET})
                 add_custom_command(TARGET ${target_name} POST_BUILD

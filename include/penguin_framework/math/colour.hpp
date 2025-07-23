@@ -1,6 +1,6 @@
 #pragma once
 
-#include <penguin_framework/penguin_api.hpp>
+#include <penguin_api.hpp>
 #include <penguin_framework/math/math_funcs.hpp>
 #include <algorithm>
 #include <cstdint>

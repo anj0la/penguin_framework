@@ -4,12 +4,12 @@
 
 namespace penguin::rendering {
 
-	Renderer::Renderer(NativeWindowPtr window_ptr, const char* driver_name) : pimpl_(nullptr) {
+	Renderer::Renderer(const penguin::window::Window& window, const char* driver_name) : pimpl_(nullptr) {
 		std::string message = "Attempting to create renderer with driver: (" + std::string(driver_name) +  ")...";
 		PF_LOG_INFO(message.c_str());
 
 		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::RendererImpl>(window_ptr, driver_name);
+			pimpl_ = std::make_unique<penguin::internal::rendering::RendererImpl>(window.get_native_ptr(), driver_name);
 				PF_LOG_INFO("Success: Renderer created successfully.");
 
 		} catch (const penguin::internal::error::InternalError& e) {
@@ -232,7 +232,7 @@ namespace penguin::rendering {
 
 	// Drawing functions for Sprites
 
-	void Renderer::draw_sprite(const penguin::rendering::primitives::Sprite& spr) {
+	void Renderer::draw_sprite(const drawables::Sprite& spr) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("draw_sprite() called on an uninitialized or destroyed renderer.");
 			return;
@@ -248,7 +248,7 @@ namespace penguin::rendering {
 		}
 	}
 
-	void Renderer::draw_sprite_transformed(const penguin::rendering::primitives::Sprite& spr) {
+	void Renderer::draw_sprite_transformed(const drawables::Sprite& spr) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("draw_sprite_transformed() called on an uninitialized or destroyed renderer.");
 			return;

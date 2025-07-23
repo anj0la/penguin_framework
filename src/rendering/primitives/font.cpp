@@ -4,13 +4,13 @@
 
 namespace penguin::rendering::primitives {
 
-	Font::Font(const char* path, float size) : pimpl_(nullptr) {
+	Font::Font(const char* path, float size, int outline) : pimpl_(nullptr) {
 
 		// Log attempt to create a sprite
 		PF_LOG_INFO("Attempting to create font...");
 
 		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::primitives::FontImpl>(path, size);
+			pimpl_ = std::make_unique<penguin::internal::rendering::primitives::FontImpl>(path, size, outline);
 			PF_LOG_INFO("Success: Font created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
@@ -67,15 +67,6 @@ namespace penguin::rendering::primitives {
 		return pimpl_->outline;
 	}
 
-	const char* Font::get_styles() const {
-		if (!is_valid()) {
-			PF_LOG_WARNING("get_styles() called on an uninitialized or destroyed font.");
-			return "";
-		}
-
-		return pimpl_->get_styles();
-	}
-
 	void Font::set_size(float new_size) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_size() called on an uninitialized or destroyed font.");
@@ -94,31 +85,103 @@ namespace penguin::rendering::primitives {
 		pimpl_->outline = new_outline;
 	}
 
-	void Font::add_style(FontStyle style) {
+	void Font::make_normal() {
 		if (!is_valid()) {
-			PF_LOG_WARNING("add_style() called on an uninitialized or destroyed font.");
+			PF_LOG_WARNING("make_normal() called on an uninitialized or destroyed font.");
 			return;
 		}
 
-		pimpl_->add_style(style);
+		pimpl_->make_normal();
 	}
 
-	void Font::remove_style(FontStyle style) {
+	void Font::make_bold() {
 		if (!is_valid()) {
-			PF_LOG_WARNING("remove_style() called on an uninitialized or destroyed font.");
+			PF_LOG_WARNING("make_bold() called on an uninitialized or destroyed font.");
 			return;
 		}
 
-		pimpl_->remove_style(style);
+		pimpl_->make_bold();
 	}
 
-	void Font::replace_style(FontStyle style) {
+	void Font::make_italic() {
 		if (!is_valid()) {
-			PF_LOG_WARNING("override_style() called on an uninitialized or destroyed font.");
+			PF_LOG_WARNING("make_italic() called on an uninitialized or destroyed font.");
 			return;
 		}
 
-		pimpl_->replace_style(style);
+		pimpl_->make_italic();
+	}
+
+	void Font::make_underline() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("make_underline() called on an uninitialized or destroyed font.");
+			return;
+		}
+
+		pimpl_->make_underline();
+	}
+
+	void Font::make_strikethrough() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("make_strikethrough() called on an uninitialized or destroyed font.");
+			return;
+		}
+
+		pimpl_->make_strikethrough();
+	}
+
+	bool Font::is_bold() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("is_bold() called on an uninitialized or destroyed font.");
+			return false;
+		}
+
+		return pimpl_->bold;
+	}
+
+	bool Font::is_italic() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("is_italic() called on an uninitialized or destroyed font.");
+			return false;
+		}
+
+		return pimpl_->italic;
+	}
+
+	bool Font::is_underline() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("is_underline() called on an uninitialized or destroyed font.");
+			return false;
+		}
+
+		return pimpl_->underline;
+	}
+
+	bool Font::is_strikethrough() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("is_strikethrough() called on an uninitialized or destroyed font.");
+			return false;
+		}
+
+		return pimpl_->strikethrough;
+	}
+
+	bool Font::is_normal() const {
+		if (!is_valid()) {
+			PF_LOG_WARNING("is_normal() called on an uninitialized or destroyed font.");
+			return false;
+		}
+
+		return pimpl_->normal;
+	}
+
+	void Font::clear() {
+		if (!is_valid()) {
+			PF_LOG_WARNING("clear() called on an uninitialized or destroyed font.");
+			return;
+		}
+
+		pimpl_->make_normal();
 	}
 
 	NativeFontPtr Font::get_native_ptr() {

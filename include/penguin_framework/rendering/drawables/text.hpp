@@ -1,6 +1,6 @@
 #pragma once
 
-#include <penguin_framework/penguin_api.hpp>
+#include <penguin_api.hpp>
 
 #include <penguin_framework/common/native_types.hpp>
 #include <penguin_framework/rendering/systems/text_context.hpp>
@@ -19,7 +19,7 @@ namespace penguin::rendering::drawables {
 
     class PENGUIN_API Text { // TODO -> create TextContext
     public:
-        Text(systems::TextContext text_context, std::shared_ptr<penguin::rendering::primitives::Font> font, const char* str, penguin::math::Colour colour = Colours::White, penguin::math::Vector2 position = penguin::math::Vector2::Zero);
+        Text(const systems::TextContext& text_context, std::shared_ptr<penguin::rendering::primitives::Font> font, const char* str, penguin::math::Colour colour = Colours::White, penguin::math::Vector2 position = penguin::math::Vector2::Zero);
         ~Text();
 
         Text(Text&&) noexcept;
@@ -38,7 +38,7 @@ namespace penguin::rendering::drawables {
         void set_colour(penguin::math::Colour new_colour);
         void set_string(const char* new_string);
 
-        NativeTextPtr get_native_ptr();
+        NativeTextPtr get_native_ptr() const;
 
     private:
         std::unique_ptr<penguin::internal::rendering::drawables::TextImpl> pimpl_;

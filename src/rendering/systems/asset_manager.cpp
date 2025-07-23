@@ -5,12 +5,12 @@
 namespace penguin::rendering::systems {
 
 	// Assumes that NativeRendererPtr contains a valid renderer_ptr
-	AssetManager::AssetManager(NativeRendererPtr renderer_ptr) : pimpl_(nullptr) {
+	AssetManager::AssetManager(const rendering::Renderer& renderer) : pimpl_(nullptr) {
 		// Log attempt to create a texture loader
 		PF_LOG_INFO("Attempting to create asset manager...");
 
 		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::systems::AssetManagerImpl>(renderer_ptr);
+			pimpl_ = std::make_unique<penguin::internal::rendering::systems::AssetManagerImpl>(renderer.get_native_ptr());
 			PF_LOG_INFO("Success: AssetManager created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
@@ -48,13 +48,22 @@ namespace penguin::rendering::systems {
 		return is_valid();
 	}
 
-	std::shared_ptr<primitives::Texture> AssetManager::load(const char* path) {
+	std::shared_ptr<primitives::Texture> AssetManager::load_texture(const char* path) {
 		if (!is_valid()) {
-			PF_LOG_WARNING("load() called on an uninitialized or destroyed asset manager.");
+			PF_LOG_WARNING("load_texture() called on an uninitialized or destroyed asset manager.");
 			return nullptr;
 		}
 
-		return pimpl_->load(path);
+		return pimpl_->load_texture(path);
+	}
+
+	std::shared_ptr<primitives::Font> AssetManager::load_font(const char* path, float size, int outline) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("load_font() called on an uninitialized or destroyed asset manager.");
+			return nullptr;
+		}
+
+		return pimpl_->load_font(path, size, outline);
 	}
 }
 

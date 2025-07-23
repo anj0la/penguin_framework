@@ -1,8 +1,9 @@
 #include <penguin_framework/window/window.hpp>
 #include <penguin_framework/rendering/renderer.hpp>
 #include <penguin_framework/rendering/primitives/texture.hpp>
+#include <penguin_framework/rendering/primitives/font.hpp>
 #include <penguin_framework/rendering/systems/asset_manager.hpp>
-#include <SDL3/SDL.h>
+#include <penguin_framework/penguin_init.hpp>
 #include <gtest/gtest.h>
 #include <memory>
 #include <filesystem>
@@ -15,11 +16,13 @@ using penguin::window::WindowFlags;
 using penguin::rendering::Renderer;
 using penguin::rendering::systems::AssetManager;
 using penguin::rendering::primitives::Texture;
+using penguin::rendering::primitives::Font;
 using penguin::math::Vector2i;
 
 class AssetManagerTestFixture : public ::testing::Test {
 protected:
     std::unique_ptr<Window> window_ptr;
+    std::unique_ptr<Window> invalid_window_ptr;
     std::unique_ptr<Renderer> renderer_ptr;
     std::unique_ptr<AssetManager> content_ptr;
 
@@ -28,30 +31,35 @@ protected:
     std::unique_ptr<AssetManager> valid_content_ptr;
 
     const char* asset_name = "penguin_cute.bmp";
+    const char* font_asset_name = "pixelify_sans_regular.ttf";
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
+    std::string font_abs_path = std::filesystem::absolute(get_test_asset_path(font_asset_name)).string();
 
     void SetUp() override {
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
-        ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
+        penguin::InitOptions options{ .headless_mode = true };
+        ASSERT_TRUE(penguin::init(options));
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
         ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
 
-        renderer_ptr = std::make_unique<Renderer>(window_ptr.get()->get_native_ptr(), "software");
+        invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), static_cast<WindowFlags>(0xFFFFFFFF)); // the flag is a nonsensical value
+        ASSERT_FALSE(invalid_window_ptr->is_valid());
+
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
 
-        content_ptr = std::make_unique<AssetManager>(renderer_ptr->get_native_ptr());
-        ASSERT_TRUE(content_ptr->is_valid());
-
-        invalid_renderer_ptr = std::make_unique<Renderer>(NativeWindowPtr{ nullptr }, "");
+        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr.get(), "");
         ASSERT_FALSE(invalid_renderer_ptr->is_valid());
 
-        invalid_content_ptr = std::make_unique<AssetManager>(invalid_renderer_ptr->get_native_ptr());
+        content_ptr = std::make_unique<AssetManager>(*renderer_ptr.get());
+        ASSERT_TRUE(content_ptr->is_valid());
+
+        invalid_content_ptr = std::make_unique<AssetManager>(*invalid_renderer_ptr.get());
         ASSERT_FALSE(invalid_content_ptr->is_valid());
     }
 
     void TearDown() override {
-        SDL_Quit();
+        penguin::quit();
     }
 };
 
@@ -77,11 +85,11 @@ TEST_F(AssetManagerTestFixture, BoolOperator_WithValidAssetManager_ReturnsTrue) 
     EXPECT_TRUE(bool_result);
 }
 
-// Load
+// Load Texture
 
-TEST_F(AssetManagerTestFixture, LoadFunction_WithValidPath_ReturnsValidTexture) {
+TEST_F(AssetManagerTestFixture, LoadTexture_WithValidPath_ReturnsValidTexture) {
     // Arrange & Act
-    std::shared_ptr<Texture> texture_ptr = content_ptr->load(abs_path.c_str());
+    std::shared_ptr<Texture> texture_ptr = content_ptr->load_texture(abs_path.c_str());
 
     // Assert
     EXPECT_TRUE(content_ptr->is_valid());
@@ -114,58 +122,100 @@ TEST_F(AssetManagerTestFixture, BoolOperator_WithInvalidAssetManager_ReturnsFals
     EXPECT_FALSE(bool_result);
 }
 
-TEST_F(AssetManagerTestFixture, LoadFunction_WithInvalidAssetManager_ReturnsNullPtr) {
+// Invalid Load Texture
+
+TEST_F(AssetManagerTestFixture, LoadTexture_WithInvalidAssetManager_ReturnsNullPtr) {
     // Arrange & Act
-    std::shared_ptr<Texture> texture_ptr = invalid_content_ptr->load(abs_path.c_str());
+    std::shared_ptr<Texture> texture_ptr = invalid_content_ptr->load_texture(abs_path.c_str());
 
     // Assert
     EXPECT_FALSE(invalid_content_ptr->is_valid());
     EXPECT_EQ(texture_ptr, nullptr);
 }
 
-TEST_F(AssetManagerTestFixture, LoadFunction_WithInvalidPath_ReturnsNullPtr) {
+TEST_F(AssetManagerTestFixture, LoadTexture_WithInvalidPath_ReturnsNullPtr) {
     // Arrange
     const char* invalid_path = "cute_img.png";
+    std::string invalid_abs_path = std::filesystem::absolute(get_test_asset_path(invalid_path)).string();
 
     // Act
-    std::shared_ptr<Texture> texture_ptr = content_ptr->load(invalid_path);
+    std::shared_ptr<Texture> texture_ptr = content_ptr->load_texture(invalid_abs_path.c_str());
 
     // Assert
     EXPECT_TRUE(content_ptr->is_valid());
     EXPECT_EQ(texture_ptr, nullptr);
 }
 
-TEST_F(AssetManagerTestFixture, LoadFunction_WithInvalidPathExt_ReturnsNullPtr) {
+TEST_F(AssetManagerTestFixture, LoadTexture_WithInvalidPathExt_ReturnsNullPtr) {
     // Arrange
-    const char* invalid_path = "penguin_cute.svg";
+    const char* invalid_path = "penguin_cute.pcx";
+    std::string invalid_abs_path = std::filesystem::absolute(get_test_asset_path(invalid_path)).string();
 
     // Act
-    std::shared_ptr<Texture> texture_ptr = content_ptr->load(invalid_path);
+    std::shared_ptr<Texture> texture_ptr = content_ptr->load_texture(invalid_abs_path.c_str());
 
     // Assert
     EXPECT_TRUE(content_ptr->is_valid());
     EXPECT_EQ(texture_ptr, nullptr);
 }
 
-TEST_F(AssetManagerTestFixture, LoadFunction_InvalidPath_Returns_NullPointer) {
-    // Arrange
-    const char* invalid_path = "cute_img.png";
+// Load Font
 
-    // Act
-    std::shared_ptr<Texture> texture_ptr = content_ptr->load(invalid_path);
+TEST_F(AssetManagerTestFixture, LoadFont_WithValidPath_ReturnsValidTexture) {
+    // Arrange & Act
+    std::shared_ptr<Font> font_ptr = content_ptr->load_font(font_abs_path.c_str());
+    float expected_size = 12.0f;
+    int expected_outline = 1;
 
     // Assert
-    EXPECT_EQ(texture_ptr, nullptr);
+    EXPECT_TRUE(content_ptr->is_valid());
+    EXPECT_TRUE(font_ptr->is_valid());
+
+    float actual_size = font_ptr->get_size();
+    int actual_outline = font_ptr->get_outline();
+
+    EXPECT_FLOAT_EQ(actual_size, expected_size);
+    EXPECT_EQ(actual_outline, expected_outline);
+    EXPECT_TRUE(font_ptr->is_normal());
+    EXPECT_FALSE(font_ptr->is_bold());
+    EXPECT_FALSE(font_ptr->is_italic());
+    EXPECT_FALSE(font_ptr->is_underline());
+    EXPECT_FALSE(font_ptr->is_strikethrough());
 }
 
-TEST_F(AssetManagerTestFixture, LoadFunction_InvalidPathExt_Returns_NullPointer) {
-    // Arrange
-    const char* invalid_path = "penguin_cute.svg";
+// Invalid Load Font
 
-    // Act
-    std::shared_ptr<Texture> texture_ptr = content_ptr->load(invalid_path);
-
+TEST_F(AssetManagerTestFixture, LoadFont_WithInvalidAssetManager_ReturnsNullPtr) {
+    // Arrange & Act
+    std::shared_ptr<Font> font_ptr = invalid_content_ptr->load_font(font_abs_path.c_str());
 
     // Assert
-    EXPECT_EQ(texture_ptr, nullptr);
+    EXPECT_FALSE(invalid_content_ptr->is_valid());
+    EXPECT_EQ(font_ptr, nullptr);
+}
+
+TEST_F(AssetManagerTestFixture, LoadFont_WithInvalidPath_ReturnsNullPtr) {
+    // Arrange
+    const char* invalid_path = "roboto.ttf";
+    std::string invalid_abs_path = std::filesystem::absolute(get_test_asset_path(invalid_path)).string();
+
+    // Act
+    std::shared_ptr<Font> font_ptr = content_ptr->load_font(invalid_abs_path.c_str());
+
+    // Assert
+    EXPECT_TRUE(content_ptr->is_valid());
+    EXPECT_EQ(font_ptr, nullptr);
+}
+
+TEST_F(AssetManagerTestFixture, LoadFont_WithInvalidPathExt_ReturnsNullPtr) {
+    // Arrange
+    const char* invalid_path = "pixelify_sans_regular.font";
+    std::string invalid_abs_path = std::filesystem::absolute(get_test_asset_path(invalid_path)).string();
+
+    // Act
+    std::shared_ptr<Font> font_ptr = content_ptr->load_font(invalid_abs_path.c_str());
+
+    // Assert
+    EXPECT_TRUE(content_ptr->is_valid());
+    EXPECT_EQ(font_ptr, nullptr);
 }

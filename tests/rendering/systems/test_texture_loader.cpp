@@ -2,7 +2,7 @@
 #include <penguin_framework/rendering/renderer.hpp>
 #include <penguin_framework/rendering/primitives/texture.hpp>
 #include <penguin_framework/rendering/systems/texture_loader.hpp>
-#include <SDL3/SDL.h>
+#include <penguin_framework/penguin_init.hpp>
 #include <gtest/gtest.h>
 #include <memory>
 #include <filesystem>
@@ -20,6 +20,7 @@ using penguin::math::Vector2i;
 class TextureLoaderTestFixture : public ::testing::Test {
 protected:
     std::unique_ptr<Window> window_ptr;
+    std::unique_ptr<Window> invalid_window_ptr;
     std::unique_ptr<Renderer> renderer_ptr;
     std::unique_ptr<TextureLoader> loader_ptr;
 
@@ -29,24 +30,27 @@ protected:
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
 
     void SetUp() override {
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
-        ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
+        penguin::InitOptions options{ .headless_mode = true };
+        ASSERT_TRUE(penguin::init(options));
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
         ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
 
-        renderer_ptr = std::make_unique<Renderer>(window_ptr.get()->get_native_ptr(), "software");
+        invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), static_cast<WindowFlags>(0xFFFFFFFF)); // the flag is a nonsensical value
+        ASSERT_FALSE(invalid_window_ptr->is_valid());
+
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
+
+        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr.get(), "");
+        ASSERT_FALSE(invalid_renderer_ptr->is_valid());
 
         loader_ptr = std::make_unique<TextureLoader>();
         ASSERT_TRUE(loader_ptr->is_valid());
-
-        invalid_renderer_ptr = std::make_unique<Renderer>(NativeWindowPtr{ nullptr }, "");
-        ASSERT_FALSE(invalid_renderer_ptr->is_valid());
     }
 
     void TearDown() override {
-        SDL_Quit();
+        penguin::quit();
     }
 };
 

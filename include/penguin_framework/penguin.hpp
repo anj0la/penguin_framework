@@ -2,6 +2,8 @@
 
 // Common
 
+#include <penguin_framework/common/native_types.hpp>
+
 // Events
 
 // Input
@@ -27,15 +29,23 @@
 
 #include <penguin_framework/rendering/renderer.hpp>
 
-// Renderer Primitives
+// Primitives
 
 #include <penguin_framework/rendering/primitives/flip_modes.hpp>
 #include <penguin_framework/rendering/primitives/texture.hpp>
-#include <penguin_framework/rendering/primitives/sprite.hpp>
+#include <penguin_framework/rendering/primitives/font.hpp>
+#include <penguin_framework/rendering/primitives/font_style.hpp>
 
-// Renderer Systems
+// Drawables
+
+#include <penguin_framework/rendering/drawables/sprite.hpp>
+#include <penguin_framework/rendering/drawables/text.hpp>
+
+// Systems
 
 #include <penguin_framework/rendering/systems/texture_loader.hpp>
+#include <penguin_framework/rendering/systems/font_loader.hpp>
+#include <penguin_framework/rendering/systems/text_context.hpp>
 #include <penguin_framework/rendering/systems/asset_manager.hpp>
 
 // Window

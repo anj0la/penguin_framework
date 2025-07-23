@@ -1,10 +1,10 @@
 #pragma once
 
-#include <penguin_framework/penguin_api.hpp>
+#include <penguin_api.hpp>
 
 #include <penguin_framework/common/native_types.hpp>
 #include <penguin_framework/window/window.hpp>
-#include <penguin_framework/rendering/primitives/sprite.hpp>
+#include <penguin_framework/rendering/drawables/sprite.hpp>
 #include <penguin_framework/math/rect2.hpp>
 #include <penguin_framework/math/vector2.hpp>
 #include <penguin_framework/math/circle2.hpp>
@@ -21,7 +21,7 @@ namespace penguin::rendering {
 
 	class PENGUIN_API Renderer {
 	public:
-		Renderer(NativeWindowPtr window_ptr, const char* driver_name = "");
+		Renderer(const penguin::window::Window& window, const char* driver_name = "");
 		~Renderer();
 
 		// Move semantics
@@ -56,8 +56,8 @@ namespace penguin::rendering {
 
 		// Drawing functions for Sprites
 
-		void draw_sprite(const penguin::rendering::primitives::Sprite& spr);
-		void draw_sprite_transformed(const penguin::rendering::primitives::Sprite& spr);
+		void draw_sprite(const drawables::Sprite& spr);
+		void draw_sprite_transformed(const drawables::Sprite& spr);
 
 		NativeRendererPtr get_native_ptr() const;
 

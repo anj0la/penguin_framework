@@ -15,7 +15,7 @@
 
 #include <memory>
 
-namespace penguin::internal::rendering::primitives {
+namespace penguin::internal::rendering::drawables {
 
 	class SpriteImpl {
 	public:

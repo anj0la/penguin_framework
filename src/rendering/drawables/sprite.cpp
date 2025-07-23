@@ -1,16 +1,16 @@
-#include <penguin_framework/rendering/primitives/sprite.hpp>
-#include <rendering/primitives/internal/sprite_impl.hpp>
+#include <penguin_framework/rendering/drawables/sprite.hpp>
+#include <rendering/drawables/internal/sprite_impl.hpp>
 #include <penguin_framework/logger/logger.hpp>
 
-namespace penguin::rendering::primitives {
+namespace penguin::rendering::drawables {
 
-	Sprite::Sprite(std::shared_ptr<Texture> p_texture) : pimpl_(nullptr) {
+	Sprite::Sprite(std::shared_ptr<primitives::Texture> p_texture) : pimpl_(nullptr) {
 
 		// Log attempt to create a sprite
 		PF_LOG_INFO("Attempting to create sprite...");
 
 		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::primitives::SpriteImpl>(p_texture);
+			pimpl_ = std::make_unique<penguin::internal::rendering::drawables::SpriteImpl>(p_texture);
 			PF_LOG_INFO("Success: Sprite created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
@@ -152,10 +152,10 @@ namespace penguin::rendering::primitives {
 		return pimpl_->tint;
 	}
 
-	FlipMode Sprite::get_flip_mode() const {
+	primitives::FlipMode Sprite::get_flip_mode() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_flip_mode() called on an uninitialized or destroyed sprite.");
-			return FlipMode::None;
+			return primitives::FlipMode::None;
 		}
 
 		return pimpl_->mode;
@@ -172,7 +172,7 @@ namespace penguin::rendering::primitives {
 
 	// Setters
 
-	void Sprite::set_texture(std::shared_ptr<Texture> new_texture) {
+	void Sprite::set_texture(std::shared_ptr<primitives::Texture> new_texture) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_texture() called on an uninitialized or destroyed sprite.");
 			return;
@@ -340,7 +340,7 @@ namespace penguin::rendering::primitives {
 		pimpl_->visible = false;
 	}
 
-	void Sprite::set_flip_mode(FlipMode new_mode) {
+	void Sprite::set_flip_mode(primitives::FlipMode new_mode) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("set_flip_mode() called on an uninitialized or destroyed sprite.");
 			return;

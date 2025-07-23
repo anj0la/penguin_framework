@@ -23,17 +23,15 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" IS_TOP_
 # Build Options
 #----------------------------------------------------------------------------------------------------------------------
 
-# NOTE: The main library is currently built as a SHARED library instead of a STATIC library.
+set(PF_BUILD_SHARED ON) # For testing purposes
+set(PF_BUILD_TESTS ON) # For testing purposes
 
-set(PF_BUILD_SHARED ON) 
-set(BUILD_SHARED_LIBS ${PF_BUILD_SHARED})
+option(PF_BUILD_SHARED "Build Penguin Framework as a shared library" ON) 
 
-option(PF_BUILD_TESTS "Build Penguin Framework tests" ON) # TODO: Update tests CMakeLists.txt file
+option(PF_BUILD_TESTS "Build Penguin Framework tests" ON)
 option(PF_BUILD_EXAMPLES "Build Penguin Framework examples" OFF) # NOTE: No examples currently
 option(PF_BUILD_DOCS "Build Penguin Framework documentation" OFF) # NOTE: No documentation currently
 option(PF_INSTALL "Generate target for installing Penguin Framework" ${IS_TOP_LEVEL})
-
-set(PF_BUILD_TESTS ON) # JUST FOR TESTING PURPOSES
 
 #----------------------------------------------------------------------------------------------------------------------
 # Build Settings
@@ -57,17 +55,18 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 #----------------------------------------------------------------------------------------------------------------------
 
 message(STATUS "Installing dependencies for penguin_framework...")
+set(BUILD_SHARED_LIBS OFF)
 
 FetchContent_Declare(
     sdl3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git 
-    GIT_TAG        release-3.2.10
+    GIT_TAG        release-3.2.18
     CMAKE_ARGS
-        -DSDL_SHARED=ON 
-        -DSDL_STATIC=OFF # Disable static build for now
+        -DSDL_SHARED=OFF 
+        -DSDL_STATIC=ON
         -DSDL_TESTS=OFF 
         -DSDL_EXAMPLES=OFF 
-        -DSDL_INSTALL=ON
+        -DSDL_INSTALL=OFF
     SYSTEM
 )
 
@@ -76,11 +75,11 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
     GIT_TAG        release-3.2.2
     CMAKE_ARGS
-        -DSDLTTF_SHARED=ON
-        -DSDLTTF_STATIC=OFF # Disable static build for now
+        -DSDLTTF_SHARED=OFF
+        -DSDLTTF_STATIC=ON
         -DSDLTTF_VENDORED=ON
         -DSDLTTF_SAMPLES=OFF
-        -DSDLTTF_INSTALL=ON
+        -DSDLTTF_INSTALL=OFF
     SYSTEM
 )
 
@@ -89,11 +88,11 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
     GIT_TAG        release-3.2.4
     CMAKE_ARGS
-        -DSDLIMAGE_SHARED=ON
-        -DSDLIMAGE_STATIC=OFF
+        -DSDLIMAGE_SHARED=OFF
+        -DSDLIMAGE_STATIC=ON
         -DSDLIMAGE_TESTS=OFF 
         -DSDLIMAGE_VENDORED=OFF
-        -DSDLIMAGE_INSTALL=ON
+        -DSDLIMAGE_INSTALL=OFF
 
         # Disabled formats
         -DSDLIMAGE_AVIF=OFF
@@ -123,16 +122,15 @@ FetchContent_MakeAvailable(sdl3)
 FetchContent_MakeAvailable(sdl3_ttf)
 FetchContent_MakeAvailable(sdl3_image)
 
-message(STATUS "SDL3, SDL3_ttf and SDL_image are available.")
-message(STATUS "Finished installing dependencies for penguin_framework.")
-
 #----------------------------------------------------------------------------------------------------------------------
 # Library Definition
 #----------------------------------------------------------------------------------------------------------------------
 
 message(STATUS "Adding penguin_framework library...")
 
-add_library(penguin_framework
+add_library(penguin_main STATIC "src/penguin_main.cpp")
+
+set(PF_SOURCES 
         "src/math/vector2.cpp"
         "src/math/vector2i.cpp"
         "src/math/circle2.cpp" 
@@ -142,17 +140,41 @@ add_library(penguin_framework
         "src/window/window.cpp"
         "src/rendering/renderer.cpp"
         "src/rendering/primitives/texture.cpp" 
-        "src/rendering/primitives/sprite.cpp" 
+        "src/rendering/drawables/sprite.cpp" 
         "src/rendering/systems/texture_loader.cpp" 
         "src/rendering/systems/asset_manager.cpp"
         "src/window/internal/window_impl.cpp" 
         "src/logger/internal/logger_impl.cpp" 
         "src/logger/logger.cpp" 
         "src/rendering/primitives/internal/texture_impl.cpp" 
-        "src/rendering/primitives/internal/sprite_impl.cpp" 
+        "src/rendering/drawables/internal/sprite_impl.cpp" 
         "src/rendering/systems/internal/texture_loader_impl.cpp" 
         "src/rendering/systems/internal/asset_manager_impl.cpp" 
-        "src/rendering/internal/renderer_impl.cpp" "src/rendering/primitives/internal/font_impl.cpp" "src/rendering/primitives/font.cpp" "src/rendering/drawables/internal/text_impl.cpp" "src/rendering/drawables/text.cpp" "src/rendering/systems/internal/text_context_impl.cpp" "src/rendering/systems/text_context.cpp" "src/rendering/systems/internal/font_loader_impl.cpp" "src/rendering/systems/font_loader.cpp")
+        "src/rendering/internal/renderer_impl.cpp" 
+        "src/rendering/primitives/internal/font_impl.cpp" 
+        "src/rendering/primitives/font.cpp" 
+        "src/rendering/drawables/internal/text_impl.cpp" 
+        "src/rendering/drawables/text.cpp" 
+        "src/rendering/systems/internal/text_context_impl.cpp" 
+        "src/rendering/systems/text_context.cpp" 
+        "src/rendering/systems/internal/font_loader_impl.cpp" 
+        "src/rendering/systems/font_loader.cpp"
+        "src/internal/penguin_init.cpp"
+)
+
+set(BUILD_SHARED_LIBS ${PF_BUILD_SHARED}) # Set after SDL dependencies
+
+if(PF_BUILD_SHARED)
+    message(STATUS "Building penguin_framework as a SHARED library.")
+    add_library(penguin_framework SHARED ${PF_SOURCES})
+else()
+    message(STATUS "Building penguin_framework as a STATIC library.")
+    add_library(penguin_framework STATIC ${PF_SOURCES})
+    target_compile_definitions(penguin_framework
+        INTERFACE PENGUIN_STATIC_DEFINE
+)
+
+endif()
 
 add_library(penguin::penguin ALIAS penguin_framework)
 
@@ -166,7 +188,8 @@ generate_export_header(penguin_framework
       BASE_NAME PENGUIN
       EXPORT_MACRO_NAME PENGUIN_API
       NO_EXPORT_MACRO_NAME PENGUIN_HIDDEN
-      EXPORT_FILE_NAME include/penguin_framework/penguin_api.hpp
+      STATIC_DEFINE PENGUIN_STATIC_DEFINE
+      EXPORT_FILE_NAME penguin_api.hpp
 )
 
 #----------------------------------------------------------------------------------------------------------------------
@@ -175,8 +198,14 @@ generate_export_header(penguin_framework
 
 message(STATUS "Linking penguin_framework...")
 
+target_include_directories(penguin_main
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/include
+)
+
 target_include_directories(penguin_framework
     PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<INSTALL_INTERFACE:include>
@@ -184,30 +213,26 @@ target_include_directories(penguin_framework
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-if(NOT TARGET SDL3::SDL3)
-    message(FATAL_ERROR "Target SDL3::SDL3 not found. Check FetchContent.")
-endif()
-if(NOT TARGET SDL3_ttf::SDL3_ttf)
-    message(FATAL_ERROR "Target SDL3_ttf::SDL3_ttf not found. Check FetchContent.")
-endif()
-if(NOT TARGET SDL3_image::SDL3_image)
-    message(FATAL_ERROR "Target SDL3_image::SDL3_image not found. Check FetchContent.")
-endif()
+target_link_libraries(penguin_main 
+    PRIVATE 
+        penguin_framework
+        SDL3::SDL3-static
+)
 
 target_link_libraries(penguin_framework
      PRIVATE
-         SDL3::SDL3
-         SDL3_ttf::SDL3_ttf
-         SDL3_image::SDL3_image
+        SDL3::SDL3-static
+        SDL3_ttf::SDL3_ttf-static
+        SDL3_image::SDL3_image-static
 )
 
 target_compile_features(penguin_framework PUBLIC cxx_std_20)
 
-set_target_properties(penguin_framework PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib 
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib 
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+set_target_properties(penguin_framework PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
 
@@ -215,37 +240,6 @@ set_target_properties(penguin_framework PROPERTIES
 )
 
 message(STATUS "Finished linking penguin_framework.")
-
-#----------------------------------------------------------------------------------------------------------------------
-# Post-Build
-#----------------------------------------------------------------------------------------------------------------------
-
-if(PF_BUILD_SHARED)
-    message(STATUS "penguin_framework is SHARED, adding post-build copy command...")
-
-    if(WIN32)
-        set(SDL3_COPY_DEST_DIR "${CMAKE_BINARY_DIR}/bin")
-    else()
-        set(SDL3_COPY_DEST_DIR "${CMAKE_BINARY_DIR}/lib")
-    endif()
-    message(STATUS "SDL3 copy destination directory: ${SDL3_COPY_DEST_DIR}")
-
-    add_custom_command(
-        TARGET penguin_framework POST_BUILD 
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3::SDL3> $<TARGET_FILE_DIR:penguin_framework>
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3_ttf::SDL3_ttf> $<TARGET_FILE_DIR:penguin_framework>
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3_image::SDL3_image> $<TARGET_FILE_DIR:penguin_framework>
-
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        "$<TARGET_FILE_DIR:SDL3::SDL3>/$<TARGET_FILE_BASE_NAME:SDL3::SDL3>.pdb" $<TARGET_FILE_DIR:penguin_framework>
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        "$<TARGET_FILE_DIR:SDL3_ttf::SDL3_ttf>/$<TARGET_FILE_BASE_NAME:SDL3_ttf::SDL3_ttf>.pdb" $<TARGET_FILE_DIR:penguin_framework>
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        "$<TARGET_FILE_DIR:SDL3_image::SDL3_image>/$<TARGET_FILE_BASE_NAME:SDL3_image::SDL3_image>.pdb" $<TARGET_FILE_DIR:penguin_framework>
-        COMMENT "Copying SDL runtime artifacts for local build..."
-        VERBATIM
-    )
-endif()
 
 #----------------------------------------------------------------------------------------------------------------------
 # Installation
@@ -266,13 +260,16 @@ if(PF_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     )
 
     install(TARGETS penguin_framework
+                    SDL3_Headers           
+                    SDL3-static
+                    SDL3_ttf-static
+                    SDL3_image-static
             EXPORT penguin_framework_export 
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime # Installs penguin_framework.dll/so to bin/
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime # Installs import lib/.so link to lib/
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Development
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
-
     set(targets_export_file "penguin_framework-targets.cmake")
 
     install(EXPORT penguin_framework_export 
@@ -301,30 +298,7 @@ if(PF_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
             COMPONENT Development
     )
 
-    install(FILES
-            $<TARGET_FILE:SDL3::SDL3>
-            $<TARGET_FILE:SDL3_ttf::SDL3_ttf>
-            $<TARGET_FILE:SDL3_image::SDL3_image>
-            DESTINATION ${CMAKE_INSTALL_BINDIR} # Install DLLs to bin/
-            COMPONENT Runtime
-    )
-
-    if(MSVC)
-        message(STATUS "Configuring PDB installation for MSVC...")
-        
-        install(FILES
-            "$<TARGET_FILE_DIR:SDL3::SDL3>/$<TARGET_FILE_BASE_NAME:SDL3::SDL3>.pdb"
-            "$<TARGET_FILE_DIR:SDL3_ttf::SDL3_ttf>/$<TARGET_FILE_BASE_NAME:SDL3_ttf::SDL3_ttf>.pdb"
-            "$<TARGET_FILE_DIR:SDL3_image::SDL3_image>/$<TARGET_FILE_BASE_NAME:SDL3_image::SDL3_image>.pdb"
-            DESTINATION ${CMAKE_INSTALL_BINDIR}
-            COMPONENT Development
-            CONFIGURATIONS Debug RelWithDebInfo
-            OPTIONAL
-        )
-    endif()
-
     include(CPack)
-
     message(STATUS "Finished installing penguin_framework.")
 
 endif() 

@@ -4,7 +4,7 @@
 
 namespace penguin::rendering::drawables {
 
-	Text::Text(systems::TextContext text_context, std::shared_ptr<penguin::rendering::primitives::Font> font,
+	Text::Text(const systems::TextContext& text_context, std::shared_ptr<penguin::rendering::primitives::Font> font,
 		const char* str, penguin::math::Colour colour, penguin::math::Vector2 position) : pimpl_(nullptr) {
 
 		// Log attempt to create a text
@@ -104,7 +104,7 @@ namespace penguin::rendering::drawables {
 		pimpl_->str = new_string;
 	}
 
-	NativeTextPtr Text::get_native_ptr() {
+	NativeTextPtr Text::get_native_ptr() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed text.");
 			return NativeTextPtr{ nullptr };

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <penguin_framework/penguin_api.hpp>
-
 #include <penguin_framework/common/native_types.hpp>
 #include <penguin_framework/math/colours.hpp>
 #include <penguin_framework/math/vector2.hpp>

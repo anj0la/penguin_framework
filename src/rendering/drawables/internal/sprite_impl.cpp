@@ -1,6 +1,6 @@
-#include <rendering/primitives/internal/sprite_impl.hpp>
+#include <rendering/drawables/internal/sprite_impl.hpp>
 
-namespace penguin::internal::rendering::primitives {
+namespace penguin::internal::rendering::drawables {
 
 	SpriteImpl::SpriteImpl(std::shared_ptr<penguin::rendering::primitives::Texture> p_texture) : texture(std::move(p_texture)) {
 		

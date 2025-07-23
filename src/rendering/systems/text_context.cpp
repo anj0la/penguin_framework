@@ -4,13 +4,13 @@
 
 namespace penguin::rendering::systems {
 
-	TextContext::TextContext(NativeRendererPtr renderer) : pimpl_(nullptr) {
+	TextContext::TextContext(const rendering::Renderer& renderer) : pimpl_(nullptr) {
 
 		// Log attempt to create a sprite
 		PF_LOG_INFO("Attempting to create text context...");
 
 		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextContextImpl>(renderer);
+			pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextContextImpl>(renderer.get_native_ptr());
 			PF_LOG_INFO("Success: Text Context created successfully.");
 		}
 		catch (const penguin::internal::error::InternalError& e) {
@@ -34,9 +34,6 @@ namespace penguin::rendering::systems {
 
 	TextContext::~TextContext() = default;
 
-	TextContext::TextContext(const TextContext&) = default;
-	TextContext& TextContext::operator=(const TextContext&) = default;
-
 	bool TextContext::is_valid() const noexcept {
 		if (!pimpl_) {
 			return false;
@@ -49,7 +46,7 @@ namespace penguin::rendering::systems {
 		return is_valid();
 	}
 
-	NativeFontPtr TextContext::get_native_ptr() {
+	NativeFontPtr TextContext::get_native_ptr() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed text context.");
 			return NativeFontPtr{ nullptr };

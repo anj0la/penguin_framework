@@ -6,7 +6,7 @@ namespace penguin::rendering::systems {
 
 	FontLoader::FontLoader() : pimpl_(nullptr) {
 
-		// Log attempt to create a texture loader
+		// Log attempt to create a font loader
 		PF_LOG_INFO("Attempting to create font loader...");
 
 		try {
@@ -47,12 +47,12 @@ namespace penguin::rendering::systems {
 		return is_valid();
 	}
 
-	std::shared_ptr<penguin::rendering::primitives::Font> FontLoader::load(const char* path, float size) {
+	std::shared_ptr<penguin::rendering::primitives::Font> FontLoader::load(const char* path, float size, int outline) {
 		if (!is_valid()) {
 			PF_LOG_WARNING("load() called on an uninitialized or destroyed font loader.");
 			return nullptr;
 		}
 
-		return pimpl_->load(path, size);
+		return pimpl_->load(path, size, outline);
 	}
 }

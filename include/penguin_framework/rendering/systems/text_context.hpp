@@ -1,7 +1,8 @@
 #pragma once
 
-#include <penguin_framework/penguin_api.hpp>
+#include <penguin_api.hpp>
 
+#include <penguin_framework/rendering/renderer.hpp>
 #include <penguin_framework/common/native_types.hpp>
 #include <memory>
 
@@ -14,7 +15,7 @@ namespace penguin::rendering::systems {
 
     class PENGUIN_API TextContext {
     public:
-        TextContext(NativeRendererPtr renderer);
+        TextContext(const rendering::Renderer& renderer);
         ~TextContext();
 
         // Move semantics
@@ -27,7 +28,8 @@ namespace penguin::rendering::systems {
         [[nodiscard]] bool is_valid() const noexcept;
         [[nodiscard]] explicit operator bool() const noexcept;
 
-        NativeTextContextPtr get_native_ptr();
+        NativeTextContextPtr get_native_ptr() const;
+
     private:
         std::unique_ptr<penguin::internal::rendering::systems::TextContextImpl> pimpl_;
     };

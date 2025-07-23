@@ -1,5 +1,5 @@
 #include <penguin_framework/window/window.hpp>
-#include <SDL3/SDL.h>
+#include <penguin_framework/penguin_init.hpp>
 #include <gtest/gtest.h>
 
 using penguin::window::Window;
@@ -12,19 +12,18 @@ protected:
     std::unique_ptr<Window> invalid_window_ptr;
 
 	void SetUp() override {
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "dummy");
-		ASSERT_EQ(SDL_Init(SDL_INIT_VIDEO), true) << "SDL_Init(SDL_INIT_VIDEO) failed: " << SDL_GetError();
+        penguin::InitOptions options{ .headless_mode = true };
+        ASSERT_TRUE(penguin::init(options));
 
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden | WindowFlags::Resizable); 
         ASSERT_TRUE(window_ptr->is_valid());
 
-        invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), WindowFlags::Hidden);
-        invalid_window_ptr->close(); // open = false, and window is now invalid
+        invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), static_cast<WindowFlags>(0xFFFFFFFF)); // the flag is a nonsensical value
         ASSERT_FALSE(invalid_window_ptr->is_valid());
 	}
 
 	void TearDown() override {
-		SDL_Quit();
+		penguin::quit();
 	}
 };
 
