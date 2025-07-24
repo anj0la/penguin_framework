@@ -54,10 +54,10 @@ protected:
         invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr, "");
         ASSERT_FALSE(invalid_renderer_ptr->is_valid());
 
-        text_context_ptr = std::make_unique<TextContext>(*renderer_ptr);
+        text_context_ptr = std::make_unique<TextContext>(renderer_ptr->get_native_ptr());
         ASSERT_TRUE(text_context_ptr->is_valid());
 
-        invalid_text_context_ptr = std::make_unique<TextContext>(*invalid_renderer_ptr);
+        invalid_text_context_ptr = std::make_unique<TextContext>(invalid_renderer_ptr->get_native_ptr());
         ASSERT_FALSE(invalid_text_context_ptr->is_valid());
 
         font_ptr = std::make_shared<Font>(abs_path.c_str());

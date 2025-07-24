@@ -1,4 +1,5 @@
 #include <rendering/internal/renderer_impl.hpp>
+#include <SDL3_ttf/SDL_ttf.h>
 
 namespace penguin::internal::rendering {
 
@@ -347,5 +348,7 @@ namespace penguin::internal::rendering {
 		return SDL_RenderTextureRotated(renderer.get(), texture, sdl_source_ptr, sdl_dest_ptr, angle, sdl_anchor_ptr, sdl_mode);
 	}
 
-
+	bool RendererImpl::draw_text(NativeTextPtr txt_ptr, float x, float y) {
+		return TTF_DrawRendererText(txt_ptr.as<TTF_Text>(), x, y);
+	}
 }

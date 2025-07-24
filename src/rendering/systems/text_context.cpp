@@ -4,14 +4,14 @@
 
 namespace penguin::rendering::systems {
 
-	TextContext::TextContext(const rendering::Renderer& renderer) : pimpl_(nullptr) {
+	TextContext::TextContext(NativeRendererPtr renderer) : pimpl_(nullptr) {
 
 		// Log attempt to create a sprite
 		PF_LOG_INFO("Attempting to create text context...");
 
-		if (renderer.is_valid()) {
+		if (renderer.ptr) {
 			try {
-				pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextContextImpl>(renderer.get_native_ptr());
+				pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextContextImpl>(renderer);
 				PF_LOG_INFO("Success: Text Context created successfully.");
 			}
 			catch (const penguin::internal::error::InternalError& e) {

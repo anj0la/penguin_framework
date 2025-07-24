@@ -1,6 +1,8 @@
 #include <penguin_framework/window/window.hpp>
 #include <penguin_framework/rendering/renderer.hpp>
 #include <penguin_framework/rendering/drawables/sprite.hpp> 
+#include <penguin_framework/rendering/drawables/text.hpp>
+#include <penguin_framework/rendering/systems/text_context.hpp>
 #include <penguin_framework/penguin_init.hpp>
 #include <gtest/gtest.h>
 #include <memory>
@@ -14,6 +16,9 @@ using penguin::rendering::Renderer;
 using penguin::rendering::drawables::Sprite;
 using penguin::rendering::primitives::Texture;
 using penguin::rendering::primitives::FlipMode;
+using penguin::rendering::drawables::Text;
+using penguin::rendering::primitives::Font;
+using penguin::rendering::systems::TextContext;
 using penguin::math::Vector2;
 using penguin::math::Rect2;
 using penguin::math::Vector2i;
@@ -28,8 +33,14 @@ protected:
     std::unique_ptr<Renderer> invalid_renderer_ptr;
     std::shared_ptr<Texture> texture_ptr;
     std::unique_ptr<Sprite> sprite_ptr;
+    std::unique_ptr<TextContext> text_context_ptr;
+    std::shared_ptr<Font> font_ptr;
+    std::unique_ptr<Text> text_ptr;
+
     const char* asset_name = "penguin_cute.bmp";
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
+    const char* font_asset_name = "pixelify_sans_regular.ttf";
+    std::string font_abs_path = std::filesystem::absolute(get_test_asset_path(font_asset_name)).string();
 
     const Vector2 test_vec1{ 10, 10 };
     const Vector2 test_vec2{ 50, 50 };
@@ -60,10 +71,22 @@ protected:
 
         sprite_ptr = std::make_unique<Sprite>(texture_ptr);
         ASSERT_TRUE(sprite_ptr->is_valid());
+
+        text_context_ptr = std::make_unique<TextContext>(renderer_ptr->get_native_ptr());
+        ASSERT_TRUE(text_context_ptr->is_valid());
+
+        font_ptr = std::make_shared<Font>(font_abs_path.c_str());
+        ASSERT_TRUE(font_ptr->is_valid());
+
+        text_ptr = std::make_unique<Text>(*text_context_ptr, font_ptr, "Hello World!");
+        ASSERT_TRUE(text_ptr->is_valid());
     }
 
     void TearDown() override {
         // Manually destroy resources in reverse order
+        text_ptr.reset();
+        font_ptr.reset();
+        text_context_ptr.reset();
         sprite_ptr.reset();
         texture_ptr.reset();
         invalid_renderer_ptr.reset();
@@ -279,6 +302,15 @@ TEST_F(RendererTestFixture, DrawSpriteTransformed_WithHiddenSprite_RendererRemai
 
     // Act
     renderer_ptr->draw_sprite_transformed(*sprite_ptr);
+
+    // Assert
+    EXPECT_TRUE(renderer_ptr->is_valid());
+}
+
+TEST_F(RendererTestFixture, DrawText_WithValidParams_RendererRemainsValid) {
+    // Arrange (done in Setup)
+    // Act
+    renderer_ptr->draw_text(*text_ptr);
 
     // Assert
     EXPECT_TRUE(renderer_ptr->is_valid());

@@ -1,8 +1,7 @@
 #pragma once
 
 #include <penguin_framework/common/native_types.hpp>
-
-#include <penguin_framework/rendering/drawables/sprite.hpp>
+#include <penguin_framework/rendering/primitives/flip_modes.hpp>
 
 #include <penguin_framework/math/rect2.hpp>
 #include <penguin_framework/math/circle2.hpp>
@@ -72,6 +71,10 @@ namespace penguin::internal::rendering {
 		bool draw_sprite(NativeTexturePtr spr_texture, const penguin::math::Rect2& texture_region, const penguin::math::Rect2& screen_placement);
 		bool draw_sprite_transformed(NativeTexturePtr spr_texture, const penguin::math::Rect2& texture_region, const penguin::math::Rect2& screen_placement,
 			const penguin::math::Vector2& scale_factor, const penguin::math::Vector2& normalized_anchor, float angle, penguin::rendering::primitives::FlipMode mode);
+
+		// Drawing functions for Text
+
+		bool draw_text(NativeTextPtr txt_ptr, float x, float y);
 
 	private:
 		bool draw_horizontal_line(float x1, float x2, float y, penguin::math::Colour colour);

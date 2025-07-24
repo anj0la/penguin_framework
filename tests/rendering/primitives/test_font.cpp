@@ -35,12 +35,6 @@ protected:
 
         invalid_font_ptr = std::make_unique<Font>(invalid_abs_path.c_str());
         ASSERT_FALSE(invalid_font_ptr->is_valid());
-
-        //window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
-        //ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
-
-        //renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
-        //ASSERT_TRUE(renderer_ptr->is_valid());
     }
 
     void TearDown() override {

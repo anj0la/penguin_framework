@@ -5,6 +5,7 @@
 #include <penguin_framework/common/native_types.hpp>
 #include <penguin_framework/window/window.hpp>
 #include <penguin_framework/rendering/drawables/sprite.hpp>
+#include <penguin_framework/rendering/drawables/text.hpp>
 #include <penguin_framework/math/rect2.hpp>
 #include <penguin_framework/math/vector2.hpp>
 #include <penguin_framework/math/circle2.hpp>
@@ -58,6 +59,10 @@ namespace penguin::rendering {
 
 		void draw_sprite(const drawables::Sprite& spr);
 		void draw_sprite_transformed(const drawables::Sprite& spr);
+
+		// Drawing functions for Text
+		
+		void draw_text(const drawables::Text& txt);
 
 		NativeRendererPtr get_native_ptr() const;
 

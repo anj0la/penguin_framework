@@ -272,6 +272,20 @@ namespace penguin::rendering {
 		}
 	}
 
+	void Renderer::draw_text(const drawables::Text& txt) {
+		if (!is_valid()) {
+			PF_LOG_WARNING("draw_text() called on an uninitialized or destroyed renderer.");
+			return;
+		}
+
+		penguin::math::Vector2 position = txt.get_position();
+		bool res = pimpl_->draw_text(txt.get_native_ptr(), position.x, position.y);
+
+		if (!res) {
+			PF_LOG_WARNING("Internal_System_Error: Failed to draw text to renderer.");
+		}
+	}
+
 	NativeRendererPtr Renderer::get_native_ptr() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed renderer.");
