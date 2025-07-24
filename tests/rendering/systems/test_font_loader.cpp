@@ -30,17 +30,15 @@ protected:
         penguin::InitOptions options{ .headless_mode = true };
         ASSERT_TRUE(penguin::init(options));
 
-        window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
-        ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
-
-        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
-        ASSERT_TRUE(renderer_ptr->is_valid());
-
         loader_ptr = std::make_unique<FontLoader>();
         ASSERT_TRUE(loader_ptr->is_valid());
     }
 
     void TearDown() override {
+        // Manually destroy resources in reverse order
+        loader_ptr.reset();
+
+        // Safe to quit
         penguin::quit();
     }
 };

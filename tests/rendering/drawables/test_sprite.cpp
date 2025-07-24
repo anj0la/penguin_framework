@@ -37,7 +37,7 @@ protected:
         window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
         ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
 
-        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr, "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
 
         texture_ptr = std::make_shared<Texture>(renderer_ptr->get_native_ptr(), abs_path.c_str());
@@ -54,6 +54,15 @@ protected:
     }
 
     void TearDown() override {
+        // Manually destroy resources in reverse order
+        invalid_sprite_ptr.reset();
+        second_sprite_ptr.reset();
+        sprite_ptr.reset();
+        texture_ptr.reset();
+        renderer_ptr.reset();
+        window_ptr.reset();
+
+        // Safe to quit
         penguin::quit();
     }
 };

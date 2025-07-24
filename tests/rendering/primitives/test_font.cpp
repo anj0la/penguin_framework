@@ -31,8 +31,10 @@ protected:
         ASSERT_TRUE(penguin::init(options));
 
         font_ptr = std::make_unique<Font>(abs_path.c_str());
-        invalid_font_ptr = std::make_unique<Font>(invalid_abs_path.c_str());
+        ASSERT_TRUE(font_ptr->is_valid());
 
+        invalid_font_ptr = std::make_unique<Font>(invalid_abs_path.c_str());
+        ASSERT_FALSE(invalid_font_ptr->is_valid());
 
         //window_ptr = std::make_unique<Window>("Test Window", Vector2i(640, 480), WindowFlags::Hidden);
         //ASSERT_TRUE(window_ptr->is_valid()); // window should be OPEN and VALID
@@ -42,6 +44,11 @@ protected:
     }
 
     void TearDown() override {
+        // Manually destroy resources
+        invalid_font_ptr.reset();
+        font_ptr.reset();
+
+        // Safe to quit
         penguin::quit();
     }
 };

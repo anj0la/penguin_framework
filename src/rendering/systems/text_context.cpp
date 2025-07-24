@@ -9,27 +9,33 @@ namespace penguin::rendering::systems {
 		// Log attempt to create a sprite
 		PF_LOG_INFO("Attempting to create text context...");
 
-		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextContextImpl>(renderer.get_native_ptr());
-			PF_LOG_INFO("Success: Text Context created successfully.");
-		}
-		catch (const penguin::internal::error::InternalError& e) {
-			// Get the error code and message
-			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = error_code_str + ": " + e.what();
+		if (renderer.is_valid()) {
+			try {
+				pimpl_ = std::make_unique<penguin::internal::rendering::systems::TextContextImpl>(renderer.get_native_ptr());
+				PF_LOG_INFO("Success: Text Context created successfully.");
+			}
+			catch (const penguin::internal::error::InternalError& e) {
+				// Get the error code and message
+				std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
+				std::string error_message = error_code_str + ": " + e.what();
 
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
 
-		}
-		catch (const std::exception& e) { // Other specific C++ errors
-			// Get error message
-			std::string last_error_message = e.what();
-			std::string error_message = "Unknown_Error: " + error_message;
+			}
+			catch (const std::exception& e) { // Other specific C++ errors
+				// Get error message
+				std::string last_error_message = e.what();
+				std::string error_message = "Unknown_Error: " + error_message;
 
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+			}
 		}
+		else {
+			PF_LOG_ERROR("Text_Context_Init_Failed: The renderer is null or has not been initialized.");
+		}
+
 	}
 
 	TextContext::~TextContext() = default;
@@ -46,12 +52,12 @@ namespace penguin::rendering::systems {
 		return is_valid();
 	}
 
-	NativeFontPtr TextContext::get_native_ptr() const {
+	NativeTextContextPtr TextContext::get_native_ptr() const {
 		if (!is_valid()) {
 			PF_LOG_WARNING("get_native_ptr() called on an uninitialized or destroyed text context.");
-			return NativeFontPtr{ nullptr };
+			return NativeTextContextPtr{ nullptr };
 		}
 
-		return NativeFontPtr{ pimpl_->context.get() };
+		return NativeTextContextPtr{ pimpl_->context.get() };
 	}
 }

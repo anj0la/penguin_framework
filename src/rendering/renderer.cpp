@@ -8,11 +8,13 @@ namespace penguin::rendering {
 		std::string message = "Attempting to create renderer with driver: (" + std::string(driver_name) +  ")...";
 		PF_LOG_INFO(message.c_str());
 
-		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::RendererImpl>(window.get_native_ptr(), driver_name);
+		if (window.is_valid()) { // Don't bother trying to create the renderer if the window is invalid!
+			try {
+				pimpl_ = std::make_unique<penguin::internal::rendering::RendererImpl>(window.get_native_ptr(), driver_name);
 				PF_LOG_INFO("Success: Renderer created successfully.");
 
-		} catch (const penguin::internal::error::InternalError& e) {
+			}
+			catch (const penguin::internal::error::InternalError& e) {
 				// Get the error code and message
 				std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
 				std::string error_message = error_code_str + ": " + e.what();
@@ -20,13 +22,18 @@ namespace penguin::rendering {
 				// Log the error
 				PF_LOG_ERROR(error_message.c_str());
 
-		} catch (const std::exception& e) { // Other specific C++ errors
+			}
+			catch (const std::exception& e) { // Other specific C++ errors
 				// Get error message
 				std::string last_error_message = e.what();
 				std::string error_message = "Unknown_Error: " + error_message;
 
 				// Log the error
 				PF_LOG_ERROR(error_message.c_str());
+			}
+		}
+		else {
+			PF_LOG_ERROR("Renderer_Creation_Failed: The window is null or has not been initialized.");
 		}
 	}
 

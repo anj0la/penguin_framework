@@ -10,26 +10,31 @@ namespace penguin::rendering::drawables {
 		// Log attempt to create a text
 		PF_LOG_INFO("Attempting to create text...");
 
-		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::drawables::TextImpl>(text_context.get_native_ptr(), font->get_native_ptr(), str, colour, position);
-			PF_LOG_INFO("Success: Text created successfully.");
+		if (font && text_context.is_valid()) { // If the font / text context is invalid, don't bother trying to create it
+			try {
+				pimpl_ = std::make_unique<penguin::internal::rendering::drawables::TextImpl>(text_context.get_native_ptr(), font->get_native_ptr(), str, colour, position);
+				PF_LOG_INFO("Success: Text created successfully.");
+			}
+			catch (const penguin::internal::error::InternalError& e) {
+				// Get the error code and message
+				std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
+				std::string error_message = error_code_str + ": " + e.what();
+
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+
+			}
+			catch (const std::exception& e) { // Other specific C++ errors
+				// Get error message
+				std::string last_error_message = e.what();
+				std::string error_message = "Unknown_Error: " + error_message;
+
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+			}
 		}
-		catch (const penguin::internal::error::InternalError& e) {
-			// Get the error code and message
-			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = error_code_str + ": " + e.what();
-
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
-
-		}
-		catch (const std::exception& e) { // Other specific C++ errors
-			// Get error message
-			std::string last_error_message = e.what();
-			std::string error_message = "Unknown_Error: " + error_message;
-
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
+		else {
+			PF_LOG_ERROR("Text_Creation_Failed: The font and/or the text context are either null or have not been initialized.");
 		}
 	}
 

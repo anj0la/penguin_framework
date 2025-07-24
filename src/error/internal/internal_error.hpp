@@ -27,7 +27,6 @@ namespace penguin::internal::error {
         Texture_Loader_Init_Failed,
         Text_Context_Init_Failed,
         Font_Loader_Init_Failed,
-        // Text_Loader_Init_Failed,
 
         // Resource Handling
         File_Not_Found,             // The path was valid, but the file isn't there
@@ -66,10 +65,16 @@ namespace penguin::internal::error {
                 return "Texture_Creation_Failed";
             case ErrorCode::Sprite_Creation_Failed:
                 return "Sprite_Creation_Failed";
+            case ErrorCode::Font_Creation_Failed:
+                return "Font_Creation_Failed";
+            case ErrorCode::Text_Creation_Failed:
+                return "Text_Creation_Failed";
             case ErrorCode::Asset_Manager_Init_Failed:
                 return "Asset_Manager_Creation_Failed";
             case ErrorCode::Texture_Loader_Init_Failed:
                 return "Texture_Loader_Creation_Failed";
+            case ErrorCode::Font_Loader_Init_Failed:
+                return "Font_Loader_Init_Failed";
             case ErrorCode::Text_Context_Init_Failed:
                 return "Text_Context_Init_Failed";
 

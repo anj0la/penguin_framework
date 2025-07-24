@@ -9,26 +9,31 @@ namespace penguin::rendering::drawables {
 		// Log attempt to create a sprite
 		PF_LOG_INFO("Attempting to create sprite...");
 
-		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::drawables::SpriteImpl>(p_texture);
-			PF_LOG_INFO("Success: Sprite created successfully.");
+		if (p_texture) { // Don't create the sprite if there's no valid texture!
+			try {
+				pimpl_ = std::make_unique<penguin::internal::rendering::drawables::SpriteImpl>(p_texture);
+				PF_LOG_INFO("Success: Sprite created successfully.");
+			}
+			catch (const penguin::internal::error::InternalError& e) {
+				// Get the error code and message
+				std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
+				std::string error_message = error_code_str + ": " + e.what();
+
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+
+			}
+			catch (const std::exception& e) { // Other specific C++ errors
+				// Get error message
+				std::string last_error_message = e.what();
+				std::string error_message = "Unknown_Error: " + error_message;
+
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+			}
 		}
-		catch (const penguin::internal::error::InternalError& e) {
-			// Get the error code and message
-			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = error_code_str + ": " + e.what();
-
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
-
-		}
-		catch (const std::exception& e) { // Other specific C++ errors
-			// Get error message
-			std::string last_error_message = e.what();
-			std::string error_message = "Unknown_Error: " + error_message;
-
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
+		else {
+			PF_LOG_ERROR("Sprite_Creation_Failed: The texture is null or has not been initialized.");
 		}
 	}
 

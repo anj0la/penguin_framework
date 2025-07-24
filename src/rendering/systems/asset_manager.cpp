@@ -6,29 +6,34 @@ namespace penguin::rendering::systems {
 
 	// Assumes that NativeRendererPtr contains a valid renderer_ptr
 	AssetManager::AssetManager(const rendering::Renderer& renderer) : pimpl_(nullptr) {
-		// Log attempt to create a texture loader
+		// Log attempt to create asset loader
 		PF_LOG_INFO("Attempting to create asset manager...");
 
-		try {
-			pimpl_ = std::make_unique<penguin::internal::rendering::systems::AssetManagerImpl>(renderer.get_native_ptr());
-			PF_LOG_INFO("Success: AssetManager created successfully.");
+		if (renderer.is_valid()) {
+			try {
+				pimpl_ = std::make_unique<penguin::internal::rendering::systems::AssetManagerImpl>(renderer.get_native_ptr());
+				PF_LOG_INFO("Success: AssetManager created successfully.");
+			}
+			catch (const penguin::internal::error::InternalError& e) {
+				// Get the error code and message
+				std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
+				std::string error_message = error_code_str + ": " + e.what();
+
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+
+			}
+			catch (const std::exception& e) { // Other specific C++ errors
+				// Get error message
+				std::string last_error_message = e.what();
+				std::string error_message = "Unknown_Error: " + error_message;
+
+				// Log the error
+				PF_LOG_ERROR(error_message.c_str());
+			}
 		}
-		catch (const penguin::internal::error::InternalError& e) {
-			// Get the error code and message
-			std::string error_code_str = penguin::internal::error::error_code_to_string(e.get_error());
-			std::string error_message = error_code_str + ": " + e.what();
-
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
-
-		}
-		catch (const std::exception& e) { // Other specific C++ errors
-			// Get error message
-			std::string last_error_message = e.what();
-			std::string error_message = "Unknown_Error: " + error_message;
-
-			// Log the error
-			PF_LOG_ERROR(error_message.c_str());
+		else {
+			PF_LOG_ERROR("Asset_Manager_Init_Failed: The renderer is null or has not been initialized.");
 		}
 	}
 		

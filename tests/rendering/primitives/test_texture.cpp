@@ -35,14 +35,21 @@ protected:
         invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), static_cast<WindowFlags>(0xFFFFFFFF)); // the flag is a nonsensical value
         ASSERT_FALSE(invalid_window_ptr->is_valid());
 
-        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr, "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
 
-        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr.get(), "");
+        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr, "");
         ASSERT_FALSE(invalid_renderer_ptr->is_valid());
     }
 
     void TearDown() override {
+        // Manually destroy resources in reverse order
+        invalid_renderer_ptr.reset();
+        renderer_ptr.reset();
+        invalid_window_ptr.reset();
+        window_ptr.reset();
+
+        // Safe to quit
         penguin::quit();
     }
 };

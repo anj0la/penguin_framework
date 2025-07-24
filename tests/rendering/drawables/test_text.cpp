@@ -29,11 +29,14 @@ protected:
     std::unique_ptr<TextContext> text_context_ptr;
     std::unique_ptr<TextContext> invalid_text_context_ptr;
     std::shared_ptr<Font> font_ptr;
+    std::shared_ptr<Font> invalid_font_ptr;
     std::unique_ptr<Text> text_ptr;
     std::unique_ptr<Text> invalid_text_ptr;
 
     const char* asset_name = "pixelify_sans_regular.ttf";
+    const char* invalid_asset_name = "roboto.ttf";
     std::string abs_path = std::filesystem::absolute(get_test_asset_path(asset_name)).string();
+    std::string invalid_abs_path = std::filesystem::absolute(get_test_asset_path(invalid_asset_name)).string();
 
     void SetUp() override {
         penguin::InitOptions options{ .headless_mode = true };
@@ -45,29 +48,44 @@ protected:
         invalid_window_ptr = std::make_unique<Window>("Invalid Window", Vector2i(-1, -1), static_cast<WindowFlags>(0xFFFFFFFF)); // the flag is a nonsensical value
         ASSERT_FALSE(invalid_window_ptr->is_valid());
 
-        renderer_ptr = std::make_unique<Renderer>(*window_ptr.get(), "software");
+        renderer_ptr = std::make_unique<Renderer>(*window_ptr, "software");
         ASSERT_TRUE(renderer_ptr->is_valid());
 
-        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr.get(), "");
+        invalid_renderer_ptr = std::make_unique<Renderer>(*invalid_window_ptr, "");
         ASSERT_FALSE(invalid_renderer_ptr->is_valid());
 
-        text_context_ptr = std::make_unique<TextContext>(*renderer_ptr.get());
+        text_context_ptr = std::make_unique<TextContext>(*renderer_ptr);
         ASSERT_TRUE(text_context_ptr->is_valid());
 
-        invalid_text_context_ptr = std::make_unique<TextContext>(*invalid_renderer_ptr.get());
+        invalid_text_context_ptr = std::make_unique<TextContext>(*invalid_renderer_ptr);
         ASSERT_FALSE(invalid_text_context_ptr->is_valid());
 
         font_ptr = std::make_shared<Font>(abs_path.c_str());
         ASSERT_TRUE(font_ptr->is_valid());
 
-        text_ptr = std::make_unique<Text>(*text_context_ptr.get(), font_ptr, "Hello World!");
+        invalid_font_ptr = std::make_unique<Font>(invalid_abs_path.c_str());
+        ASSERT_FALSE(invalid_font_ptr->is_valid());
+
+        text_ptr = std::make_unique<Text>(*text_context_ptr, font_ptr, "Hello World!");
         ASSERT_TRUE(text_ptr->is_valid());
 
-        invalid_text_ptr = std::make_unique<Text>(*invalid_text_context_ptr.get(), font_ptr, "");
+        invalid_text_ptr = std::make_unique<Text>(*invalid_text_context_ptr, invalid_font_ptr, "");
         ASSERT_FALSE(invalid_text_context_ptr->is_valid());
     }
 
     void TearDown() override {
+        // Manually destroy resources in reverse order
+        invalid_text_ptr.reset();
+        text_ptr.reset();
+        font_ptr.reset();
+        invalid_text_context_ptr.reset();
+        text_context_ptr.reset();
+        invalid_renderer_ptr.reset();
+        renderer_ptr.reset();
+        invalid_window_ptr.reset();
+        window_ptr.reset();
+
+        // Safe to quit
         penguin::quit();
     }
 };
@@ -180,7 +198,7 @@ TEST_F(TextTestFixture, SetString_Sets_TextString) {
 
     // Assert
     EXPECT_TRUE(text_ptr->is_valid());
-    EXPECT_EQ(new_string, actual_string);
+    EXPECT_STREQ(new_string, actual_string);
 }
 
 // Native Pointer
@@ -231,7 +249,7 @@ TEST_F(TextTestFixture, InvalidText_GettersReturn_DefaultValues) {
 
     EXPECT_FALSE(invalid_text_ptr->is_valid());
 }
-TEST_F(TextTestFixture, InvalidSprite_SettersLog_Warnings) {
+TEST_F(TextTestFixture, InvalidText_SettersLog_Warnings) {
     // Arrange (done via SetUp)
 
     // Act & Assert

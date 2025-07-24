@@ -23,6 +23,11 @@ protected:
 	}
 
 	void TearDown() override {
+        // Manually destroy resources in reverse order
+        invalid_window_ptr.reset();
+        window_ptr.reset();
+
+        // Safe to quit
 		penguin::quit();
 	}
 };
