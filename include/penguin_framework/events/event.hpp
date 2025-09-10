@@ -1,16 +1,32 @@
 #pragma once
 
-#include "core/events/pf_windowevent.hpp"
-#include "core/input/pf_input.hpp"
+#include <penguin_api.hpp>
+#include <penguin_framework/events/event_type.hpp>
+#include <memory>
 
-#include <SDL3/SDL_events.h>
+namespace penguin::events {
 
-#include <vector>
-#include <functional>
+	namespace penguin::internal::events {
+		struct EventImpl;
+	}
 
-namespace pf::core::events {
+	class PENGUIN_API Event {
+	public:
+		Event();
+		~Event();
 
-	class PF_Event {
-		static void poll_events();
+		// Can be any of the structs, so with the event, we can check its type using type()
+
+		// We then have easy functions for conversion
+
+		EventType type() const;
+
+		const QuitEvent& as_quit() const;
+		const WindowEvent& as_window() const;
+		const InputEvent& as_input() const;
+		const CustomEvent& as_custom() const;
+
+	private:
+		std::unique_ptr<penguin::internal::events::EventImpl> pimpl_;
 	};
 }

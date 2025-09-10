@@ -21,7 +21,7 @@ namespace penguin::window {
 		NotFocusable = (0x0000000080000000ULL)			
 	};
 
-	// Enable bitwise operations for WindowFlags
+	// Bitwise operations
 
 	constexpr WindowFlags operator|(WindowFlags lhs, WindowFlags rhs) {
 		return static_cast<WindowFlags>(
