@@ -4,7 +4,7 @@
 
 namespace penguin::input::keyboard {
 
-	enum class Keymod : uint16_t {
+	enum class KeyMod : uint16_t {
 		None = 0x0000u,
 		LShift = 0x0001u,
 		RShift = 0x0002u,

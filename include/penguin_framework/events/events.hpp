@@ -3,15 +3,11 @@
 #include <penguin_api.hpp>
 #include <memory>
 
+namespace penguin::internal::events {
+	class EventsImpl;
+}
+
 namespace penguin::events {
-
-
-
-
-	
-	namespace penguin::internal::events {
-		class EventsImpl;
-	}
 
 	class PENGUIN_API Events {
 	public:

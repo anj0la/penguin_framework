@@ -160,6 +160,8 @@ set(PF_SOURCES
         "src/rendering/systems/internal/font_loader_impl.cpp" 
         "src/rendering/systems/font_loader.cpp"
         "src/internal/penguin_init.cpp"
+        "src/events/internal/input_event_impl.cpp"
+        "src/events/input_event.cpp"
 )
 
 set(BUILD_SHARED_LIBS ${PF_BUILD_SHARED}) # Set after SDL dependencies

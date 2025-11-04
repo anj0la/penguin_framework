@@ -17,3 +17,4 @@ using NativeTexturePtr = NativePtr;
 using NativeTextContextPtr = NativePtr;
 using NativeTextPtr = NativePtr;
 using NativeFontPtr = NativePtr;
+using NativeEventPtr = NativePtr;

@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <penguin_framework/input/keyboard/key.hpp>
 #include <penguin_framework/input/keyboard/scan.hpp>
-#include <penguin_framework/input/keyboard/keymod..hpp>
-#include <penguin_framework/input/mouse/mouse_buttons.hpp>
+#include <penguin_framework/input/keyboard/keymod.hpp>
+#include <penguin_framework/input/mouse/mouse_button.hpp>
 #include <penguin_framework/input/mouse/mouse_wheel.hpp>
 
 namespace penguin::events {
@@ -12,23 +12,13 @@ namespace penguin::events {
 	// Event Types
 
 	enum class EventType : uint32_t {
-		Quit,
-		Window,
-		Input,
-		Custom
-	};
-
-	// Event Structs
-
-	struct QuitEvent {
-		EventType type;
-		uint64_t timestamp;
-	};
-
-	struct WindowEvent {
-		EventType type;
-		uint64_t timestamp;
-		int32_t param1, param2;
+		Invalid = -1,
+		KeyboardDown,
+		KeyboardUp,
+		MouseButtonDown,
+		MouseButtonUp,
+		MouseMotion,
+		MouseWheel
 	};
 
 	struct KeyboardEvent {
@@ -64,13 +54,6 @@ namespace penguin::events {
 		float x, y;				// sroll amounts
 		float mouse_x, mouse_y; // where the scroll happened
 		input::mouse::MouseWheelDirection direction;
-	};
-
-	struct CustomEvent {
-		EventType type;
-		uint64_t timestamp;
-		int32_t code;
-		int32_t param1, param2;
 	};
 
 }
