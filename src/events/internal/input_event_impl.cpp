@@ -53,6 +53,7 @@ namespace penguin::internal::events {
 	InputEventImpl::~InputEventImpl() = default;
 
 	bool InputEventImpl::has_event() const {
-		return std::holds_alternative<std::monostate>(event);
+		return !std::holds_alternative<std::monostate>(event); // if it holds an event, holds_alternative should return false
+																 // negating it makes it true, otherwise, it should be false
 	}
 }

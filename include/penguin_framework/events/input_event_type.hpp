@@ -51,8 +51,9 @@ namespace penguin::events {
 	struct MouseWheelEvent {
 		EventType type;
 		uint64_t timestamp;
-		float x, y;				// sroll amounts
-		float mouse_x, mouse_y; // where the scroll happened
+		float x, y;				// sroll amounts (precise)
+		int integer_x, integer_y; // scroll amounts (discrete)
+		float mouse_x, mouse_y; // where the scroll happened (cursor)
 		input::mouse::MouseWheelDirection direction;
 	};
 
