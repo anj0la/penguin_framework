@@ -1,16 +1,47 @@
 #pragma once
 
-#include "core/input/keyboard/keyboard.hpp"
-#include <SDL3/SDL_events.h>
+#include <penguin_api.hpp>
+#include <penguin_framework/common/native_types.hpp>
+#include <memory>
 
-namespace pf::core::input {
-	class PF_Input {
-		static void handle_events(const SDL_Event& p_event);
-		static void update();
+namespace penguin::internal::input {
+    class InputImpl;
+}
 
-		// ADD CALLBACKS LATER
-		
-		// static void register_callback(const PF_EventCallback& callback);
-		// static void trigger_event();
-	};
+namespace penguin::input {
+
+    class PENGUIN_API Input {
+    public:
+        Input(NativeEventPtr e);
+        ~Input();
+
+        // Delete copy semantics
+
+        Input(const Input&) = delete;
+        Input& operator=(const Input&) = delete;
+
+        // Move semantics
+
+        Input(Input&&) noexcept;
+        Input& operator=(Input&&) noexcept;
+
+        // Singleton access
+
+        static Input& get_instance();
+
+        // Keyboard functions
+
+
+        // Mouse button functions
+
+        
+        // Mouse motion functions
+
+
+        // Mouse wheel functions
+
+    private:
+        std::unique_ptr<penguin::internal::input::InputImpl> pimpl_;
+    };
+
 }

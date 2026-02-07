@@ -10,10 +10,15 @@ namespace penguin::events {
 
 		if (e.ptr) {
 			pimpl_ = std::make_unique<penguin::internal::events::InputEventImpl>(*e.as<SDL_Event>());
-			PF_LOG_INFO("Success: InputEvent created successfully.");
+			if (pimpl_ && pimpl_->has_event()) { // the constructor doesn't throw an exception, so we must check that it has an event (NOT monostate)
+				PF_LOG_INFO("Success: InputEvent created successfully.");
+			}
+			else { // otherwise, we don't have a valid input event
+				PF_LOG_ERROR("Event_Creation_Failed: The event is NOT an InputEvent."); // TODO: Create better system for adding error codes
+			}
 		}
-		else {
-			PF_LOG_ERROR("Event_Creation_Failed: The event is NOT an InputEvent.");
+		else { // only happens if the ptr is NOT an event
+			PF_LOG_ERROR("Event_Creation_Failed: Not a valid event.");
 		}
 	}
 
@@ -118,6 +123,14 @@ namespace penguin::events {
 
 	bool InputEvent::is_key_released(input::keyboard::Key key) const {
 		return is_keyboard_up() && as_keyboard().key == key;
+	}
+
+	bool InputEvent::is_key_pressed(input::keyboard::Scan keycode) const {
+		return is_keyboard_down() && as_keyboard().scan == keycode;
+	}
+
+	bool InputEvent::is_key_released(input::keyboard::Scan keycode) const {
+		return is_keyboard_up() && as_keyboard().scan == keycode;
 	}
 
 	bool InputEvent::is_mouse_button_down() const noexcept {

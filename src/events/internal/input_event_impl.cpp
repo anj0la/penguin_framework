@@ -40,8 +40,8 @@ namespace penguin::internal::events {
 		// MouseWheel
 			case SDL_EVENT_MOUSE_WHEEL:
 				type = penguin::events::EventType::MouseMotion;
-				event = penguin::events::MouseWheelEvent{ type, e.wheel.timestamp, e.wheel.x, e.wheel.y, e.wheel.mouse_x, e.wheel.mouse_y,
-				static_cast<penguin::input::mouse::MouseWheelDirection>(e.wheel.direction) };
+				event = penguin::events::MouseWheelEvent{ type, e.wheel.timestamp, e.wheel.x, e.wheel.y, e.wheel.integer_x, e.wheel.integer_y,
+					e.wheel.mouse_x, e.wheel.mouse_y, static_cast<penguin::input::mouse::MouseWheelDirection>(e.wheel.direction) };
 				break;
 			default:
 				type = penguin::events::EventType::Invalid;

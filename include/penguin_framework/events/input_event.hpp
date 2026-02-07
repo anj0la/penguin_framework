@@ -44,6 +44,8 @@ namespace penguin::events {
 		// Check event TYPE + specific key
 		[[nodiscard]] bool is_key_pressed(input::keyboard::Key key) const;
 		[[nodiscard]] bool is_key_released(input::keyboard::Key key) const;
+		[[nodiscard]] bool is_key_pressed(input::keyboard::Scan keycode) const;
+		[[nodiscard]] bool is_key_released(input::keyboard::Scan keycode) const;
 
 		// Similar for mouse
 		[[nodiscard]] bool is_mouse_button_down() const noexcept;

@@ -19,6 +19,7 @@ namespace penguin::input::keyboard {
 		CapsLock = 0x2000u,
 		ScrollLock = 0x8000u,
 		Ctrl = (LCtrl | RCtrl),
+		Shift = (LShift | RShift),
 		Alt = (LAlt | RAlt),
 		Gui = (LGui | RGui),
 	};
