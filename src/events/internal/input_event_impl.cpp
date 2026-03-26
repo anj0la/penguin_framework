@@ -22,26 +22,26 @@ namespace penguin::internal::events {
 			case SDL_EVENT_MOUSE_BUTTON_DOWN:
 				type = penguin::events::EventType::MouseButtonDown;
 				event = penguin::events::MouseButtonEvent{ type, e.button.timestamp, 
-					static_cast<penguin::input::mouse::MouseButton>(e.button.button), e.button.down, e.button.clicks, e.button.x, e.button.y };
+					static_cast<penguin::input::mouse::Button>(e.button.button), e.button.down, e.button.clicks, e.button.x, e.button.y };
 				break;
 			case SDL_EVENT_MOUSE_BUTTON_UP:
 				type = penguin::events::EventType::MouseButtonUp;
 				event = penguin::events::MouseButtonEvent{ type, e.button.timestamp,
-					static_cast<penguin::input::mouse::MouseButton>(e.button.button), e.button.down, e.button.clicks, e.button.x, e.button.y };
+					static_cast<penguin::input::mouse::Button>(e.button.button), e.button.down, e.button.clicks, e.button.x, e.button.y };
 				break;
 
 		// Mouse Motion
 			case SDL_EVENT_MOUSE_MOTION:
 				type = penguin::events::EventType::MouseMotion;
 				event = penguin::events::MouseMotionEvent{ type, e.motion.timestamp, e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel,
-				static_cast<penguin::input::mouse::MouseButtonFlags>(e.motion.state) };
+				static_cast<penguin::input::mouse::ButtonFlags>(e.motion.state) };
 				break;
 
 		// MouseWheel
 			case SDL_EVENT_MOUSE_WHEEL:
 				type = penguin::events::EventType::MouseMotion;
 				event = penguin::events::MouseWheelEvent{ type, e.wheel.timestamp, e.wheel.x, e.wheel.y, e.wheel.integer_x, e.wheel.integer_y,
-					e.wheel.mouse_x, e.wheel.mouse_y, static_cast<penguin::input::mouse::MouseWheelDirection>(e.wheel.direction) };
+					e.wheel.mouse_x, e.wheel.mouse_y, static_cast<penguin::input::mouse::WheelDirection>(e.wheel.direction) };
 				break;
 			default:
 				type = penguin::events::EventType::Invalid;

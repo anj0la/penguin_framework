@@ -16,6 +16,10 @@ namespace penguin::events {
 	class PENGUIN_API InputEvent {
 	public:
 		InputEvent(NativeEventPtr e);
+
+		InputEvent(InputEvent&&) noexcept;
+		InputEvent& operator=(InputEvent&&) noexcept;
+
 		~InputEvent();
 
 		[[nodiscard]] bool is_valid() const noexcept;
@@ -51,8 +55,8 @@ namespace penguin::events {
 		[[nodiscard]] bool is_mouse_button_down() const noexcept;
 		[[nodiscard]] bool is_mouse_button_up() const noexcept;
 
-		[[nodiscard]] bool is_mouse_pressed(input::mouse::MouseButton btn) const;
-		[[nodiscard]] bool is_mouse_released(input::mouse::MouseButton btn) const;
+		[[nodiscard]] bool is_mouse_pressed(input::mouse::Button btn) const;
+		[[nodiscard]] bool is_mouse_released(input::mouse::Button btn) const;
 
 		// Mouse motion
 		[[nodiscard]] std::pair<float, float> get_abs_mouse_pos() const;
@@ -63,7 +67,6 @@ namespace penguin::events {
 		[[nodiscard]] bool is_mouse_wheel_up() const;
 
 		[[nodiscard]] std::pair<float, float> get_mouse_wheel_pos() const;
-
 
 	private:
 		std::unique_ptr<penguin::internal::events::InputEventImpl> pimpl_;

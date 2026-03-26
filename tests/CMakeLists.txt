@@ -32,7 +32,6 @@ include(GoogleTest)
 
 set(BUILD_SHARED_LIBS ${PF_OLD_BUILD_SHARED}) # Safe to store original value
 
-
 if(TARGET GTest::gtest)
     get_target_property(GTEST_INCLUDES GTest::gtest INTERFACE_INCLUDE_DIRECTORIES)
     message(STATUS "GTest::gtest INTERFACE_INCLUDE_DIRECTORIES reported: ${GTEST_INCLUDES}")

@@ -1,5 +1,6 @@
 #pragma once 
 
+#include <functional>
 #include <SDL3/SDL_scancode.h>
 
 namespace penguin::input::keyboard {
@@ -141,5 +142,13 @@ namespace penguin::input::keyboard {
         RAlt = 230,
         RGui = 231,
 	};
+}
 
+namespace std {
+    template <>
+    struct hash<penguin::input::keyboard::Scan> {
+        std::size_t operator()(penguin::input::keyboard::Scan k) const noexcept {
+            return std::hash<int>()(static_cast<int>(k));
+        }
+    };
 }

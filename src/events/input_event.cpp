@@ -24,6 +24,9 @@ namespace penguin::events {
 
 	InputEvent::~InputEvent() = default;
 
+	InputEvent::InputEvent(InputEvent&&) noexcept = default;
+	InputEvent& InputEvent::operator=(InputEvent&&) noexcept = default;
+
 	// Validity checking
 
 	bool InputEvent::is_valid() const noexcept {
@@ -141,12 +144,12 @@ namespace penguin::events {
 		return is_mouse_button_event() && pimpl_->type == EventType::MouseButtonUp;
 	}
 
-	bool InputEvent::is_mouse_pressed(input::mouse::MouseButton btn) const noexcept {
-		return is_mouse_button_down() && as_mouse_button().button == btn;
+	bool InputEvent::is_mouse_pressed(input::mouse::Button btn) const {
+		return is_mouse_button_down() && as_mouse_button().btn == btn;
 	}
 
-	bool InputEvent::is_mouse_released(input::mouse::MouseButton btn) const noexcept {
-		return is_mouse_button_up() && as_mouse_button().button == btn;
+	bool InputEvent::is_mouse_released(input::mouse::Button btn) const {
+		return is_mouse_button_up() && as_mouse_button().btn == btn;
 	}
 
 	std::pair<float, float> InputEvent::get_abs_mouse_pos() const {
@@ -176,7 +179,7 @@ namespace penguin::events {
 			return false;
 		}
 
-		if (as_mouse_wheel().direction == input::mouse::MouseWheelDirection::Normal) {
+		if (as_mouse_wheel().direction == input::mouse::WheelDirection::Normal) {
 			return as_mouse_wheel().integer_y < 0;
 		}
 		
@@ -188,7 +191,7 @@ namespace penguin::events {
 			return false;
 		}
 
-		if (as_mouse_wheel().direction == input::mouse::MouseWheelDirection::Normal) {
+		if (as_mouse_wheel().direction == input::mouse::WheelDirection::Normal) {
 			return as_mouse_wheel().integer_y > 0;
 		}
 

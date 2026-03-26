@@ -13,7 +13,7 @@ namespace penguin::events {
 
 	enum class EventType : uint32_t {
 		Invalid = -1,
-		KeyboardDown,
+		KeyboardDown = 0,
 		KeyboardUp,
 		MouseButtonDown,
 		MouseButtonUp,
@@ -34,7 +34,7 @@ namespace penguin::events {
 	struct MouseButtonEvent {
 		EventType type;
 		uint64_t timestamp;
-		input::mouse::MouseButton button;  // mouse button index
+		input::mouse::Button btn;  // mouse button index
 		bool down;       
 		uint8_t clicks;  // double-click detection
 		float x, y;
@@ -45,7 +45,7 @@ namespace penguin::events {
 		uint64_t timestamp;
 		float x, y;           // absolute position
 		float rel_x, rel_y;   // relative movement
-		input::mouse::MouseButtonFlags state;
+		input::mouse::ButtonFlags state;
 	};
 
 	struct MouseWheelEvent {
@@ -54,7 +54,7 @@ namespace penguin::events {
 		float x, y;				// scroll amounts (precise)
 		int integer_x, integer_y; // scroll amounts (discrete)
 		float mouse_x, mouse_y; // where the scroll happened (cursor)
-		input::mouse::MouseWheelDirection direction;
+		input::mouse::WheelDirection direction;
 	};
 
 }

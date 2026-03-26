@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <cstdint>
 
 namespace penguin::input::keyboard {
@@ -271,5 +272,15 @@ namespace penguin::input::keyboard {
         RShift,
         RAlt,
         RGui
+    };
+
+}
+
+namespace std {
+    template <>
+    struct hash<penguin::input::keyboard::Key> {
+        std::size_t operator()(penguin::input::keyboard::Key k) const noexcept {
+            return std::hash<int>()(static_cast<int>(k));
+        }
     };
 }

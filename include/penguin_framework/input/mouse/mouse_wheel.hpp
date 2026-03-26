@@ -2,7 +2,7 @@
 
 namespace penguin::input::mouse {
 
-	enum class MouseWheelDirection {
+	enum class WheelDirection {
 		Normal,
 		Flipped
 	};

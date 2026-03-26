@@ -162,6 +162,8 @@ set(PF_SOURCES
         "src/internal/penguin_init.cpp"
         "src/events/internal/input_event_impl.cpp"
         "src/events/input_event.cpp"
+        "src/input/internal/input_impl.cpp"
+        "src/input/input.cpp"
 )
 
 set(BUILD_SHARED_LIBS ${PF_BUILD_SHARED}) # Set after SDL dependencies

@@ -22,6 +22,8 @@ namespace penguin::internal::error {
         Sprite_Creation_Failed,
         Font_Creation_Failed,
         Text_Creation_Failed,
+        Event_Creation_Failed,
+        Input_System_Creation_Failed,
         //Audio_Device_Open_Failed,
         Asset_Manager_Init_Failed,
         Texture_Loader_Init_Failed,

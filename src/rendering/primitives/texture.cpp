@@ -41,7 +41,6 @@ namespace penguin::rendering::primitives {
 	Texture::Texture(Texture&&) noexcept = default;
 	Texture& Texture::operator=(Texture&&) noexcept = default;
 
-
 	// Validity checking
 
 	bool Texture::is_valid() const noexcept {
