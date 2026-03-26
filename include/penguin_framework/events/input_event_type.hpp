@@ -12,13 +12,14 @@ namespace penguin::events {
 	// Event Types
 
 	enum class EventType : uint32_t {
-		Invalid = -1,
-		KeyboardDown = 0,
+		KeyboardDown,
 		KeyboardUp,
 		MouseButtonDown,
 		MouseButtonUp,
 		MouseMotion,
-		MouseWheel
+		MouseWheel,
+		Invalid = 0xFFFFFFFF
+
 	};
 
 	struct KeyboardEvent {
