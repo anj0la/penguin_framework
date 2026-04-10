@@ -68,6 +68,8 @@ namespace penguin::events {
 
 		[[nodiscard]] std::pair<float, float> get_mouse_wheel_pos() const;
 
+		// NativeEventPtr get_native_ptr();
+
 	private:
 		std::unique_ptr<penguin::internal::events::InputEventImpl> pimpl_;
 	};

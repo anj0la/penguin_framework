@@ -21,7 +21,7 @@ namespace penguin::events {
 		Invalid = 0xFFFFFFFF
 
 	};
-
+	
 	struct KeyboardEvent {
 		EventType type;
 		uint64_t timestamp;
